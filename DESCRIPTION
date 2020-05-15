@@ -1,0 +1,21 @@
+Package: csasMarPhys
+Type: Package
+Title: DFO Maritimes Physical Oceanography CSAS analysis
+Version: 0.0.9000
+Authors@R: 
+    person(given = "Chantelle",
+           family = "Layton",
+           role = c("aut", "cre"),
+           email = "Chantelle.Layton@dfo-mpo.gc.ca",
+           comment = c(ORCID="https://orcid.org/0000-0002-3199-5763"))
+Maintainer: Chantelle Layton <Chantelle.Layton@dfo-mpo.gc.ca>
+Description: Supports the analysis completed for the
+    Fisheries and Oceans Canada (DFO) Canadian Science Advisory Secretariat (CSAS)
+    research document that reports on the meteorological and physical oceanographic
+    conditions on the Scotian shelf and the Gulf of Maine annually.
+License: What license is it under?
+Roxygen: list(markdown = TRUE)
+Encoding: UTF-8
+LazyData: true
+Imports: oce
+RoxygenNote: 7.0.2
