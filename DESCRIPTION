@@ -13,9 +13,11 @@ Description: Supports the analysis completed for the
     Fisheries and Oceans Canada (DFO) Canadian Science Advisory Secretariat (CSAS)
     research document that reports on the meteorological and physical oceanographic
     conditions on the Scotian shelf and the Gulf of Maine annually.
-License: What license is it under?
+License: GPL (>= 2)
 Roxygen: list(markdown = TRUE)
 Encoding: UTF-8
 LazyData: true
-Imports: oce
+Depends: R (>= 3.6.0)
+Imports: oce, readxl, RCurl, sp, dplyr
+Suggests: R.utils
 RoxygenNote: 7.0.2

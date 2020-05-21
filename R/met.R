@@ -1,4 +1,4 @@
-#' @title Download a Cache a Met Climate Summary File
+#' @title Download and Cache a Met Climate Summary File
 #'
 #' @description Data are downloaded from the Environment and Climate Change Canada's
 #' climate weather website and cached locally
@@ -17,12 +17,27 @@
 #' @param province A string giving the province abbreviation of interest.
 #' @param type A string indicating which type of file to download, either
 #' `"xml"` for an XML file or `"csv"` for a CSV file.
-#' @param destdir
+#' @param destdir Optional string indicating the directory in which to store
+#' downloaded files. If not supplied, `"."` is used, i.e. the data file
+#' is stored in the present working directory.
+#' @param destfile Optional string indicating the name of the file.
+#' If not supplied, the file name is constructed from the other
+#' parameters of the function call, so subsequent calls with the same
+#' parameters will yield the same result, thus providing the key
+#' to the caching scheme.
+#' @param force Logical value indicating whether to force a download, even
+#' if the file already exists locally.
+#' @param quiet Logical value passed to [download.file()]; a `TRUE` value
+#' silences output.
+#'
+#' @importFrom utils download.file
+#' @importFrom utils capture.output
 #'
 #' @export
 
 download.met.climateSummaries <- function(year, month, province, type,
-                                          destdir = '.', destfile)
+                                          destdir = '.', destfile,
+                                          force = FALSE, quiet = TRUE)
 {
 
   if(missing(year) | missing(month)){
@@ -74,27 +89,27 @@ download.met.climateSummaries <- function(year, month, province, type,
   }
 
   if(missing(destfile)){
-    destfile <- paste0('metClimateSummaries_',prov,'_',year,ifelse(month < 10, paste0('0', month), month),'.', type)
+    destfile <- paste0('metClimateSummaries_',province,'_',year,ifelse(month < 10, paste0('0', month), month),'.', type)
   }
 
 
   url <- paste0('http://climate.weather.gc.ca/prods_servs/cdn_climate_summary_report_e.html?int',
                 'Year=',year,
                 '&intMonth=',month,
-                '&prov=',prov,
+                '&prov=',province,
                 '&dataFormat=',type,
                 '&btnSubmit=Download+data')
 
   destination <- paste(destdir, destfile, sep="/")
-  oceDebug(debug, "url:", url, "\n")
-  if (!force && 1 == length(list.files(path=destdir, pattern=paste("^", destfile, "$", sep="")))) {
-    oceDebug(debug, "Not downloading \"", destfile, "\" because it is already present in the \"", destdir, "\" directory\n", sep="")
-  } else {
-    ##?owarn <- options()$warn # this, and the capture.output, quieten the processing
-    ##?options(warn=-1)
-    capture.output({download.file(url, destination, quiet=TRUE, mode = 'wb')})
-    ##?options(warn=owarn)
-    oceDebug(debug, "Downloaded file stored as '", destination, "'\n", sep="")
-  }
-
+  # oceDebug(debug, "url:", url, "\n")
+   if (!force && 1 == length(list.files(path=destdir, pattern=paste("^", destfile, "$", sep="")))) {
+  #   #oceDebug(debug, "Not downloading \"", destfile, "\" because it is already present in the \"", destdir, "\" directory\n", sep="")
+   } else {
+  #   ##?owarn <- options()$warn # this, and the capture.output, quieten the processing
+  #   ##?options(warn=-1)
+     capture.output({download.file(url, destination, quiet=quiet, mode = 'wb')})
+  #   ##?options(warn=owarn)
+  #   #oceDebug(debug, "Downloaded file stored as '", destination, "'\n", sep="")
+   }
+  destination
 }

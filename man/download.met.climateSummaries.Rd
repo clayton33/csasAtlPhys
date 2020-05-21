@@ -2,7 +2,7 @@
 % Please edit documentation in R/met.R
 \name{download.met.climateSummaries}
 \alias{download.met.climateSummaries}
-\title{Download a Cache a Met Climate Summary File}
+\title{Download and Cache a Met Climate Summary File}
 \usage{
 download.met.climateSummaries(
   year,
@@ -10,7 +10,9 @@ download.met.climateSummaries(
   province,
   type,
   destdir = ".",
-  destfile
+  destfile,
+  force = FALSE,
+  quiet = TRUE
 )
 }
 \arguments{
@@ -22,6 +24,22 @@ download.met.climateSummaries(
 
 \item{type}{A string indicating which type of file to download, either
 \code{"xml"} for an XML file or \code{"csv"} for a CSV file.}
+
+\item{destdir}{Optional string indicating the directory in which to store
+downloaded files. If not supplied, \code{"."} is used, i.e. the data file
+is stored in the present working directory.}
+
+\item{destfile}{Optional string indicating the name of the file.
+If not supplied, the file name is constructed from the other
+parameters of the function call, so subsequent calls with the same
+parameters will yield the same result, thus providing the key
+to the caching scheme.}
+
+\item{force}{Logical value indicating whether to force a download, even
+if the file already exists locally.}
+
+\item{quiet}{Logical value passed to \code{\link[=download.file]{download.file()}}; a \code{TRUE} value
+silences output.}
 }
 \description{
 Data are downloaded from the Environment and Climate Change Canada's
