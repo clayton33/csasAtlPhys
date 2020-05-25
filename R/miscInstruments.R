@@ -2,13 +2,14 @@
 #'
 #' @description This function reads in a Vemco minilog file.
 #'
-#' @param filename a connection or character string  of the file to read.
+#' @param file a connection or character string  of the file to read.
 #' @param skipStart an optional numeric value indicating number of hours to skip at the beginning of the file,
 #' default is NA, meaning keep all the data points.
 #' @param skipEnd an optional numeric value indicating number of hours to skip at the beginning of the file,
 #' default is NA, meaning keep all the data points.
 #' @param skip an optional integer value indicating the number of lines of the data file to skip before
 #' beginning to read the data, default is 8.
+#' @param pressure a numerical value of the pressure that the instrument was moored
 #'
 #' @details Reads a Vemco minilog file assuming just date, time and temperature fields. At this time
 #' it is not clear is this a standard formatted file. Saves no information
@@ -22,26 +23,26 @@
 #' @importFrom oce as.ctd
 #'
 
-read.minilog <- function(filename, skipStart = NA, skipEnd = NA, skip = 8, pressure) {
-
-  csvdata <- read.table(filename,
+read.minilog <- function(file, skipStart = NA, skipEnd = NA, skip = 8, pressure) {
+  csvdata <- read.table(file,
                         header=FALSE, skip = skip, sep=",",
                         col.names = c("DATE","TIME","TEMPERATURE"),stringsAsFactors = FALSE)
-  sst <- cbind(as.POSIXct(paste(csvdata$DATE,csvdata$TIME), tryFormats=c("%d/%m/%Y %H:%M:%S",
+  sst <- as.data.frame(DATE = as.POSIXct(paste(csvdata$DATE,csvdata$TIME), tryFormats=c("%d/%m/%Y %H:%M:%S",
                                                                          "%Y-%m-%d %H:%M:%S"),
-                          tz="UTC",origin="1970-01-01"), csvdata$TEMPERATURE)
-  colnames(sst) <- c("DATE", "TEMPERATURE")
-  sst <- as.data.frame(sst)
-  sst$DATE <- as.POSIXct(sst$DATE, tz="UTC", origin="1970-01-01")
+                          tz="UTC",origin="1970-01-01"),
+                       TEMPERATURE = csvdata$TEMPERATURE)
+  #colnames(sst) <- c("DATE", "TEMPERATURE")
+  #sst <- as.data.frame(sst)
+  #sst$DATE <- as.POSIXct(sst$DATE, tz="UTC", origin="1970-01-01")
   if(!is.na(skipStart)){
     start <- sst$DATE[1]
     startSkip <- start + skipStart*3600 # multiply by seconds per hour
-    sst <- subset(sst, DATE > startSkip)
+    #sst <- subset(sst, DATE > startSkip)
   }
   if(!is.na(skipEnd)){
     end <- sst$DATE[length(sst$DATE)]
     endSkip <- end - skipEnd*3600 # multiply by seconds per hour
-    sst <- subset(sst, DATE < endSkip)
+    #sst <- subset(sst, DATE < endSkip)
   }
   names(sst) <- tolower(names(sst))
 
@@ -56,6 +57,7 @@ read.minilog <- function(filename, skipStart = NA, skipEnd = NA, skip = 8, press
 #'
 #' @param file a connection or a character string giving the name of the file to load.
 #' @param skip a numerical value indicating the number of rows to skip before reading in data
+#' @param header logical value indicating whether or not a header is present in the file
 #' @param pressure a numerical value of the pressure that the instrument was moored
 #'
 #' @details This function attempts to read in a non-archived file that is obtained
@@ -69,10 +71,10 @@ read.minilog <- function(filename, skipStart = NA, skipEnd = NA, skip = 8, press
 #' @author Chantelle Layton
 #'
 #' @importFrom oce as.ctd
+#' @importFrom utils read.csv
 #'
 
 read.stAndrewsTemperature <- function(file, skip = 0, header = TRUE, pressure){
-  require(oce)
   ss <- strsplit(x = file, split = '\\.')[[1]]
   ext <- ss[length(ss)]
   if(ext == 'xlsx'){
@@ -145,13 +147,12 @@ read.stAndrewsTemperature <- function(file, skip = 0, header = TRUE, pressure){
 #'
 #' @description This function reads in a sealog-T file.
 #'
-#' @param filename a connection or character string  of the file to read.
+#' @param file a connection or character string  of the file to read.
 #' @param skipStart an optional numeric value indicating number of hours to skip at the beginning of the file,
 #' default is NA, meaning keep all the data points.
 #' @param skipEnd an optional numeric value indicating number of hours to skip at the beginning of the file,
 #' default is NA, meaning keep all the data points.
-#' @param skip an optional integer value indicating the number of lines of the data file to skip before
-#' beginning to read the data, default is 8.
+#' @param pressure a numerical value of the pressure that the instrument was moored
 #'
 #' @details Reads a sealog-T file, calculates the date based on the start, end, and sample period specified
 #' in the header lines. Saves no information. It assumes that only temperature is present. This code
@@ -164,7 +165,7 @@ read.stAndrewsTemperature <- function(file, skip = 0, header = TRUE, pressure){
 #' @return a ctd object with `deploymentType = "moored"`.
 #'
 
-read.sealogT <- function(file, skipStart, skipEnd, pressure){
+read.sealogT <- function(file, skipStart = NA, skipEnd = NA, pressure){
   rl <- readLines(file)
   # the data starts after * Sample period
   hdrEnd <- grep('\\* Sample period', rl)
