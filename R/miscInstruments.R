@@ -37,12 +37,12 @@ read.minilog <- function(file, skipStart = NA, skipEnd = NA, skip = 8, pressure)
   if(!is.na(skipStart)){
     start <- sst$DATE[1]
     startSkip <- start + skipStart*3600 # multiply by seconds per hour
-    #sst <- subset(sst, DATE > startSkip)
+    sst <- subset(sst, DATE > startSkip)
   }
   if(!is.na(skipEnd)){
     end <- sst$DATE[length(sst$DATE)]
     endSkip <- end - skipEnd*3600 # multiply by seconds per hour
-    #sst <- subset(sst, DATE < endSkip)
+    sst <- subset(sst, DATE < endSkip)
   }
   names(sst) <- tolower(names(sst))
 
