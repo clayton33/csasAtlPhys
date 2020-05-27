@@ -5,7 +5,7 @@
 #' @format a data frame with un-named columns, but they are as follows,
 #' \code{latitude}, \code{longitude}, \code{depth}, ...
 #'
-"scotianShelfLonLatGrid"
+"summerGroundfishLonLatGrid"
 
 #' Scotian shelf utm grid.
 #'
@@ -14,7 +14,7 @@
 #' @format a data frame with un-named columns, but they are as follows,
 #' \code{latitude}, \code{longitude}, \code{depth}, ...
 #'
-"scotianShelfUtmGrid"
+"summerGroundfishUtmGrid"
 
 #' Climate area climatologies
 #'
