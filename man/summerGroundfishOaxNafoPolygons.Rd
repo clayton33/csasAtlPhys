@@ -4,7 +4,7 @@
 \name{summerGroundfishOaxNafoPolygons}
 \alias{summerGroundfishOaxNafoPolygons}
 \title{Summer groundfish NAFO region boundaries for oax grid}
-\format{a list that contains each NAFO region within the oax grid, 4vN, 4vS,
+\format{a list that contains each NAFO region within the oax grid, 4vn, 4vs,
 4w, 4x, and 4v. Each list element contains \code{longitude} and \code{latitude}.}
 \usage{
 summerGroundfishOaxNafoPolygons

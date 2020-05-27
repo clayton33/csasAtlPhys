@@ -39,9 +39,45 @@
 #' Summer groundfish NAFO region boundaries based on the grid that is used for the
 #' OAX analysis.
 #'
-#' @format a list that contains each NAFO region within the oax grid, 4vN, 4vS,
+#' @format a list that contains each NAFO region within the oax grid, 4vn, 4vs,
 #' 4w, 4x, and 4v. Each list element contains \code{longitude} and \code{latitude}.
 "summerGroundfishOaxNafoPolygons"
+
+#' Winter groundfish longitude latitude grid.
+#'
+#' Winter groundfish longitude latitude grid used for optimal estimation analysis (oax)
+#'
+#' @format a data frame with un-named columns, but they are as follows,
+#' \code{latitude}, \code{longitude}, \code{depth}, ...
+#'
+"winterGroundfishLonLatGrid"
+
+#' Winter groundfish utm grid.
+#'
+#' Winter groundfish utm grid used for optimal estimation analysis (oax)
+#'
+#' @format a data frame with un-named columns, but they are as follows,
+#' \code{latitude}, \code{longitude}, \code{depth}, ...
+#'
+"winterGroundfishUtmGrid"
+
+#' Winter groundfish optimal estimation results
+#'
+#' Winter groundfish optimal estimation results from 1970 to present
+#'
+#' @format a data frame with columns \code{year}, \code{latitude}, \code{longitude},
+#' \code{day_number}, \code{depth}, \code{temperature}, \code{temperature_error}, \code{salinity},
+#' \code{salinity_error}
+"winterGroundfishOaxResults"
+
+#' Winter groundfish optimal estimation climatology
+#'
+#' Winter groundfish optimal estimation climatology for 1980 to 2010.
+#'
+#' @format a data frame with columns \code{latitude}, \code{longitude}, \code{day_number}, \code{depth},
+#' \code{temperature}, \code{temperature_error}, \code{salinity}, \code{salinity_error},
+#' \code{sigmat}, \code{sigmat_error}.
+"winterGroundfishClimatology1980to2010"
 
 #' Climate area climatologies
 #'
@@ -152,3 +188,23 @@
 #' Transect standard depth bins and tolerances definitions for verticaly averaging
 #' @format a data frame with columns \code{bin} and \code{tolerance}
 "transectDepthBins"
+
+#' Sea surface temperature in-situ for Halifax site
+#'
+#' Monthly average sea surface temperature for in-situ Halifax site
+#' that is located at the wharf at theMaritime museum in the Halifax harbour. The monthly averages
+#' are only up to a certain year, the purpose of this file being included is that the
+#' historical data is not avaliable anywhere.
+#'
+#' @format a data frame with columns \code{year}, \code{month}, \code{temperature}
+"sstInSituHalifax"
+
+#' Sea surface temperature in-situ for St.Andrews site
+#'
+#' Monthly average sea surface temperature for in-situ St.Andrews site
+#' that is located off the wharf at the St.Andrews Biological Station. The monthly averages
+#' are only up to a certain year, the purpose of this file being included is that the
+#' historical data is not avaliable anywhere.
+#'
+#' @format a data frame with columns \code{year}, \code{month}, \code{temperature}
+"sstInSituStAndrews"
