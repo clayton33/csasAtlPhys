@@ -1,5 +1,5 @@
 library(usethis)
-path <- 'data-raw/areas'
+path <- 'data-raw/areas/climatology'
 files <- list.files(path = path,
                     pattern = 'Area\\d+_1981-2010\\.RData')
 
