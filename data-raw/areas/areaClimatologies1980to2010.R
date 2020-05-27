@@ -1,10 +1,11 @@
-path <- 'data-raw'
+library(usethis)
+path <- 'data-raw/areas'
 files <- list.files(path = path,
                     pattern = 'Area\\d+_1981-2010\\.RData')
 
 
 areaClimatologies1980to2010 <- vector(mode = 'list', length = length(files))
-areaNames[i] <- vector(length = length(files))
+areaNames <- vector(length = length(files))
 for(i in 1:length(files)){
   load(paste(path, files[i], sep = '/'))
   # each file has a variable named 'ltm'
