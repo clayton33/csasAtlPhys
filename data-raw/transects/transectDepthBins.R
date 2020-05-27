@@ -1,3 +1,4 @@
+library(usethis)
 depthBins <- c(seq(0, 90, 10),
                seq(100, 440, 20),
                seq(500, 3000, 100))

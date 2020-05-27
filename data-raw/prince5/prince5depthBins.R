@@ -1,3 +1,4 @@
+library(usethis)
 std <- c(0, 10, 25, 50, 75, 90) # not the same as HL2
 tol <- c(5, 5, 5, 10, 10, 10)
 

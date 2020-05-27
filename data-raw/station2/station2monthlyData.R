@@ -1,4 +1,5 @@
-load('data-raw/Halifax2_Big_Monthly_TimeSeries.RData')
+library(usethis)
+load('data-raw/station2/Halifax2_Big_Monthly_TimeSeries.RData')
 # reformat this to be similar to p5 so scripts can be easily used between the two stations
 station2monthlyData <- data.frame(year = hfx2_monthly$YEAR,
                      month = hfx2_monthly$MONTH,
