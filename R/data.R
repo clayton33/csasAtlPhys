@@ -34,6 +34,15 @@
 #' \code{sigmat}, \code{sigmat_error}.
 "summerGroundfishClimatology1980to2010"
 
+#' Summer groundfish NAFO region boundaries for oax grid
+#'
+#' Summer groundfish NAFO region boundaries based on the grid that is used for the
+#' OAX analysis.
+#'
+#' @format a list that contains each NAFO region within the oax grid, 4vN, 4vS,
+#' 4w, 4x, and 4v. Each list element contains \code{longitude} and \code{latitude}.
+"summerGroundfishOaxNafoPolygons"
+
 #' Climate area climatologies
 #'
 #' Select climatologies for specified climate areas on the scotian shelf
