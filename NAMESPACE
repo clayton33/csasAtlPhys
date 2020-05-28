@@ -3,6 +3,7 @@
 export(download.meds)
 export(download.met.climateSummaries)
 export(download.nefsc)
+export(findValidSnowCrabGridPoints)
 export(presentTime)
 export(read.ahccd)
 export(read.ahccd.stations)

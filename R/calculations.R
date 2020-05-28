@@ -135,3 +135,103 @@ cilVolume <- function(T, p, longitude, latitude, dlongitude, dlatitude, Tlim = 4
   volume <- area * thicknesskm
   return(list(thickness = thicknesskm, volume = volume, minTemp = minTemp))
 }
+
+#' @title Find valid snow crab oax grid points
+#'
+#' @description This function identifies points that should be included
+#' when calculating various metrics using the oax results for snow crab analysis.
+#'
+#' @param longitude,latitude an optional numeric vector of longitudes and latitudes,
+#' note that both must be supplied if `checkNthl` or `checkIgnore` are `TRUE`.
+#' @param pressure an optional numeric vector of pressure, ignored if
+#' `checkPressure` is `FALSE`.
+#' @param checkNthl a logical value indicating whether or not to check points in
+#' western Northumberland, default is `TRUE`.
+#' @param checkIgnore a logical value indicating whether or not to check for points
+#' that have been identified to be ignored.
+#' @param checkPressure a logical value indicating whether or not to check points
+#' based on the pressure, default is `FALSE`.
+#' @param pressureMinimum a numeric value indicating the minimum pressure value
+#' for valid points, default is 20. If `checkPressure` is `FALSE`, then ignored.
+#' @param pressureMaximum a numeric value indicating the maximum pressure value
+#' for valid points, default is 200. If `checkPressure` is `FALSE`, then ignored.
+#'
+#' @details The oax snow crab analysis grids have varied over the years. When
+#' a new one was developed, for continuity to past results, various points
+#' are ommited from the analysis. See the source code for more details,
+#' but in general, there are a handful of points that are omitted from the
+#' western Northumberland strait, various ones to be ignored along the coast,
+#' and points where the bottom depth of a grid point that is less than 20m and
+#' greater than 200 m.
+#'
+#' @return a vector of logical values, TRUE indicating a point that should be included
+#' in analysis.
+#'
+#' @author Chantelle Layton
+#'
+#' @export
+
+findValidSnowCrabGridPoints <- function(longitude, latitude, pressure = NULL,
+                                        checkNthl = TRUE, checkIgnore = TRUE,
+                                        checkPressure = FALSE, pressureMinimum = 20, pressureMaximum = 200){
+  # do some initial checks to make sure appropriate paramters have been supplied
+  if((missing(longitude) | missing(latitude)) & (checkNthl | checkIgnore)){
+    stop('Must provide longitude and latitude.')
+  }
+  if(missing(pressure) & checkPressure){
+    stop('Must provide pressure.')
+  }
+
+  # defined the various functions to call for varying combinations
+  # of checkNthl, checkIgnore, and checkPressure
+
+  #returns TRUE/FALSE vector, TRUE value indicates points are in the area to be ignored
+  # so results of this fn should be negated if checkNthl = TRUE
+  checkNthlPoints <- function(longitude, latitude){
+    (latitude < 46.51 & longitude < -63.59) | (latitude > 46.59 & latitude < 46.61 & longitude < -64.09) # 57 points
+  }
+  # omit certain points that were not present in earlier years
+  # returns TRUE/FALSE vector, TRUE values indicates that the points
+  # are the points that should be ignored,
+  # so when checkIgnore = TRUE, the results of this fn should be negated
+  checkIgnorePoints <- function(longitude, latitude){
+    (latitude == 46.0 & (longitude >= -63.5 & longitude <= -63.3)) | # 3 points
+      (latitude == 47.0 & longitude == -60.4) | # 1 point
+      (latitude == 47.8 & longitude == -65.2) | # 1 point
+      (latitude == 48.1 & (longitude == -65.1 | longitude == -66.1)) | # 2 points
+      (latitude == 48.8 & (longitude >= -64.4 & longitude <= -64.3)) # 2 points
+  }
+  # bottom depth must be between certain range
+  checkBtmDepthPoints <- function(p, pmin, pmax){
+    p[length(p)] >= pmin & p[length(p)] <= pmax
+  }
+
+  if(checkNthl){
+    badNthl <- checkNthlPoints(longitude,latitude)
+  }
+  if(checkIgnore){
+    badIgnore <- checkIgnorePoints(longitude, latitude)
+  }
+  if(checkPressure){
+    okPressure <- checkPressure(p = pressure,
+                                pmin = pressureMinimum,
+                                pmax = pressureMaximum)
+  }
+
+  if(checkNthl & checkIgnore & checkPressure){
+    !badNthl & !badIgnore & okPressure
+  } else if (checkNthl & checkIgnore & !checkPressure){
+    !badNthl & !badIgnore
+  } else if(checkNthl & !checkIgnore & !checkPressure){
+    !badNthl
+  } else if(!checkNthl & checkIgnore & !checkPressure){
+    !badIgnore
+  } else if(!checkNthl & !checkIgnore & checkPressure){
+    okPressure
+  } else if(!checkNthl & checkIgnore & checkPressure){
+    !badIgnore & okPressure
+  } else if(checkNthl & !checkIgnore & checkPressure){
+    !badNthl & okPressure
+  }
+
+}

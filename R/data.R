@@ -79,6 +79,34 @@
 #' \code{sigmat}, \code{sigmat_error}.
 "winterGroundfishClimatology1980to2010"
 
+#' Snow crab longitude latitude grid.
+#'
+#' Snow crab longitude latitude grid used for optimal estimation analysis (oax)
+#'
+#' @format a data frame with un-named columns, but they are as follows,
+#' \code{latitude}, \code{longitude}, \code{depth}, ...
+#'
+"snowCrabLonLatGrid"
+
+#' Snow crab utm grid.
+#'
+#' Snow crab utm grid used for optimal estimation analysis (oax)
+#'
+#' @format a data frame with un-named columns, but they are as follows,
+#' \code{latitude}, \code{longitude}, \code{depth}, ...
+#'
+"snowCrabUtmGrid"
+
+#' Snow crab optimal estimation results
+#'
+#' Snow crab optimal estimation results from 1970 to present
+#'
+#' @format a data frame with columns \code{year}, \code{latitude}, \code{longitude},
+#' \code{depth}, \code{temperature}, \code{temperature_error}, \code{salinity},
+#' \code{salinity_error}
+"snowCrabOaxResults"
+
+
 #' Climate area climatologies
 #'
 #' Select climatologies for specified climate areas on the scotian shelf
@@ -188,6 +216,15 @@
 #' Transect standard depth bins and tolerances definitions for verticaly averaging
 #' @format a data frame with columns \code{bin} and \code{tolerance}
 "transectDepthBins"
+
+#' Transect plot limits
+#'
+#' Various limits for plotting transects.
+#'
+#' @format a list of \code{limits}, \code{contourLevelLimits}, and \code{contourLevelLimits},
+#' each having defined items for \code{temperature}, \code{temperatureAnomaly}, \code{salinity},
+#' \code{salinityAnomaly}, \code{sigmaTheta}, \code{sigmaThetaAnomaly}.
+"transectPlotLimits"
 
 #' Sea surface temperature in-situ for Halifax site
 #'
