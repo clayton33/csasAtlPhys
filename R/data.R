@@ -226,6 +226,29 @@
 #' \code{salinityAnomaly}, \code{sigmaTheta}, \code{sigmaThetaAnomaly}.
 "transectPlotLimits"
 
+#' Transect 1980 to 2010 climatology
+#'
+#' Core azmp transect 1980 to 2010 climatology.
+#'
+#' @format a list which contains a list for each transect that has the \code{transecAbbreviation},
+#' \code{transectFullname}, \code{season}, \code{program}, and \code{climatology}, the climatology has
+#' column names of \code{distanceBin}, \code{depthBin}, \code{temperature}, \code{temperatureSd},
+#' \code{temperatureNobs}, \code{salinity}, \code{salinitySd}, \code{salinityNobs}, \code{sigmaTheta},
+#' \code{sigmaThetaSd}, \code{sigmaThetaNobs}.
+"transectClimatology1980to2010"
+
+#' Transect definitions
+#'
+#' Transect definitions has some important information pertaining to plotting
+#' many of the transects associated with the AZMP program. Some is leftover from what used to be used
+#' when plotting in MATLAB, but there are some items of importance, so everything was saved.
+#'
+#' @format a list which contains a list for each transect that has \code{info}, that has a handful
+#' of other variables which is too lengthy to list here, but two that are of importance are
+#' \code{start_longitude} and \code{start_latitude}, \code{bottom_outline}, the bathymetry for plotting,
+#' and then other information that is not currently used, \code{bottom_mask}, \code{xgrid}, and \code{ygrid}.
+"transectDefinitions"
+
 #' Sea surface temperature in-situ for Halifax site
 #'
 #' Monthly average sea surface temperature for in-situ Halifax site
