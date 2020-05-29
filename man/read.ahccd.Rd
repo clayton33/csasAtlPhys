@@ -4,17 +4,25 @@
 \alias{read.ahccd}
 \title{Read AHCCD data}
 \usage{
-read.ahccd(file)
+read.ahccd(file, longitude = NULL, latitude = NULL, elevation = NULL)
 }
 \arguments{
-\item{file}{the file containing the data}
+\item{file}{a connection or a character string giving the name of the file to load.}
+
+\item{longitude}{optional numerical value containing longitude in decimal degrees,
+positive in the eastern hemisphere.}
+
+\item{latitude}{optional numerical value containing the latitude in decimal degrees,
+positive in the northern hemisphere.}
+
+\item{elevation}{optional numerical value containing the elevation of the station in meters.}
+}
+\value{
+named list of data for each station provided in stns
 }
 \description{
-Read AHCCD data
-}
-\details{
 Read Adjusted and Homogenized Canadian Climate Data files. Data can be downloaded from
-the ftp site at \url{ftp://ccrp.tor.ec.gc.ca/pub/AHCCD/} . It is required that the data file be downloaded
+the ftp site at ftp://ccrp.tor.ec.gc.ca/pub/AHCCD/ . It is required that the data file be downloaded
 along with the associated stations excel file. For example, if the 'Adj_monthly_rain.zip' file
 is downloaded, then the 'Precipitation_Stations.xls' file should also be downloaded whether it
 be using download.file(), or manually from the site.
