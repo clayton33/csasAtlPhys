@@ -1,9 +1,9 @@
-# csasMarPhys
-The csasMarPhys R package supports DFO Maritimes Physical Oceanography CSAS analysis.
+# csasAtlPhys
+The csasAtlPhys R package supports DFO Atlantic region physical oceanography CSAS analysis.
 
-## About csasMarPhys
+## About csasAtlPhys
 
-csasMarPhys helps support data analysis to produce data products presented in the research document
+csasAtlPhys helps support data analysis to produce data products presented in the research document
 that summarizes the meteorological and physical oceanographic conditions on the Scotian shelf and Gulf of Maine, 
 [as seen here](http://www.dfo-mpo.gc.ca/csas-sccs/Publications/ResDocs-DocRech/2018/2018_016-eng.html).
 
@@ -20,7 +20,7 @@ there is no plan at this time to submit to CRAN. For users to who wish to instal
 
 ```
 library(devtools)
-install_github('clayton33/csasMarPhys', ref = 'develop')
+install_github('clayton33/csasAtlPhys', ref = 'develop')
 ```
 
 this package is dependent on the `oce` package, so it is also best to have
