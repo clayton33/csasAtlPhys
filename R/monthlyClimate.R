@@ -22,6 +22,8 @@
 #' @param destfile Optional string indicating the name of the file. If not supplied, the file
 #' name is constructed from the other parameters of the function call, so subsequent calls with
 #' the same parameters will yield the same result, thus providing the key to the caching scheme.
+#' @param force Logical value indicating whether to force a download, even if the file already
+#' exists locally.
 #'
 #' @author Chantelle Layton
 #'
@@ -32,7 +34,8 @@
 
 
 download.climateSummaries <- function(year, month, province, type,
-                                          destdir = '.', destfile)
+                                          destdir = '.', destfile,
+                                      force = TRUE)
 {
 
   if(missing(year) | missing(month)){
@@ -95,6 +98,10 @@ download.climateSummaries <- function(year, month, province, type,
                 '&dataFormat=',type,
                 '&btnSubmit=Download+data')
 
+  if(!dir.exists(destdir)){
+    dir.create(destdir, recursive = TRUE)
+  }
+
   destination <- paste(destdir, destfile, sep="/")
   if (!force && 1 == length(list.files(path=destdir, pattern=paste("^", destfile, "$", sep="")))) {
     message(paste("Not downloading \"", destfile, "\" because it is already present in the \"", destdir, "\" directory\n", sep=""))
@@ -119,7 +126,7 @@ download.climateSummaries <- function(year, month, province, type,
 #'
 #' @author Chantelle Layton
 #'
-#' @return a data.frame containing all of the data, except for snow
+#' @return a data.frame containing all of the data, except for snow and sunshine.
 #'
 #' @importFrom XML xmlToList
 #' @importFrom XML xmlParse
@@ -159,7 +166,6 @@ read.climateSummaries.xml <- function(file)
   maxTemperature <- unname(unlist(lapply(stationData, function(k) ifelse(is.null(k[['max_temperature']]), NA, k[['max_temperature']][1]))))
   minTemperature <- unname(unlist(lapply(stationData, function(k) ifelse(is.null(k[['min_temperature']]), NA, k[['min_temperature']][1]))))
   precipitation <- unname(unlist(lapply(stationData, function(k) k[['precipitation']][1])))
-  sunshine <- unname(unlist(lapply(stationData, function(k) k[['name']])))
   degreeDaysHeating <- unname(unlist(lapply(stationData, function(k) ifelse(is.null(k[['degreedays']]), NA, k[['degreedays']][1]))))
   degreeDaysCooling <- unname(unlist(lapply(stationData, function(k) ifelse(is.null(k[['degreedays']]), NA, k[['degreedays']][2]))))
   month <- rep(unname(xml[['.attrs']][['month']]), length(stationData))
@@ -176,9 +182,95 @@ read.climateSummaries.xml <- function(file)
                    maxTemperature = maxTemperature,
                    minTemperature = minTemperature,
                    precipitation = precipitation,
-                   sunshine = sunshine,
                    degreeDaysHeating = degreeDaysHeating,
                    degreeDaysCooling = degreeDaysCooling,
                    stringsAsFactors = FALSE)
   df
+}
+
+#' @title Convert monthly climate data to ahccd format
+#'
+#' @description This function takes the monthly climate data, which is read in as a data frame,
+#' and puts it into the decided list format of the ahccd data.
+#'
+#' @param x a data.frame of monthly climate data that was manipulated after reading it in.
+#'
+#' @author Chantelle Layton
+#'
+#' @return a list that contains the same format as [read.ahccd]. Note that the `elevation` variable
+#' is missing from the climate summary files.
+#'
+#' @export
+#'
+
+climateSummary2ahccd <- function(x) {
+  metaDataNames <- c('stationName', 'stationId', 'latitude', 'longitude', 'province')
+  okDataNames <- !names(x) %in% metaDataNames
+  list(stationId = x$stationId[1],
+       stationName = x$stationName[1],
+       province = x$province[1],
+       latitude = x$latitude[1],
+       longitude = x$longitude[1],
+       elevation = NA,
+       updatedTo = NA,
+       data = x[, okDataNames])
+}
+
+#' @title Combine ahccd and climate summary data
+#'
+#' @description This function combines ahccd and climate summary data together into the same list.
+#'
+#' @details There is some additional data that is read in and retained for the climate summary
+#' data, but here only `meanTemperature` is retained. The climate summary metadata has `climateSummary`
+#' appended to the name in the event that a comparisson is required. Ahccd data takes precedence,
+#' so when comparing the year and month, the ahccd data is kept over the climate summary data.
+#'
+#' @param ahccd a list that has been read in using `read.ahccd`
+#' @param climateSummary a list that has been converted to the ahccd format using `climateSummary2ahccd`
+#'
+#' @return a list in the same form as `read.ahccd`, but all metadata has been preserved. Any metadata from
+#' the `climateSummary` data has `climate` added in front of it's name.
+#' @author Chantelle Layton
+#'
+#' @importFrom oce geodDist
+#'
+#' @export
+
+
+combineAhccdAndClimateSummary <- function(ahccd, climateSummary){
+  # just do a double check that either
+  # 1. the stationId matches
+  # 2. the station name of the climateSummary matches portion of ahccd
+  # 3. the distance between stations is within
+  ok <- (ahccd[['stationId']] == climateSummary[['stationId']]) |
+    grepl(ahccd[['stationName']], climateSummary[['stationName']]) |
+    (geodDist(longitude1 = as.numeric(ahccd[['longitude']]),
+              latitude1 = as.numeric(ahccd[['latitude']]),
+              longitude2 = as.numeric(climateSummary[['longitude']]),
+              latitude2 = as.numeric(climateSummary[['latitude']])) < 25)
+  if(ok){
+    adata <- ahccd[['data']]
+    cdata <- climateSummary[['data']]
+    okadd <- apply(cdata, 1, function(k) {!(k[['year']] %in% adata[['year']] & k[['month']] %in% adata[['month']])})
+    okcols <- names(cdata) %in% c('year', 'month', 'meanTemperature')
+    cdatadd <- data.frame(cdata[okadd,okcols], flag = rep('u', dim(cdata[okadd,])[1]))
+    # re-name 'meanTemperature' to be able to rbind
+    names(cdatadd)[names(cdatadd) %in% 'meanTemperature'] <- 'temperature'
+    # rbind ahccd and climateSummary
+    data <- rbind(adata, cdatadd)
+    list(stationId = ahccd[['stationId']],
+         climateStationId = climateSummary[['stationId']],
+         stationName = ahccd[['stationName']],
+         climateStationName = climateSummary[['stationName']],
+         province = ahccd[['province']],
+         climateProvince = climateSummary[['province']],
+         longitude = ahccd[['longitude']],
+         climateLongitude = climateSummary[['longitude']],
+         latitude = ahccd[['latitude']],
+         climateLatitude = climateSummary[['latitude']],
+         elevation = ahccd[['elevation']],
+         climateElevation = climateSummary[['elevation']],
+         updatedTo = ahccd[['updatedTo']],
+         data = data)
+  }
 }

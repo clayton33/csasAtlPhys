@@ -4,7 +4,15 @@
 \alias{download.climateSummaries}
 \title{Download a Cache a Met Climate Summary File}
 \usage{
-download.climateSummaries(year, month, province, type, destdir = ".", destfile)
+download.climateSummaries(
+  year,
+  month,
+  province,
+  type,
+  destdir = ".",
+  destfile,
+  force = TRUE
+)
 }
 \arguments{
 \item{year}{A number giving the year of interest.}
@@ -22,6 +30,9 @@ If not supplied, "." is used, i.e. the data file is stored in the present workin
 \item{destfile}{Optional string indicating the name of the file. If not supplied, the file
 name is constructed from the other parameters of the function call, so subsequent calls with
 the same parameters will yield the same result, thus providing the key to the caching scheme.}
+
+\item{force}{Logical value indicating whether to force a download, even if the file already
+exists locally.}
 }
 \description{
 Data are downloaded from the Environment and Climate Change Canada's

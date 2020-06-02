@@ -1,3 +1,36 @@
+#' @title Download temperature AHCCD data files
+#'
+#' @description This function downloads the two files associated with the Adjusted and Homogenized
+#' Canadian Climate Data (AHCCD) mean temperature data.
+#'
+#' @details Download the AHCCD mean temperature data and its associated station excel file.
+#'
+#' @param destdir Optional string indicating the directory in which to store downloaded files.
+#' If not supplied, "." is used, i.e. the data file is stored in the present working directory.
+#'
+#' @author Chantelle Layton
+#'
+#' @importFrom utils download.file
+#'
+#' @export
+#'
+
+download.ahccd <- function(destdir = '.') {
+
+  ftp <- 'ftp://ccrp.tor.ec.gc.ca/pub/AHCCD/'
+  # define two files associated with temperature.
+  ftpFile <- 'Homog_monthly_mean_temp.zip'
+  ftpStnFile <- 'Temperature_Stations.xls'
+
+  if(!dir.exists(destdir)){
+    dir.create(destdir, recursive = TRUE)
+  }
+
+  download.file(url = paste0(ftp, ftpFile), destfile = paste(destdir, ftpFile, sep = '/'), mode = 'wb')
+  download.file(url = paste0(ftp, ftpStnFile), destfile = paste(destdir, ftpStnFile, sep = '/'), mode = 'wb')
+}
+
+
 #' @title Read AHCCD station data file
 #'
 #' @description Read in the file which defines all stations included in the Adjusted and Homogenized
@@ -48,9 +81,11 @@ read.ahccd.stations <- function(file){
 #' @param latitude optional numerical value containing the latitude in decimal degrees,
 #' positive in the northern hemisphere.
 #' @param elevation optional numerical value containing the elevation of the station in meters.
+#'
 #' @importFrom utils read.table
 #'
 #' @return named list of data for each station provided in stns
+#' @export
 
 read.ahccd <- function(file, longitude = NULL, latitude = NULL, elevation = NULL){
   lines <- readLines(file, encoding = 'UTF-8')
@@ -93,4 +128,78 @@ read.ahccd <- function(file, longitude = NULL, latitude = NULL, elevation = NULL
        elevation = elevation,
        updatedTo = metaEng[7],
        data = df)
+}
+
+#' @title Find missing air temperature data
+#'
+#' @description This function identifies missing monthly data from the last date to
+#' the present date
+#'
+#' @param ahccd a list containing data that is read in using `read.ahcdd`
+#'
+#' @return a data.frame of year, month, province, stationId, stationName
+#'
+#' @importFrom utils tail
+#'
+#' @export
+#'
+
+identifyMissingAhccd <- function(ahccd){
+  lastDataTime <- as.POSIXct(paste(tail(ahccd[['data']][['year']],1),
+                                   tail(ahccd[['data']][['month']],1),
+                                   '01',
+                                   sep = '-'),
+                             format = '%Y-%m-%d', tz = 'UTC') # note that the day doesn't really matter
+  currentTime <- checkCurrentTimeForClimateSummary(as.POSIXlt(presentTime()))
+  missingTime <- as.POSIXlt(seq(lastDataTime, currentTime, by = 'month')[-1]) # omit the first one since it's the last data time
+  n <- length(missingTime)
+  data.frame(year = missingTime$year + 1900,
+             month = missingTime$mon + 1,
+             province = rep(ahccd[['province']], n),
+             stationId = rep(ahccd[['stationId']], n),
+             stationName = rep(ahccd[['stationName']], n))
+
+}
+
+#' Check current time
+#'
+#' @description This function checks a provided time, and returns the most recent date
+#' available for monthly climate data.
+#'
+#' @param x a POSIXlt formatted time
+#'
+#' @return a POSIXct formatted time
+#'
+#' @author Chantelle Layton
+#'
+#' @export
+
+
+checkCurrentTimeForClimateSummary <- function(x) {
+  year <- x$year + 1900
+  month <- x$mon + 1 # so 1 = jan
+  {
+    if (month == 1) {
+      year <- year - 1
+      if (x$mday < 5) {
+        month <- 11
+      } else {
+        month <- 12
+      }
+    } else if (month == 2) {
+      if (x$mday < 5) {
+        month <- 12
+        year <- year - 1
+      } else {
+        month <- month - 1
+      }
+    } else {
+      if (x$mday < 5) {
+        month <- month - 2
+      } else {
+        month <- month - 1
+      }
+    }
+  }
+  as.POSIXct(paste(year, month, '01', sep = '-'), format = '%Y-%m-%d', tz = 'UTC')
 }

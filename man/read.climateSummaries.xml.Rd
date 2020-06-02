@@ -10,7 +10,7 @@ read.climateSummaries.xml(file)
 \item{file}{a connection or a character string giving the name of the file to load.}
 }
 \value{
-a data.frame containing all of the data, except for snow
+a data.frame containing all of the data, except for snow and sunshine.
 }
 \description{
 Read xml formatted climate summary files from Environment and Climate Change Canada.
