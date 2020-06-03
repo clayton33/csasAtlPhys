@@ -113,9 +113,9 @@ read.ahccd <- function(file, longitude = NULL, latitude = NULL, elevation = NULL
   flag <- as.vector(t(mm[,okflag]))
   year <- unlist(lapply(mm[,names(mm) %in% 'Year'], rep, times = 12))
   month <- rep(1:12, times = dim(mm)[1])
-  df <- data.frame(year = year,
-                   month = month,
-                   temperature = data, # wondering what to name this, obviously this fn could be used to read other ahccd data...
+  df <- data.frame(year = as.numeric(year),
+                   month = as.numeric(month),
+                   temperature = as.numeric(data), # wondering what to name this, obviously this fn could be used to read other ahccd data...
                    flag = flag)
   metaEng <- trimws(strsplit(lines[grep('^\\d+,(\\w+\\s)*?\\s+,\\s+\\w+, station( not)? joined', lines)],
                              split = ',')[[1]],
@@ -123,9 +123,9 @@ read.ahccd <- function(file, longitude = NULL, latitude = NULL, elevation = NULL
   list(stationId = metaEng[1],
        stationName = metaEng[2],
        province = metaEng[3],
-       latitude = latitude,
-       longitude = longitude,
-       elevation = elevation,
+       latitude = as.numeric(latitude),
+       longitude = as.numeric(longitude),
+       elevation = as.numeric(elevation),
        updatedTo = metaEng[7],
        data = df)
 }

@@ -173,17 +173,17 @@ read.climateSummaries.xml <- function(file)
 
   df <- data.frame(stationName = stationName,
                    stationId = stationId,
-                   year = year,
-                   month = month,
-                   latitude = latitude,
-                   longitude = longitude,
+                   year = as.numeric(year),
+                   month = as.numeric(month),
+                   latitude = as.numeric(latitude),
+                   longitude = as.numeric(longitude),
                    province = province,
-                   meanTemperature = meanTemperature,
-                   maxTemperature = maxTemperature,
-                   minTemperature = minTemperature,
-                   precipitation = precipitation,
-                   degreeDaysHeating = degreeDaysHeating,
-                   degreeDaysCooling = degreeDaysCooling,
+                   meanTemperature = as.numeric(meanTemperature),
+                   maxTemperature = as.numeric(maxTemperature),
+                   minTemperature = as.numeric(minTemperature),
+                   precipitation = as.numeric(precipitation),
+                   degreeDaysHeating = as.numeric(degreeDaysHeating),
+                   degreeDaysCooling = as.numeric(degreeDaysCooling),
                    stringsAsFactors = FALSE)
   df
 }
