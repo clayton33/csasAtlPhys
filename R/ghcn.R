@@ -92,7 +92,7 @@ read.ghcn <- function(dataFile, metadataFile, stationId = NULL){
     qcflag <- substr(rl, start = idx2[3], idx2[3])
     #dsflag <- substr(rl, start = idx2[4], idx2[4])
     #headernames <- c(months[i], paste0(months[i], flagnames, 'flags'))
-    mdf <- data.frame(year = as.numeric(year), month = rep(i, length(year)), temperature = as.numeric(data), flag = qcflag)
+    mdf <- data.frame(year = as.numeric(year), month = rep(i, length(year)), temperature = as.numeric(data), flag = qcflag, stringsAsFactors = FALSE)
     alldata <- rbind(alldata, mdf)
   }
   alldata <- alldata[with(alldata, order(year,month)), ]

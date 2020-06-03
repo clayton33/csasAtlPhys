@@ -235,3 +235,145 @@ findValidSnowCrabGridPoints <- function(longitude, latitude, pressure = NULL,
   }
 
 }
+
+#' @title Calculate monthly climatology
+#'
+#' @description This function calculates the monthly climatology
+#'
+#' @param d a data.frame containing at least a column named month and one other variable
+#' @param climatologyYears a vector of length two indicating the range of years
+#' to calculate the climatology
+#'
+#' @return the results of aggregate
+#'
+#' @author Chantelle Layton
+#'
+#' @importFrom stats aggregate
+#'
+#' @export
+
+monthlyClimatology <- function(d, climatologyYears){
+  okclim <- d$year >= climatologyYears[1] & d$year <= climatologyYears[2]
+  dd <- d[okclim, ]
+  mm <- aggregate(temperature ~ month, dd, mean, na.rm = TRUE)
+  mm
+}
+
+#' @title Calculate monthly climatology standard deviation
+#'
+#' @description This function calculates the monthly climatology standard deviation.
+#'
+#' @param d a data.frame containing at least a column named month and one other variable
+#' @param climatologyYears a vector of length two indicating the range of years
+#'
+#' @return the results of the aggregate function, a data.frame with columns `month` and `temperature`
+#'
+#' @details Monthly climatology standard deviation is calculated by taking the values within the
+#' defined climatology range and finding the standard deviation for each month.
+#'
+#' @author Chantelle Layton
+#'
+#' @importFrom stats sd
+#' @importFrom stats aggregate
+#'
+#' @export
+
+monthlyStandardDeviation <- function(d, climatologyYears){
+  okclim <- d$year >= climatologyYears[1] & d$year <= climatologyYears[2]
+  dd <- d[okclim, ]
+  mm <- aggregate(temperature ~ month, dd, sd, na.rm = TRUE)
+  mm
+}
+
+#' @title Caclulate monthly anomaly values
+#'
+#' @description This function calculates the monthly anomaly.
+#'
+#' @param d a data.frame containing at least a column named year, month, and one other variable
+#' @param climatologyYears a vector of length two indicating the range of years
+#' to calculate the climatology.
+#' @param normalizedAnomaly a logical value indicating whether or not to also calculated the
+#' normalized anomaly. Default is `TRUE`.
+#'
+#' @return a data.frame containing columns `year`, `month`, `anomaly`, and `normalizedAnomaly`
+#' if desired.
+#'
+#' @author Chantelle Layton
+#'
+#' @export
+#'
+
+monthlyAnomaly <- function(d, climatologyYears, normalizedAnomaly = TRUE){
+  mm <- monthlyClimatology(d, climatologyYears)
+  months <- 1:12
+  mok <- lapply(months, function(k) which(d$month == k))
+  anomaly <- vector(length = length(d$year))
+  for (i in 1:length(months)){
+    anomaly[mok[[i]]] <- d$temperature[mok[[i]]] - mm$temperature[i]
+  }
+  if(!normalizedAnomaly) {
+    cbind(d, anomaly = anomaly)
+  } else {
+    cbind(monthlyNormalizedAnomaly(d, climatologyYears), anomaly = anomaly)
+  }
+
+}
+
+#' @title Caclulate monthly normalized anomaly values
+#'
+#' @description This function calculates the monthly normalized anomaly.
+#'
+#' @param d a data.frame containing at least a column named year, month, and one other variable
+#' @param climatologyYears a vector of length two indicating the range of years
+#' to calculate the climatology.
+#'
+#' @return a data.frame containing columns `year`, `month`, and `normalizedAnomaly`
+#'
+#' @details To calculated the normalized anomaly, two climatology values are required, those being the
+#' monthly and standard deviation. The normalized anomaly values are calculated
+#' by subtracting the monthly climatology value from the monthly value, and the dividing it
+#' by the monthly climatology standard deviation.
+#'
+#' @author Chantelle Layton
+#'
+#' @export
+#'
+
+monthlyNormalizedAnomaly <- function(d, climatologyYears){
+  mm <- monthlyClimatology(d, climatologyYears)
+  msd <- monthlyStandardDeviation(d, climatologyYears)
+  months <- 1:12
+  mok <- lapply(months, function(k) which(d$month == k))
+  anomaly <- vector(length = length(d$year))
+  for (i in 1:length(months)){
+    anomaly[mok[[i]]] <- (d$temperature[mok[[i]]] - mm$temperature[i]) / msd$temperature[i]
+  }
+  cbind(d, normalizedAnomaly = anomaly)
+}
+
+#' @title Calculate annual anomaly values
+#'
+#' @description This function calculates annual anomaly values from provided
+#' monthly anomaly values.
+#'
+#' @param d a data.frame containing year, month, and at least anomaly, and optionally normalizedAnomaly
+#' @param normalizedAnomaly a logical value indicating whether or not to calculate the
+#' normalized annual anomaly as well, the default is `TRUE`
+#'
+#' @return a data.frame with year, anomaly, and optionally normalizedAnomaly
+#'
+#' @author Chantelle Layton
+#'
+#' @importFrom stats aggregate
+#'
+#' @export
+
+annualAnomaly <- function(d, normalizedAnomaly = TRUE){
+  aa <- aggregate(anomaly ~ year, d, mean, na.rm = TRUE)
+  if(normalizedAnomaly){
+    ana <- aggregate(normalizedAnomaly ~ year, d, mean, na.rm = TRUE)
+    cbind(aa, normalizedAnomaly = ana$normalizedAnomaly)
+  } else {
+    aa
+  }
+}
