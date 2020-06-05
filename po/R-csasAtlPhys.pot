@@ -1,0 +1,152 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: csasAtlPhys 0.0.9000\n"
+"POT-Creation-Date: 2020-06-05 09:51\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+
+msgid "Calculating area average not using bins has not been coded. Contact the author"
+msgstr ""
+
+msgid "Must provide longitude and latitude."
+msgstr ""
+
+msgid "Must provide pressure."
+msgstr ""
+
+msgid "Please provide a stationId, code not developed yet to give all data due to size."
+msgstr ""
+
+msgid "Temperature anomaly"
+msgstr ""
+
+msgid "Salinity anomaly"
+msgstr ""
+
+msgid "anomaly"
+msgstr ""
+
+msgid "Normalized anomaly"
+msgstr ""
+
+msgid "Annual air temperature anomaly"
+msgstr ""
+
+msgid "Average air temperature anomaly"
+msgstr ""
+
+msgid "Please provide a valid item, if item desired has not been implemented, please contact creator."
+msgstr ""
+
+msgid "Emerald Basin"
+msgstr ""
+
+msgid "Sable Island"
+msgstr ""
+
+msgid "Georges Bank"
+msgstr ""
+
+msgid "Laurentian Channel"
+msgstr ""
+
+msgid "Gulf of Maine"
+msgstr ""
+
+msgid "Sydney"
+msgstr ""
+
+msgid "Yarmouth"
+msgstr ""
+
+msgid "Saint John"
+msgstr ""
+
+msgid "Halifax"
+msgstr ""
+
+msgid "Boston"
+msgstr ""
+
+msgid "Cabot Strait"
+msgstr ""
+
+msgid "Misaine Bank"
+msgstr ""
+
+msgid "Lurcher Shoal"
+msgstr ""
+
+msgid "E Georges Bank"
+msgstr ""
+
+msgid "St. Anns Bank"
+msgstr ""
+
+msgid "North East Channel"
+msgstr ""
+
+msgid "At a minimum, must supply a year."
+msgstr ""
+
+msgid "No files found for"
+msgstr ""
+
+msgid "and month"
+msgstr ""
+
+msgid "."
+msgstr ""
+
+msgid "year or month was not provided, downloading the most recent file."
+msgstr ""
+
+msgid "Please provide a month."
+msgstr ""
+
+msgid "Province abbreviation '"
+msgstr ""
+
+msgid "' is not correct, try one of the following:"
+msgstr ""
+
+msgid "type '"
+msgstr ""
+
+msgid "' is not permitted ; try either 'csv' or 'xml'"
+msgstr ""
+
+msgid "Excel file formatting for this data is not ideal, save an alternate format."
+msgstr ""
+
+msgid "File format not yet supported."
+msgstr ""
+
+msgid "Not downloading \""
+msgstr ""
+
+msgid "\" because it is already present in the \""
+msgstr ""
+
+msgid "\" directory"
+msgstr ""
+
+msgid "Downloaded file stored as '"
+msgstr ""
+
+msgid "'"
+msgstr ""
+
+msgid "Please provide either a year or ship."
+msgstr ""
+
+msgid "years"
+msgstr ""
+
+msgid "average"
+msgstr ""

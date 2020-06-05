@@ -153,17 +153,17 @@ join.ghcn <- function(ghcn1, ghcn2, minYear = NULL){
     if(!is.null(minYear)){
       data <- data[data$year > minYear, ]
     }
-    list(stationId1 = ghcn1[['stationId']],
+    list(stationId = ghcn1[['stationId']],
          stationId2 = ghcn2[['stationId']],
-         stationName1 = ghcn1[['stationName']],
+         stationName = ghcn1[['stationName']],
          stationName2 = ghcn2[['stationName']],
-         province1 = ghcn1[['province']],
+         province = ghcn1[['province']],
          province2 = ghcn2[['province']],
-         longitude1 = ghcn1[['longitude']],
+         longitude = ghcn1[['longitude']],
          longitude2 = ghcn2[['longitude']],
-         latitude1 = ghcn1[['latitude']],
+         latitude = ghcn1[['latitude']],
          latitude2 = ghcn2[['latitude']],
-         elevation1 = ghcn1[['elevation']],
+         elevation = ghcn1[['elevation']],
          elevation2 = ghcn2[['elevation']],
          data = data)
   }

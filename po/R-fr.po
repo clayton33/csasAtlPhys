@@ -1,0 +1,167 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: csasAtlPhys 0.0.9000\n"
+"POT-Creation-Date: 2020-06-05 09:51\n"
+"PO-Revision-Date: 2020-06-03 19:38-0300\n"
+"Last-Translator: <EMAIL@ADDRESS>\n"
+"Language-Team: Language R-fr\n"
+"Language: R-fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid ""
+"Calculating area average not using bins has not been coded. Contact the "
+"author"
+msgstr ""
+"Calculating area average not using bins has not been coded. Contact the "
+"author"
+
+msgid "Must provide longitude and latitude."
+msgstr "Must provide longitude and latitude."
+
+msgid "Must provide pressure."
+msgstr "Must provide pressure."
+
+msgid ""
+"Please provide a stationId, code not developed yet to give all data due to "
+"size."
+msgstr ""
+"Please provide a stationId, code not developed yet to give all data due to "
+"size."
+
+msgid "Temperature anomaly"
+msgstr "Anomalie de la température"
+
+msgid "Salinity anomaly"
+msgstr "Anomalie de la salinité"
+
+msgid "anomaly"
+msgstr "Anomalie de"
+
+msgid "Normalized anomaly"
+msgstr "Anomalie normalisée"
+
+msgid "Annual air temperature anomaly"
+msgstr "Anomalie annuelle de la température de l'air"
+
+msgid "Average air temperature anomaly"
+msgstr "Anomalie de la température moyenne"
+
+msgid ""
+"Please provide a valid item, if item desired has not been implemented, "
+"please contact creator."
+msgstr ""
+"Please provide a valid item, if item desired has not been implemented, "
+"please contact creator."
+
+msgid "Emerald Basin"
+msgstr "Bassin d'Émeraude"
+
+msgid "Sable Island"
+msgstr "Île de Sable"
+
+msgid "Georges Bank"
+msgstr "Banc de Georges"
+
+msgid "Laurentian Channel"
+msgstr "Chenal Laurentien"
+
+msgid "Gulf of Maine"
+msgstr "Golfe du Maine"
+
+msgid "Sydney"
+msgstr ""
+
+msgid "Yarmouth"
+msgstr ""
+
+msgid "Saint John"
+msgstr "Saint-Jean"
+
+msgid "Halifax"
+msgstr ""
+
+msgid "Boston"
+msgstr ""
+
+msgid "Cabot Strait"
+msgstr "Détroit de Cabot"
+
+msgid "Misaine Bank"
+msgstr "Banc de Misaine Néo"
+
+msgid "Lurcher Shoal"
+msgstr "Haut-fond Lurcher"
+
+msgid "E Georges Bank"
+msgstr "E banc de Georges"
+
+msgid "St. Anns Bank"
+msgstr "Banc de Sainte-Anne"
+
+msgid "North East Channel"
+msgstr "Chenal nord-est"
+
+msgid "At a minimum, must supply a year."
+msgstr "At a minimum, must supply a year."
+
+msgid "No files found for"
+msgstr "No files found for"
+
+msgid "and month"
+msgstr "and month"
+
+msgid "."
+msgstr "."
+
+msgid "year or month was not provided, downloading the most recent file."
+msgstr "year or month was not provided, downloading the most recent file."
+
+msgid "Please provide a month."
+msgstr "Please provide a month."
+
+msgid "Province abbreviation '"
+msgstr "Province abbreviation '"
+
+msgid "' is not correct, try one of the following:"
+msgstr "' is not correct, try one of the following:"
+
+msgid "type '"
+msgstr "type '"
+
+msgid "' is not permitted ; try either 'csv' or 'xml'"
+msgstr "' is not permitted ; try either 'csv' or 'xml'"
+
+msgid ""
+"Excel file formatting for this data is not ideal, save an alternate format."
+msgstr ""
+"Excel file formatting for this data is not ideal, save an alternate format."
+
+msgid "File format not yet supported."
+msgstr "File format not yet supported."
+
+msgid "Not downloading \""
+msgstr "Not downloading \""
+
+msgid "\" because it is already present in the \""
+msgstr "\" because it is already present in the \""
+
+msgid "\" directory"
+msgstr "\" directory"
+
+msgid "Downloaded file stored as '"
+msgstr "Downloaded file stored as '"
+
+msgid "'"
+msgstr "'"
+
+msgid "Please provide either a year or ship."
+msgstr "Please provide either a year or ship."
+
+msgid "years"
+msgstr "années"
+
+msgid "average"
+msgstr "moyenne"
