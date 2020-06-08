@@ -43,6 +43,15 @@
 #' 4w, 4x, and 4v. Each list element contains \code{longitude} and \code{latitude}.
 "summerGroundfishOaxNafoPolygons"
 
+#' Summer groundfish map plot limits
+#'
+#' Various limits for plotting summer groundfish maps.
+#'
+#' @format a list of \code{limits}, \code{contourLevelLimits}, and \code{contourLevelLimits},
+#' each having defined items for \code{temperature}, \code{temperatureAnomaly}, \code{salinity},
+#' and \code{salinityAnomaly}.
+"summerGroundfishPlotLimits"
+
 #' Winter groundfish longitude latitude grid.
 #'
 #' Winter groundfish longitude latitude grid used for optimal estimation analysis (oax)
