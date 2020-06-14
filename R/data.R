@@ -277,3 +277,12 @@
 #'
 #' @format a data frame with columns \code{year}, \code{month}, \code{temperature}
 "sstInSituStAndrews"
+
+#' NAFO zones for Maritimes regions
+#'
+#' NAFO zone definitions that have been subset to those only concerned with in the Maritimes
+#' region. The shapefile was downloaded from the NAFO website.
+#'
+#' @format a list for each NAFO zone, where each zone has \code{zoneName}, \code{longitude}, and
+#' \code{latitude}
+"nafoZones"

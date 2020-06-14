@@ -21,7 +21,7 @@ contourLevels <- list(temperature = c(seq(-2,3,1), seq(14,20,2), seq(4,13,1)),
 contourLevelLimits <- list(temperature = c(2,14),
                            temperatureAnomaly = c(-2,3),
                            salinity = c(30,35.5),
-                           salinityAnomaly = c(-0.4, 0.4)
+                           salinityAnomaly = c(-0.6, 0.6)
                            #sigmaTheta = c(23, 27.5),
                            #sigmaThetaAnomaly = c(-2.5, 2.5)
                            )

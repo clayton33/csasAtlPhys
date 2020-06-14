@@ -24,6 +24,7 @@
 #' @importFrom oce lonlat2utm
 #' @importFrom oce geodXy
 #'
+#' @export
 
 as.oax <- function(x, var, longitude0, latitude0, addDayNumber = FALSE, onlyBottom = FALSE, noise = 0.1, utm = TRUE, zone = 19){
   # put in some checks here

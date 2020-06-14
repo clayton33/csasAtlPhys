@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: csasAtlPhys 0.0.9000\n"
-"POT-Creation-Date: 2020-06-05 09:51\n"
+"POT-Creation-Date: 2020-06-10 16:11\n"
 "PO-Revision-Date: 2020-06-03 19:38-0300\n"
 "Last-Translator: <EMAIL@ADDRESS>\n"
 "Language-Team: Language R-fr\n"
@@ -38,6 +38,10 @@ msgid "Salinity anomaly"
 msgstr "Anomalie de la salinité"
 
 msgid "anomaly"
+msgstr "anomalie"
+
+#, fuzzy
+msgid "anomaly of"
 msgstr "Anomalie de"
 
 msgid "Normalized anomaly"
@@ -61,6 +65,9 @@ msgstr "Bassin d'Émeraude"
 
 msgid "Sable Island"
 msgstr "Île de Sable"
+
+msgid "Georges Basin"
+msgstr "Bassin de Georges"
 
 msgid "Georges Bank"
 msgstr "Banc de Georges"
@@ -86,8 +93,17 @@ msgstr ""
 msgid "Boston"
 msgstr ""
 
+msgid "St. Andrews"
+msgstr "St. Andrews"
+
 msgid "Cabot Strait"
 msgstr "Détroit de Cabot"
+
+msgid "Browns Bank"
+msgstr "Banc de Browns"
+
+msgid "Louisbourg"
+msgstr ""
 
 msgid "Misaine Bank"
 msgstr "Banc de Misaine Néo"
@@ -103,6 +119,73 @@ msgstr "Banc de Sainte-Anne"
 
 msgid "North East Channel"
 msgstr "Chenal nord-est"
+
+#, fuzzy
+msgid ""
+"Please provide a valid location, if you believe the location has not been "
+"implemented, please contact creator."
+msgstr ""
+"Please provide a valid item, if item desired has not been implemented, "
+"please contact creator."
+
+msgid "Filename"
+msgstr "Nom du fichier"
+
+msgid "Creation date"
+msgstr "Date de création"
+
+msgid "Contact"
+msgstr "Contact"
+
+msgid "Description"
+msgstr "Description"
+
+msgid "Longitude"
+msgstr "Longitude"
+
+msgid "Latitude"
+msgstr "Latitude"
+
+msgid "Station name"
+msgstr "Nom de station"
+
+msgid "Station ID"
+msgstr "Identifiant de station"
+
+msgid "Elevation"
+msgstr "Élévation"
+
+msgid "Slope"
+msgstr "Pente"
+
+msgid "Standard deviation"
+msgstr "Écart-type"
+
+msgid "Climatological standard deviation"
+msgstr "Écart-type climatologique"
+
+msgid "Climatological mean"
+msgstr "Moyenne climatologique"
+
+msgid "Confidence interval"
+msgstr "Intervalle de confiance"
+
+msgid "Climatological reference years"
+msgstr "Années de référence climatologique"
+
+#, fuzzy
+msgid ""
+"Please provide a valid item, if you believe the desired has not been "
+"implemented, please contact creator."
+msgstr ""
+"Please provide a valid item, if item desired has not been implemented, "
+"please contact creator."
+
+msgid "normalizedAnomaly"
+msgstr "anomalieNormalisée"
+
+msgid "year"
+msgstr "année"
 
 msgid "At a minimum, must supply a year."
 msgstr "At a minimum, must supply a year."
@@ -165,3 +248,13 @@ msgstr "années"
 
 msgid "average"
 msgstr "moyenne"
+
+#, fuzzy
+msgid "Please provide a filename"
+msgstr "Please provide a month."
+
+msgid "Please provide a person of contact and their e-mail address"
+msgstr ""
+
+#~ msgid "Date created"
+#~ msgstr "Date de création"

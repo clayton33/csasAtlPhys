@@ -143,6 +143,7 @@ plotAnnualAnomaly <- function(x, y, xlim, ylim, xlab = TRUE, climatologyYears, y
   }
   if(plotLmTrend){
     slope <- sprintf('%.1f', round(unname(coef(lmResults)[2]) * 100, 1))
+    slope <- ifelse(Sys.getenv('LANG') == 'fr', gsub('\\.', ',', slope), slope) # comma instead of period for french
     print(slope)
     unit <- bquote(degree * 'C')
     yearlab <- gettext('years', domain = 'R-csasAtlPhys')

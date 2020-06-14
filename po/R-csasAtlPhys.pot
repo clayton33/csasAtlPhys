@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: csasAtlPhys 0.0.9000\n"
-"POT-Creation-Date: 2020-06-05 09:51\n"
+"POT-Creation-Date: 2020-06-10 16:11\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -31,6 +31,9 @@ msgstr ""
 msgid "anomaly"
 msgstr ""
 
+msgid "anomaly of"
+msgstr ""
+
 msgid "Normalized anomaly"
 msgstr ""
 
@@ -47,6 +50,9 @@ msgid "Emerald Basin"
 msgstr ""
 
 msgid "Sable Island"
+msgstr ""
+
+msgid "Georges Basin"
 msgstr ""
 
 msgid "Georges Bank"
@@ -73,7 +79,16 @@ msgstr ""
 msgid "Boston"
 msgstr ""
 
+msgid "St. Andrews"
+msgstr ""
+
 msgid "Cabot Strait"
+msgstr ""
+
+msgid "Browns Bank"
+msgstr ""
+
+msgid "Louisbourg"
 msgstr ""
 
 msgid "Misaine Bank"
@@ -89,6 +104,63 @@ msgid "St. Anns Bank"
 msgstr ""
 
 msgid "North East Channel"
+msgstr ""
+
+msgid "Please provide a valid location, if you believe the location has not been implemented, please contact creator."
+msgstr ""
+
+msgid "Filename"
+msgstr ""
+
+msgid "Creation date"
+msgstr ""
+
+msgid "Contact"
+msgstr ""
+
+msgid "Description"
+msgstr ""
+
+msgid "Longitude"
+msgstr ""
+
+msgid "Latitude"
+msgstr ""
+
+msgid "Station name"
+msgstr ""
+
+msgid "Station ID"
+msgstr ""
+
+msgid "Elevation"
+msgstr ""
+
+msgid "Slope"
+msgstr ""
+
+msgid "Standard deviation"
+msgstr ""
+
+msgid "Climatological standard deviation"
+msgstr ""
+
+msgid "Climatological mean"
+msgstr ""
+
+msgid "Confidence interval"
+msgstr ""
+
+msgid "Climatological reference years"
+msgstr ""
+
+msgid "Please provide a valid item, if you believe the desired has not been implemented, please contact creator."
+msgstr ""
+
+msgid "normalizedAnomaly"
+msgstr ""
+
+msgid "year"
 msgstr ""
 
 msgid "At a minimum, must supply a year."
@@ -149,4 +221,10 @@ msgid "years"
 msgstr ""
 
 msgid "average"
+msgstr ""
+
+msgid "Please provide a filename"
+msgstr ""
+
+msgid "Please provide a person of contact and their e-mail address"
 msgstr ""
