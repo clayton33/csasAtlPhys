@@ -226,3 +226,94 @@ getData <- function(item){
   }
   label
 }
+
+#' @title Make cruise map title
+#'
+#' @description This function constructs a nice title that includes the
+#' mission number, with the long ship name, the date ranges, and
+#' the number of stations.
+#'
+#' @param ctd a list of ctd stations
+#'
+#' @author Chantelle Layton
+#'
+#' @export
+#'
+
+makeCruiseMapTitle <- function(ctd) {
+  # get the time from each ctd
+  time <- as.POSIXct(unlist(lapply(ctd, function(k) k[['startTime']])), origin = '1970-01-01', tz = 'UTC')
+  # obtain the cruise number and tease it apart
+  # into ship, year, and number
+  cruiseNumber <- unique(unlist(lapply(ctd, function(k) k[['cruiseNumber']])))
+  ship <- lapply(cruiseNumber, function(k) ifelse(nchar(k) == 10 , substr(k, start = 1, stop = 3),
+                                                  substr(k, start = 1, stop = 2)))
+  year <- lapply(cruiseNumber, function(k) ifelse(nchar(k) == 10 , substr(k, start = 4, stop = 7),
+                                                  substr(k, start = 3, stop = 6)))
+  number <- lapply(cruiseNumber, function(k) ifelse(nchar(k) == 10 , substr(k, start = 8, stop = 10),
+                                                    substr(k, start = 7, stop = 9)))
+
+  lenship <- length(unique(unlist(ship)))
+  lenyear <- length(unique(unlist(year)))
+  lennumber <- length(unique(unlist(number)))
+  if(length(lenship) < length(ship) &
+     length(lenyear) < length(year) &
+     length(number) == length(number)){
+    shipname <- getShipnameLong(unique(unlist(ship)))
+    numbers <- paste0(unique(unlist(number)), collapse ='/')
+    shipnamenumber <- paste(shipname, numbers)
+  } else {
+    cship <- mapply(function(x, y) c(getShipnameLong(x), y), ship, number)
+    shipnamenumber <- paste(apply(cship, 2, paste, collapse = ' '), collapse = ' , ')
+  }
+
+  timerange <- as.POSIXlt(range(time))
+  if(timerange$year[1] == timerange$year[2]){
+    start <- format(range(time)[1], '%d %b')
+    end <- format(range(time)[2], '%d %b %Y')
+  } else {
+    start <- format(range(time)[1], '%d %b, %Y')
+    end <- format(range(time)[2], '%d %b %Y')
+  }
+  # will probably eventually need to figure out the cex if there are two different ships
+  # and the time ranges over 2 years
+  nstn <- length(ctd)
+  bquote(.(shipnamenumber) * ',' ~ .(start) ~ .(gettext('to', domain = 'R-csasAtlPhys')) ~ .(end) * ',' ~ .(nstn) ~ 'stations')
+}
+
+#' @title Get the long name of a ship abbreviation
+#'
+#' @description This function takes an abbreviation of a ship and returns the long name.
+#'
+#' @param x a character string indicating the abbreviation of a ship
+#'
+#' @author Chantelle Layton
+#'
+#' @export
+#'
+getShipnameLong <- function(x){
+  long <- NULL
+  if(x == 'COR'){
+    long <- 'R/V Coriolis II'
+  }
+  if (x == 'HUD'){
+    long <- paste(gettext('CCGS', domain = 'R-csasAtlPhys'),  'Hudson')
+  }
+  if ( x == 'NED'){
+    long <- paste(gettext('CCGS', domain = 'R-csasAtlPhys'),  'Alfred Needler')
+  }
+  if (x == 'EN'){
+    long <- 'R/V Endeavor'
+  }
+  if (x == 'TEL'){
+    long <- paste(gettext('CCGS', domain = 'R-csasAtlPhys'),  'Teleost')
+  }
+
+  if(is.null(long)){
+    cat('Ship abbreviation not found, please contact author and provide abbreviation and long name', sep = '\n')
+    cat('Returning abbreviation')
+    x
+  } else {
+    long
+  }
+}

@@ -88,6 +88,15 @@
 #' \code{sigmat}, \code{sigmat_error}.
 "winterGroundfishClimatology1980to2010"
 
+#' Winter groundfish map plot limits
+#'
+#' Various limits for plotting summer groundfish maps.
+#'
+#' @format a list of \code{limits}, \code{contourLevelLimits}, and \code{contourLevelLimits},
+#' each having defined items for \code{temperature}, \code{temperatureAnomaly}, \code{salinity},
+#' and \code{salinityAnomaly}.
+"winterGroundfishPlotLimits"
+
 #' Snow crab longitude latitude grid.
 #'
 #' Snow crab longitude latitude grid used for optimal estimation analysis (oax)
@@ -286,3 +295,11 @@
 #' @format a list for each NAFO zone, where each zone has \code{zoneName}, \code{longitude}, and
 #' \code{latitude}
 "nafoZones"
+
+#' Anomaly colours
+#'
+#' Color definitions for anomaly plots. Note that the breaks are one unit longer than the color
+#' map. This is fine when supplying it to oce's colorMap function
+#'
+#' @format a list of \code{colors} and \code{breaks}
+"anomalyColors"

@@ -47,7 +47,9 @@ as.oax <- function(x, var, longitude0, latitude0, addDayNumber = FALSE, onlyBott
     p <- unlist(lapply(x, function(k) k[['pressure']]))
     data <- unlist(lapply(x, function(k) k[[var]]))
     noised <- rep(noise, length(data))
-    time <- unlist(lapply(x, function(k) rep(k[['time']], length(k[['pressure']]))))
+    time <- unlist(lapply(x, function(k) {if(length(k[['time']]) == length(k[['pressure']])){
+                                              k[['time']]} else {
+                                              rep(k[['time']], length(k[['pressure']]))}}))
   }
 
   # calculate xy coordinates
@@ -76,5 +78,68 @@ as.oax <- function(x, var, longitude0, latitude0, addDayNumber = FALSE, onlyBott
     colnames(d) <- c('xDistance', 'yDistance', 'pressure', var, 'noise')
   }
 
+  d
+}
+
+#' @title Create deckfile for OAX
+#'
+#' @description This function will create character strings necessary
+#' to save in the form of a deck file for input into OAX analysis.
+#'
+#' @details Currently, there are three different OAX analyses that are completed,
+#' the parameter `which` indicates the specific program.
+#'
+#' @param dependent a character string indicating the name of the dependent
+#' variable
+#' @param dataFile a character string indicating the file name associated
+#' with the input data
+#' @param gridFile a character string indicating the file name associated with
+#' the OAX grid
+#' @param which a character string indicating which OAX analysis, options include
+#' `winterGroundfish`, `summerGroundfish`, `snowCrab`.
+#'
+#' @author Chantelle Layton
+#'
+#' @export
+
+createOaxDeckfile <- function(dependent, dataFile, gridFile, which){
+  validWhich <- c('winterGroundfish',
+                  'summerGroundfish',
+                  'snowCrab')
+  if(!which %in% validWhich){
+    stop('Must provide a valid value for which, please read parameter description for which.')
+  }
+
+  # go through each which
+  if(which == 'winterGroundfish'){
+    d <- rbind(paste('DEPENDENT', dependent),
+               'INDEPENDENT x y daynumber depth',
+               'GLOBAL_SCALES 30.0 30.0 30.0 20.0',
+               paste('DATAFILE', dataFile),
+               paste('GRIDFILE', gridFile),
+               'BUCKET 10',
+               'NUM_CLOSEST 15',
+               'METHOD EST_MEAN')
+  }
+  if(which == 'summerGroundfish'){
+    d <- rbind(paste('DEPENDENT', dependent),
+               'INDEPENDENT x y depth',
+               'GLOBAL_SCALES 35.0 35.0 20.0',
+               paste('DATAFILE', dataFile),
+               paste('GRIDFILE', gridFile),
+               'BUCKET 10',
+               'NUM_CLOSEST 15',
+               'METHOD EST_MEAN')
+  }
+  if(which == 'snowCrab'){
+    d <- rbind(paste('DEPENDENT', dependent),
+               'INDEPENDENT x y depth',
+               'GLOBAL_SCALES 35.0 35.0 20.0',
+               paste('DATAFILE', dataFile),
+               paste('GRIDFILE', gridFile),
+               'BUCKET 10',
+               'NUM_CLOSEST 15',
+               'METHOD EST_MEAN')
+  }
   d
 }
