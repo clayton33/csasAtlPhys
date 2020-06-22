@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: csasAtlPhys 0.0.9000\n"
-"POT-Creation-Date: 2020-06-19 09:31\n"
+"POT-Creation-Date: 2020-06-22 12:58\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -104,6 +104,9 @@ msgid "St. Anns Bank"
 msgstr ""
 
 msgid "North East Channel"
+msgstr ""
+
+msgid "Portsmouth"
 msgstr ""
 
 msgid "Please provide a valid location, if you believe the location has not been implemented, please contact creator."

@@ -137,6 +137,9 @@ getLocationName <- function(item){
   if(item == 'North East Channel'){
     location <- gettext('North East Channel', domain = 'R-csasAtlPhys')
   }
+  if(item == 'Portsmouth'){
+    location <- gettext('Portsmouth', domain = 'R-csasAtlPhys')
+  }
   if(is.null(location)) stop('Please provide a valid location, if you believe the location has not been implemented, please contact creator.')
   location
 }
