@@ -17,7 +17,9 @@ plotAnnualAnomaly(
   plotPoints = TRUE,
   plotRunningAvg = TRUE,
   plotLmTrend = FALSE,
-  lmResults
+  lmResults,
+  plotClimatologyMean = FALSE,
+  climatologyMean
 )
 }
 \arguments{
@@ -49,6 +51,10 @@ the annual anomaly over the defined climatology period.}
 on the plot}
 
 \item{lmResults}{A \code{lm} format object, if \code{plotLmTrend = FALSE}, ignored.}
+
+\item{plotClimatologyMean}{Logical indicating whether or not to print out the climatology mean.}
+
+\item{climatologyMean}{A numeric value, if \code{plotClimatologyMean = FALSE}, ignored.}
 }
 \description{
 Creates a time-series of annual time series in the format that is used

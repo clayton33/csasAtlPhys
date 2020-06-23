@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: csasAtlPhys 0.0.9000\n"
-"POT-Creation-Date: 2020-06-22 12:58\n"
+"POT-Creation-Date: 2020-06-23 11:20\n"
 "PO-Revision-Date: 2020-06-03 19:38-0300\n"
 "Last-Translator: <EMAIL@ADDRESS>\n"
 "Language-Team: Language R-fr\n"
@@ -117,11 +117,17 @@ msgstr "E banc de Georges"
 msgid "St. Anns Bank"
 msgstr "Banc de Sainte-Anne"
 
-msgid "North East Channel"
+msgid "Northeast Channel"
 msgstr "Chenal nord-est"
 
 msgid "Portsmouth"
 msgstr "Portsmouth"
+
+msgid "Gully"
+msgstr "Gully"
+
+msgid "NSC"
+msgstr "CN-E"
 
 #, fuzzy
 msgid ""
@@ -151,6 +157,9 @@ msgstr "Latitude"
 
 msgid "Station name"
 msgstr "Nom de station"
+
+msgid "Region name"
+msgstr "Nom de région"
 
 msgid "Station ID"
 msgstr "Identifiant de station"
@@ -259,6 +268,9 @@ msgstr ""
 
 msgid "years"
 msgstr "années"
+
+msgid "Mean"
+msgstr "Moyenne"
 
 msgid "average"
 msgstr "moyenne"

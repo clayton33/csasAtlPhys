@@ -134,11 +134,17 @@ getLocationName <- function(item){
   if(item == 'St. Anns Bank'){
     location <- gettext('St. Anns Bank', domain = 'R-csasAtlPhys')
   }
-  if(item == 'North East Channel'){
-    location <- gettext('North East Channel', domain = 'R-csasAtlPhys')
+  if(item == 'Northeast Channel'){
+    location <- gettext('Northeast Channel', domain = 'R-csasAtlPhys')
   }
   if(item == 'Portsmouth'){
     location <- gettext('Portsmouth', domain = 'R-csasAtlPhys')
+  }
+  if(item == 'Gully'){
+    location <- gettext('Gully', domain = 'R-csasAtlPhys')
+  }
+  if(item == 'NSC'){
+    location <- gettext('NSC', domain = 'R-csasAtlPhys')
   }
   if(is.null(location)) stop('Please provide a valid location, if you believe the location has not been implemented, please contact creator.')
   location
@@ -177,6 +183,9 @@ getMetadata <- function(item){
   }
   if(item == 'stationName'){
     label <- gettext('Station name', domain = 'R-csasAtlPhys')
+  }
+  if(item == 'regionName'){
+    label <- gettext('Region name', domain = 'R-csasAtlPhys')
   }
   if(item == 'stationId'){
     label <- gettext('Station ID', domain = 'R-csasAtlPhys')

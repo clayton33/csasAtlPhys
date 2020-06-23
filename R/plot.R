@@ -21,6 +21,8 @@
 #' @param plotLmTrend Logical indicating whether or not to print out results of a linear regression
 #' on the plot
 #' @param lmResults A `lm` format object, if `plotLmTrend = FALSE`, ignored.
+#' @param plotClimatologyMean Logical indicating whether or not to print out the climatology mean.
+#' @param climatologyMean A numeric value, if `plotClimatologyMean = FALSE`, ignored.
 #'
 #' @details The current format of the figure is for the 2019 research document. Any changes in the future
 #' will be reflected in the code with comments, and here.
@@ -48,7 +50,8 @@
 
 plotAnnualAnomaly <- function(x, y, xlim, ylim, xlab = TRUE, climatologyYears, ylabel = TRUE,
                                     plotSd = TRUE, yaxs = TRUE, plotPoints = TRUE, plotRunningAvg = TRUE,
-                              plotLmTrend = FALSE, lmResults){
+                              plotLmTrend = FALSE, lmResults,
+                              plotClimatologyMean = FALSE, climatologyMean){
   is.even <- function(x) x %% 2 == 0
   # ylabel
   L <- '['
@@ -144,11 +147,16 @@ plotAnnualAnomaly <- function(x, y, xlim, ylim, xlab = TRUE, climatologyYears, y
   if(plotLmTrend){
     slope <- sprintf('%.1f', round(unname(coef(lmResults)[2]) * 100, 1))
     slope <- ifelse(Sys.getenv('LANG') == 'fr', gsub('\\.', ',', slope), slope) # comma instead of period for french
-    print(slope)
     unit <- bquote(degree * 'C')
     yearlab <- gettext('years', domain = 'R-csasAtlPhys')
     legendText <- bquote(.(slope) * .(unit) * ' / 100 ' * .(yearlab))
     legend('bottomright', legend = legendText, bty = 'n', cex = 1.2)
+  }
+  if(plotClimatologyMean){
+    unit <- bquote(degree * 'C')
+    meanlab <- gettext('Mean', domain = 'R-csasAtlPhys')
+    climMean <- sprintf('%.2f', climatologyMean)
+    legend('bottomleft', legend = bquote(.(meanlab)*' = ' * .(climMean) * .(unit)), bty = 'n')
   }
 }
 
