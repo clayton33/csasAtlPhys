@@ -357,8 +357,6 @@ monthlyNormalizedAnomaly <- function(d, climatologyYears){
 #' monthly anomaly values.
 #'
 #' @param d a data.frame containing year, month, and at least anomaly, and optionally normalizedAnomaly
-#' @param normalizedAnomaly a logical value indicating whether or not to calculate the
-#' normalized annual anomaly as well, the default is `TRUE`
 #'
 #' @return a data.frame with year, anomaly, and optionally normalizedAnomaly
 #'
@@ -368,12 +366,32 @@ monthlyNormalizedAnomaly <- function(d, climatologyYears){
 #'
 #' @export
 
-annualAnomaly <- function(d, normalizedAnomaly = TRUE){
+annualAnomaly <- function(d){
   aa <- aggregate(anomaly ~ year, d, mean, na.rm = TRUE)
-  if(normalizedAnomaly){
-    ana <- aggregate(normalizedAnomaly ~ year, d, mean, na.rm = TRUE)
-    cbind(aa, normalizedAnomaly = ana$normalizedAnomaly)
-  } else {
-    aa
-  }
+  aa
+}
+
+#' @title Calculate normalized annual anomaly values
+#'
+#' @description This function calculates normalized annual anomaly values from provided
+#' monthly anomaly values.
+#'
+#' @param d a data.frame containing year, month, and at least anomaly
+#' @param climatologyYears a vector of length two indicating the range of years
+#' to calculate the climatology.
+#'
+#' @return a data.frame with year, normalizedAnomaly, and other columns in d
+#'
+#' @author Chantelle Layton
+#'
+#' @importFrom stats aggregate
+#'
+#' @export
+
+annualNormalizedAnomaly <- function(d, climatologyYears){
+  okclim <- d$year >= climatologyYears[1] & d$year <= climatologyYears[2]
+  dd <- d[okclim, ]
+  sd <- sd(dd$anomaly, na.rm = TRUE)
+  normanom <- d$anomaly / sd
+  cbind(d, normalizedAnomaly = normanom)
 }

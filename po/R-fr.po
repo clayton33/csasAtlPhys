@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: csasAtlPhys 0.0.9000\n"
-"POT-Creation-Date: 2020-06-23 11:20\n"
+"POT-Creation-Date: 2020-06-30 09:35\n"
 "PO-Revision-Date: 2020-06-03 19:38-0300\n"
 "Last-Translator: <EMAIL@ADDRESS>\n"
 "Language-Team: Language R-fr\n"
@@ -128,6 +128,18 @@ msgstr "Gully"
 
 msgid "NSC"
 msgstr "CN-E"
+
+msgid "4XSS"
+msgstr "4X n.-é."
+
+msgid "4XeGoM+BoF"
+msgstr "4XeGdM+BdF"
+
+msgid "4Vn"
+msgstr "4Vn"
+
+msgid "4W"
+msgstr "4W"
 
 #, fuzzy
 msgid ""

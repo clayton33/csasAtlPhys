@@ -146,6 +146,21 @@ getLocationName <- function(item){
   if(item == 'NSC'){
     location <- gettext('NSC', domain = 'R-csasAtlPhys')
   }
+  if(item == '4XSS'){
+    location <- gettext('4XSS', domain = 'R-csasAtlPhys')
+  }
+  if(item == '4XeGoM+BoF'){
+    location <- gettext('4XeGoM+BoF', domain = 'R-csasAtlPhys')
+  }
+  if(item == '4Vn'){
+    location <- gettext('4Vn', domain = 'R-csasAtlPhys')
+  }
+  if(item == '4Vs'){
+    location <- gettext('4Vn', domain = 'R-csasAtlPhys')
+  }
+  if(item == '4W'){
+    location <- gettext('4W', domain = 'R-csasAtlPhys')
+  }
   if(is.null(location)) stop('Please provide a valid location, if you believe the location has not been implemented, please contact creator.')
   location
 }

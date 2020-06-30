@@ -4,13 +4,10 @@
 \alias{annualAnomaly}
 \title{Calculate annual anomaly values}
 \usage{
-annualAnomaly(d, normalizedAnomaly = TRUE)
+annualAnomaly(d)
 }
 \arguments{
 \item{d}{a data.frame containing year, month, and at least anomaly, and optionally normalizedAnomaly}
-
-\item{normalizedAnomaly}{a logical value indicating whether or not to calculate the
-normalized annual anomaly as well, the default is \code{TRUE}}
 }
 \value{
 a data.frame with year, anomaly, and optionally normalizedAnomaly

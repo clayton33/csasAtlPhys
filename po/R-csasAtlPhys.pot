@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: csasAtlPhys 0.0.9000\n"
-"POT-Creation-Date: 2020-06-23 11:20\n"
+"POT-Creation-Date: 2020-06-30 09:35\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -113,6 +113,18 @@ msgid "Gully"
 msgstr ""
 
 msgid "NSC"
+msgstr ""
+
+msgid "4XSS"
+msgstr ""
+
+msgid "4XeGoM+BoF"
+msgstr ""
+
+msgid "4Vn"
+msgstr ""
+
+msgid "4W"
 msgstr ""
 
 msgid "Please provide a valid location, if you believe the location has not been implemented, please contact creator."
