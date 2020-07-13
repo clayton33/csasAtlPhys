@@ -61,6 +61,49 @@ getAnomalyLabel <- function(item, sep = ""){
   label
 }
 
+#' @title Provide names for various labels
+#'
+#' @description This function provides various labels.
+#'
+#' @param item A character string the desired label.
+#' @param sep An optional character string inserted between the unit and the unit bracket that encloses it.
+#' If not provided, the default `oceUnitSep` is used.
+#'
+#' @author Chantelle Layton
+#'
+#' @export
+
+getLabel <- function(item, sep = ""){
+  L <- " ["
+  R <- "]"
+
+  L <- paste(L, sep, sep="")
+  R <- paste(sep, R, sep="")
+  label <- NULL
+  if(item == 'Sea level height'){
+    var <- gettext('Sea level height', domain = 'R-csasAtlPhys')
+    label <- bquote(.(var)*" "*.(L)*"m"*.(R))
+  }
+  if(item == 'Residual height'){
+    var <- gettext('Residual height', domain = 'R-csasAtlPhys')
+    label <- bquote(.(var)*" "*.(L)*"m"*.(R))
+  }
+  if(item == 'NAO'){
+    label <- gettext('NAO', domain = 'R-csasAtlPhys')
+  }
+  if(item == 'NAO index'){
+    label <- gettext('NAO index', domain = 'R-csasAtlPhys')
+  }
+  if(item == 'Surface sea level pressure climatology'){
+    label <- gettext('Surface sea level pressure climatology', domain = 'R-csasAtlPhys')
+  }
+  if(item == 'Surface sea level pressure'){
+    label <- gettext('Surface sea level pressure', domain = 'R-csasAtlPhys')
+  }
+  if(is.null(label)) stop('Please provide a valid item, if item desired has not been implemented, please contact creator.')
+  label
+}
+
 #' @title Provide labels for locations.
 #'
 #' @description This function provides labels for locations in the
@@ -94,6 +137,9 @@ getLocationName <- function(item){
   }
   if(item == 'Sydney'){
     location <- gettext('Sydney', domain = 'R-csasAtlPhys')
+  }
+  if(item == 'North Sydney'){
+    location <- gettext('North Sydney', domain = 'R-csasAtlPhys')
   }
   if(item == 'Yarmouth'){
     location <- gettext('Yarmouth', domain = 'R-csasAtlPhys')
@@ -226,6 +272,9 @@ getMetadata <- function(item){
   if(item == 'climatologyReferenceYears'){
     label <- gettext('Climatological reference years', domain = 'R-csasAtlPhys')
   }
+  if(item == 'monthsAveraged'){
+    label <- gettext('Months averaged', domain = 'R-csasAtlPhys')
+  }
   if(is.null(label)) stop('Please provide a valid item, if you believe the desired has not been implemented, please contact creator.')
   label
 }
@@ -250,6 +299,43 @@ getData <- function(item){
   }
   if(item == 'year'){
     label <- gettext('year', domain = 'R-csasAtlPhys')
+  }
+  if(item == 'time'){
+    label <- gettext('time', domain = 'R-csasAtlPhys')
+  }
+  if(item == 'elevation'){
+    label <- gettext('elevation', domain = 'R-csasAtlPhys')
+  }
+  if(item == 'elevationResidual'){
+    label <- gettext('elevationResidual', domain = 'R-csasAtlPhys')
+  }
+  if(item == 'nao'){
+    label <- gettext('nao', domain = 'R-csasAtlPhys')
+  }
+  if(item == 'deviation'){
+    label <- gettext('devation', domain = 'R-csasAtlPhys')
+  }
+  if(item == 'rank'){
+    label <- gettext('rank', domain = 'R-csasAtlPhys')
+  }
+  if(is.null(label)) stop('Please provide a valid item, if you believe the desired has not been implemented, please contact creator.')
+  label
+}
+
+#' @title Get unit translation
+#'
+#' @description This function serves as a interface to obtain translations for a number
+#' of potential units needed when plotting.
+#'
+#' @param item A character string the desired label.
+#'
+#' @author Chantelle Layton
+#'
+#' @export
+#'
+getUnit <- function(item){
+  if(item == 'cm/century'){
+    label <- gettext('cm/century', domain = 'R-csasAtlPhys')
   }
   label
 }

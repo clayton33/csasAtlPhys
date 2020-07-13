@@ -395,3 +395,74 @@ annualNormalizedAnomaly <- function(d, climatologyYears){
   normanom <- d$anomaly / sd
   cbind(d, normalizedAnomaly = normanom)
 }
+
+#' @title Calculate monthly mean
+#'
+#' @description This function calculates the monthly mean values from data that has a temporal
+#' resolution greater than a month.
+#'
+#' @param x the times of observations in POSIXct format.
+#' @param y the observations
+#' @param minN the minimum number of data points
+#'
+#' @return A list containing the resulting monthly mean values of x, y, the number of data points,
+#' within that month, n.
+#'
+#' @author Chantelle Layton
+#'
+#' @export
+
+monthlyMeanCutSplit <- function(x, y, minN = NULL){
+  ys <- unname(unlist(lapply(split(y, cut(x, 'month')), mean)))
+  xs <- as.POSIXct(unname(unlist(lapply(split(x, cut(x, 'month')), mean))),
+                   origin = '1970-01-01',
+                   tz = 'UTC')
+  n <- unname(unlist(lapply(split(y, cut(x, 'month')), function(k) length(is.finite(k)))))
+  if(!is.null(minN)){
+    ok <- n >= minN
+    df <- list(x = xs[ok],
+               y = ys[ok],
+               n = n[ok])
+  } else {
+    df <- list(x = xs,
+               y = ys,
+               n = n)
+  }
+  df
+}
+
+#' @title Calculate annual mean
+#'
+#' @description This function calculates the annual mean value from data that has a temporal
+#' resolution greater than a year.
+#'
+#' @param x the times of observations in POSIXct format.
+#' @param y the observations
+#' @param minN the minimum number of data points
+#'
+#' @return A list containing the resulting annual mean value of x, y, the number of data points,
+#' within that year, n.
+#'
+#' @author Chantelle Layton
+#'
+#' @export
+
+annualMeanCutSplit <- function(x, y, minN = NULL){
+  ys <- unname(unlist(lapply(split(y, cut(x, 'year')), mean)))
+  xs <- as.POSIXct(unname(unlist(lapply(split(x, cut(x, 'year')), mean))),
+                   origin = '1970-01-01',
+                   tz = 'UTC')
+  n <- unname(unlist(lapply(split(y, cut(x, 'year')), function(k) length(is.finite(k)))))
+  if(!is.null(minN)){
+    ok <- n >= minN
+    df <- list(x = xs[ok],
+               y = ys[ok],
+               n = n[ok])
+  } else {
+    df <- list(x = xs,
+               y = ys,
+               n = n)
+  }
+  df
+}
+

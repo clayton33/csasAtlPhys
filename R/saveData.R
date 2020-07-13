@@ -37,7 +37,7 @@ writeProductData <- function(filename, destdir = '.',
   }
 
   # set up header
-  fnameline <- paste0("# ", getMetadata('filename'), ': ', filename)
+  fnameline <- paste0("# ", getMetadata('filename'), ': ', basename(filename))
   dateline <- paste0("# ", getMetadata('dateCreated'), ': ', dateCreated)
   contactline <- paste0("# ", getMetadata('contact'), ': ', contactName, " <", contactEMail, ">")
   descripline <- paste0("# ", getMetadata('description'), ': ', description) # might have to think about translation

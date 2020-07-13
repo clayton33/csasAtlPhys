@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: csasAtlPhys 0.0.9000\n"
-"POT-Creation-Date: 2020-06-30 09:35\n"
+"POT-Creation-Date: 2020-07-13 11:23\n"
 "PO-Revision-Date: 2020-06-03 19:38-0300\n"
 "Last-Translator: <EMAIL@ADDRESS>\n"
 "Language-Team: Language R-fr\n"
@@ -60,6 +60,24 @@ msgstr ""
 "Please provide a valid item, if item desired has not been implemented, "
 "please contact creator."
 
+msgid "Sea level height"
+msgstr "Élévation du niveau de la mer"
+
+msgid "Residual height"
+msgstr "Élévation résiduelle"
+
+msgid "NAO"
+msgstr "ONA"
+
+msgid "NAO index"
+msgstr "L'indice ONA"
+
+msgid "Surface sea level pressure climatology"
+msgstr "Climatologie de la pression à la surface de l'eau"
+
+msgid "Surface sea level pressure"
+msgstr "Pression à la surface de l'eau"
+
 msgid "Emerald Basin"
 msgstr "Bassin d'Émeraude"
 
@@ -79,6 +97,9 @@ msgid "Gulf of Maine"
 msgstr "Golfe du Maine"
 
 msgid "Sydney"
+msgstr ""
+
+msgid "North Sydney"
 msgstr ""
 
 msgid "Yarmouth"
@@ -197,6 +218,9 @@ msgstr "Intervalle de confiance"
 msgid "Climatological reference years"
 msgstr "Années de référence climatologique"
 
+msgid "Months averaged"
+msgstr "Moyenné mensuellement"
+
 #, fuzzy
 msgid ""
 "Please provide a valid item, if you believe the desired has not been "
@@ -210,6 +234,27 @@ msgstr "anomalieNormalisée"
 
 msgid "year"
 msgstr "année"
+
+msgid "time"
+msgstr "date"
+
+msgid "elevation"
+msgstr "élévation"
+
+msgid "elevationResidual"
+msgstr "élévationRésiduelle"
+
+msgid "nao"
+msgstr "ona"
+
+msgid "devation"
+msgstr "déviation"
+
+msgid "rank"
+msgstr "classement"
+
+msgid "cm/century"
+msgstr "cm/siècle"
 
 msgid "to"
 msgstr "au"
@@ -293,6 +338,9 @@ msgstr "Please provide a month."
 
 msgid "Please provide a person of contact and their e-mail address"
 msgstr ""
+
+#~ msgid "residual"
+#~ msgstr "résiduelle"
 
 #~ msgid "Date created"
 #~ msgstr "Date de création"

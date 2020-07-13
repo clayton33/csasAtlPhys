@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: csasAtlPhys 0.0.9000\n"
-"POT-Creation-Date: 2020-06-30 09:35\n"
+"POT-Creation-Date: 2020-07-13 11:23\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -46,6 +46,24 @@ msgstr ""
 msgid "Please provide a valid item, if item desired has not been implemented, please contact creator."
 msgstr ""
 
+msgid "Sea level height"
+msgstr ""
+
+msgid "Residual height"
+msgstr ""
+
+msgid "NAO"
+msgstr ""
+
+msgid "NAO index"
+msgstr ""
+
+msgid "Surface sea level pressure climatology"
+msgstr ""
+
+msgid "Surface sea level pressure"
+msgstr ""
+
 msgid "Emerald Basin"
 msgstr ""
 
@@ -65,6 +83,9 @@ msgid "Gulf of Maine"
 msgstr ""
 
 msgid "Sydney"
+msgstr ""
+
+msgid "North Sydney"
 msgstr ""
 
 msgid "Yarmouth"
@@ -178,6 +199,9 @@ msgstr ""
 msgid "Climatological reference years"
 msgstr ""
 
+msgid "Months averaged"
+msgstr ""
+
 msgid "Please provide a valid item, if you believe the desired has not been implemented, please contact creator."
 msgstr ""
 
@@ -185,6 +209,27 @@ msgid "normalizedAnomaly"
 msgstr ""
 
 msgid "year"
+msgstr ""
+
+msgid "time"
+msgstr ""
+
+msgid "elevation"
+msgstr ""
+
+msgid "elevationResidual"
+msgstr ""
+
+msgid "nao"
+msgstr ""
+
+msgid "devation"
+msgstr ""
+
+msgid "rank"
+msgstr ""
+
+msgid "cm/century"
 msgstr ""
 
 msgid "to"
