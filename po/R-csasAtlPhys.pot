@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: csasAtlPhys 0.0.9000\n"
-"POT-Creation-Date: 2020-07-13 11:23\n"
+"POT-Creation-Date: 2020-07-28 14:18\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,13 +25,16 @@ msgstr ""
 msgid "Temperature anomaly"
 msgstr ""
 
-msgid "Salinity anomaly"
+msgid "Practical salinity anomaly"
 msgstr ""
 
 msgid "anomaly"
 msgstr ""
 
 msgid "anomaly of"
+msgstr ""
+
+msgid "Anomaly"
 msgstr ""
 
 msgid "Normalized anomaly"
@@ -62,6 +65,9 @@ msgid "Surface sea level pressure climatology"
 msgstr ""
 
 msgid "Surface sea level pressure"
+msgstr ""
+
+msgid "Total volume"
 msgstr ""
 
 msgid "Emerald Basin"
@@ -146,6 +152,12 @@ msgid "4Vn"
 msgstr ""
 
 msgid "4W"
+msgstr ""
+
+msgid "4X"
+msgstr ""
+
+msgid "Prince5"
 msgstr ""
 
 msgid "Please provide a valid location, if you believe the location has not been implemented, please contact creator."

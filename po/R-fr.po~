@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: csasAtlPhys 0.0.9000\n"
-"POT-Creation-Date: 2020-07-13 11:19\n"
+"POT-Creation-Date: 2020-07-28 13:14\n"
 "PO-Revision-Date: 2020-06-03 19:38-0300\n"
 "Last-Translator: <EMAIL@ADDRESS>\n"
 "Language-Team: Language R-fr\n"
@@ -34,13 +34,12 @@ msgstr ""
 msgid "Temperature anomaly"
 msgstr "Anomalie de la température"
 
-msgid "Salinity anomaly"
-msgstr "Anomalie de la salinité"
+msgid "Practical salinity anomaly"
+msgstr "Anomalie de la salinité pratique"
 
 msgid "anomaly"
 msgstr "anomalie"
 
-#, fuzzy
 msgid "anomaly of"
 msgstr "Anomalie de"
 
@@ -78,6 +77,9 @@ msgstr "Climatologie de la pression à la surface de l'eau"
 msgid "Surface sea level pressure"
 msgstr "Pression à la surface de l'eau"
 
+msgid "Total volume"
+msgstr "Volume total"
+
 msgid "Emerald Basin"
 msgstr "Bassin d'Émeraude"
 
@@ -88,7 +90,7 @@ msgid "Georges Basin"
 msgstr "Bassin de Georges"
 
 msgid "Georges Bank"
-msgstr "Banc de Georges"
+msgstr "Banc Georges"
 
 msgid "Laurentian Channel"
 msgstr "Chenal Laurentien"
@@ -120,14 +122,16 @@ msgstr "St. Andrews"
 msgid "Cabot Strait"
 msgstr "Détroit de Cabot"
 
+# as per charts 8006 and 4255
 msgid "Browns Bank"
-msgstr "Banc de Browns"
+msgstr "Banc de Brown"
 
 msgid "Louisbourg"
 msgstr ""
 
+# as per chart 4045
 msgid "Misaine Bank"
-msgstr "Banc de Misaine Néo"
+msgstr "Banc de Misaine"
 
 msgid "Lurcher Shoal"
 msgstr "Haut-fond Lurcher"
@@ -161,6 +165,12 @@ msgstr "4Vn"
 
 msgid "4W"
 msgstr "4W"
+
+msgid "4X"
+msgstr "4X"
+
+msgid "Prince5"
+msgstr "Prince5"
 
 #, fuzzy
 msgid ""
@@ -218,6 +228,9 @@ msgstr "Intervalle de confiance"
 msgid "Climatological reference years"
 msgstr "Années de référence climatologique"
 
+msgid "Months averaged"
+msgstr "Moyenné mensuellement"
+
 #, fuzzy
 msgid ""
 "Please provide a valid item, if you believe the desired has not been "
@@ -233,7 +246,7 @@ msgid "year"
 msgstr "année"
 
 msgid "time"
-msgstr "time"
+msgstr "date"
 
 msgid "elevation"
 msgstr "élévation"
@@ -248,7 +261,7 @@ msgid "devation"
 msgstr "déviation"
 
 msgid "rank"
-msgstr "rang"
+msgstr "classement"
 
 msgid "cm/century"
 msgstr "cm/siècle"

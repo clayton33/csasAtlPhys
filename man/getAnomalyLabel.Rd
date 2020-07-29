@@ -4,7 +4,7 @@
 \alias{getAnomalyLabel}
 \title{Provide axis names for anomaly labels}
 \usage{
-getAnomalyLabel(item, sep = "")
+getAnomalyLabel(item, sep = "", bold = FALSE)
 }
 \arguments{
 \item{item}{A character string the desired label. Supported labels include \code{temperatureAnomaly},
@@ -12,6 +12,8 @@ getAnomalyLabel(item, sep = "")
 
 \item{sep}{An optional character string inserted between the unit and the unit bracket that encloses it.
 If not provided, the default \code{oceUnitSep} is used.}
+
+\item{bold}{A logical value indicating whether or not to return a bold version of the label.}
 }
 \description{
 This function provides the axis name for anomaly variables

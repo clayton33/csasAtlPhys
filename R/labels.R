@@ -6,12 +6,13 @@
 #' `salinityAnomaly`, and `sigmaThetaAnomaly`.
 #' @param sep An optional character string inserted between the unit and the unit bracket that encloses it.
 #' If not provided, the default `oceUnitSep` is used.
+#' @param bold A logical value indicating whether or not to return a bold version of the label.
 #'
 #' @author Chantelle Layton
 #'
 #' @export
 
-getAnomalyLabel <- function(item, sep = ""){
+getAnomalyLabel <- function(item, sep = "", bold = FALSE){
   #if (getOption("oceUnitBracket") == "[") {
     L <- " ["
     R <- "]"
@@ -28,34 +29,92 @@ getAnomalyLabel <- function(item, sep = ""){
   label <- NULL
   if(item == 'temperatureAnomaly'){
     var <- gettext("Temperature anomaly", domain="R-csasAtlPhys")
-    label <- bquote(.(var)*.(L)*degree*"C"*.(R))
-  }
-  if(item == 'salinityAnomaly'){
-    var <- gettext("Salinity anomaly", domain = "R-csasAtlPhys")
-
-  }
-  if(item == 'sigmaThetaAnomaly'){
-    if(Sys.getenv('LANG' == 'en')){
-      var <- gettext('anomaly', domain = 'R-csasAtlPhys')
-      label <- bquote(sigma[theta]*.(var)*.(L)*kg/m^3*.(R))
-    } else if(Sys.getenv('LANG' == 'fr')){
-      var <- gettext("anomaly of", domain = 'R-csasAtlPhys')
-      label <- bquote(.(var)*sigma[theta]*.(L)*kg/m^3*.(R))
-    } else{ # just use english convention
-      label <- bquote(sigma[theta]*.(var)*.(L)*kg/m^3*.(R))
+    if(bold){
+      label <- bquote(bold(.(var)*.(L)*degree*"C"*.(R)))
+    } else {
+      label <- bquote(.(var)*.(L)*degree*"C"*.(R))
     }
 
   }
+  if(item == 'salinityAnomaly'){
+    var <- gettext("Practical salinity anomaly", domain = "R-csasAtlPhys")
+    if(bold){
+      label <- bquote(bold(.(var)))
+    } else {
+      label <- var
+    }
+  }
+  if(item == 'sigmaThetaAnomaly'){
+    if(Sys.getenv('LANG') == 'en'){
+      var <- gettext('anomaly', domain = 'R-csasAtlPhys')
+      if(bold){
+        label <- bquote(bold(sigma[theta]*' '*.(var)*.(L)*kg/m^3*.(R)))
+      } else {
+        label <- bquote(sigma[theta]*' '*.(var)*.(L)*kg/m^3*.(R))
+      }
+    } else if(Sys.getenv('LANG') == 'fr'){
+      var <- gettext("anomaly of", domain = 'R-csasAtlPhys')
+      if(bold){
+        label <- bquote(bold(.(var)*' '*sigma[theta]*' '*.(L)*kg/m^3*.(R)))
+      } else {
+        label <- bquote(.(var)*' '*sigma[theta]*' '*.(L)*kg/m^3*.(R))
+      }
+    } else{ # just use english convention
+      var <- gettext('anomaly', domain = 'R-csasAtlPhys')
+      if(bold){
+        label <- bquote(bold(sigma[theta]*' '*.(var)*' '*.(L)*kg/m^3*.(R)))
+      } else {
+        label <- bquote(sigma[theta]*' '*.(var)*' '*.(L)*kg/m^3*.(R))
+      }
+    }
+  }
+    if(item == 'sigmaThetaGradientAnomaly'){
+      if(Sys.getenv('LANG') == 'en'){
+        var <- gettext('anomaly', domain = 'R-csasAtlPhys')
+        if(bold){
+          label <- bquote(bold('d'* rho * '/dz' *' '*.(var)*.(L)*'kg ' * m ^-3 * '/m'*.(R)))
+        } else {
+          label <- bquote('d'* rho * '/dz' *' '*.(var)*.(L)*'kg ' * m ^-3 * '/m'*.(R))
+        }
+      } else if(Sys.getenv('LANG') == 'fr'){
+        var <- gettext("Anomaly", domain = 'R-csasAtlPhys')
+        if(bold){
+          label <- bquote(bold(.(var)*' '*'d'* rho * '/dz'*' '*.(L)*'kg ' * m ^-3 * '/m'*.(R)))
+        } else {
+          label <- bquote(.(var)*' '*'d'* rho * '/dz'*' '*.(L)*'kg ' * m ^-3 * '/m'*.(R))
+        }
+      } else{ # just use english convention
+        var <- gettext('anomaly', domain = 'R-csasAtlPhys')
+        if(bold){
+          label <- bquote(bold('d'* rho * '/dz'*' '*.(var)*' '*.(L)*'kg ' * m ^-3 * '/m'*.(R)))
+        } else {
+          label <- bquote('d'* rho * '/dz'*' '*.(var)*' '*.(L)*'kg ' * m ^-3 * '/m'*.(R))
+        }
+      }
+    }
   if(item == 'normalizedAnomaly'){
-    label <- gettext('Normalized anomaly', domain = 'R-csasAtlPhys')
+    var <- gettext('Normalized anomaly', domain = 'R-csasAtlPhys')
+    if(bold){
+      label <- bquote(bold(.((var))))
+    } else {
+      label <- var
+    }
   }
   if(item == 'annualAirTemperatureAnomaly'){
     var <- gettext('Annual air temperature anomaly', domain = 'R-csasAtlPhys')
-    label <- bquote(.(var)*" "*.(L)*degree*"C"*.(R))
+    if(bold){
+      label <- bquote(bold(.(var)*" "*.(L)*degree*"C"*.(R)))
+    } else {
+      label <- bquote(.(var)*" "*.(L)*degree*"C"*.(R))
+    }
   }
   if(item == 'averageAirTemperatureAnomaly'){
     var <- gettext('Average air temperature anomaly', domain = 'R-csasAtlPhys')
-    label <- bquote(.(var)*" "*.(L)*degree*"C"*.(R))
+    if(bold){
+      label <- bquote(bold(.(var)*" "*.(L)*degree*"C"*.(R)))
+    } else {
+      label <- bquote(.(var)*" "*.(L)*degree*"C"*.(R))
+    }
   }
   if(is.null(label)) stop('Please provide a valid item, if item desired has not been implemented, please contact creator.')
   label
@@ -99,6 +158,9 @@ getLabel <- function(item, sep = ""){
   }
   if(item == 'Surface sea level pressure'){
     label <- gettext('Surface sea level pressure', domain = 'R-csasAtlPhys')
+  }
+  if(item == 'Total volume'){
+    label <- gettext('Total volume', domain = 'R-csasAtlPhys')
   }
   if(is.null(label)) stop('Please provide a valid item, if item desired has not been implemented, please contact creator.')
   label
@@ -156,7 +218,7 @@ getLocationName <- function(item){
   if(item == 'Boston'){
     location <- gettext('Boston', domain = 'R-csasAtlPhys')
   }
-  if(item == 'St. Andrews'){
+  if(item == 'St. Andrews' | item == 'St.Andrews'){
     location <- gettext('St. Andrews', domain = 'R-csasAtlPhys')
   }
   if(item == 'Cabot Strait'){
@@ -177,7 +239,7 @@ getLocationName <- function(item){
   if(item == 'E Georges Bank'){
     location <- gettext('E Georges Bank', domain = 'R-csasAtlPhys')
   }
-  if(item == 'St. Anns Bank'){
+  if(item == 'St. Anns Bank' | item == 'St Anns Bank'){
     location <- gettext('St. Anns Bank', domain = 'R-csasAtlPhys')
   }
   if(item == 'Northeast Channel'){
@@ -198,14 +260,20 @@ getLocationName <- function(item){
   if(item == '4XeGoM+BoF'){
     location <- gettext('4XeGoM+BoF', domain = 'R-csasAtlPhys')
   }
-  if(item == '4Vn'){
+  if(item == '4Vn' | item == '4vn'){
     location <- gettext('4Vn', domain = 'R-csasAtlPhys')
   }
-  if(item == '4Vs'){
+  if(item == '4Vs' | item == '4vs'){
     location <- gettext('4Vn', domain = 'R-csasAtlPhys')
   }
-  if(item == '4W'){
+  if(item == '4W' | item == '4w'){
     location <- gettext('4W', domain = 'R-csasAtlPhys')
+  }
+  if(item == '4X' | item == '4x'){
+    location <- gettext('4X', domain = 'R-csasAtlPhas')
+  }
+  if(item == 'Prince5'){
+    location <- gettext('Prince5', domain = 'R-csasAtlPhys')
   }
   if(is.null(location)) stop('Please provide a valid location, if you believe the location has not been implemented, please contact creator.')
   location
