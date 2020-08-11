@@ -4,8 +4,10 @@
 \name{nafoZones}
 \alias{nafoZones}
 \title{NAFO zones for Maritimes regions}
-\format{a list for each NAFO zone, where each zone has \code{zoneName}, \code{longitude}, and
-\code{latitude}}
+\format{
+a list for each NAFO zone, where each zone has \code{zoneName}, \code{longitude}, and
+\code{latitude}
+}
 \usage{
 nafoZones
 }

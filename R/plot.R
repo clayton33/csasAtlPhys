@@ -316,11 +316,13 @@ plotMonthlyStackedBarplot <- function(d, plotAverage = TRUE, stationNames){
   # have to split up the matrix into negative and positive
   dPos <- d
   dPos[dPos < 0] <- 0
+  dPos[is.na(dPos)] <- 0
   dNeg <- d
   dNeg[dNeg > 0] <- 0
+  dNeg[is.na(dNeg)] <- 0
 
   cexaxis <- 0.8
-  # first do the postive values
+  # first do the positive values
   bppos <- barplot(dPos, ylim = c(-15, 15), col = viridis(n = 6), xaxt = 'n',
                    legend = stationNames, args.legend = list(x = 'topleft', bty = 'n'), border = NA,
                    cex.axis = cexaxis)

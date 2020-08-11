@@ -4,9 +4,11 @@
 \name{winterGroundfishClimatology1980to2010}
 \alias{winterGroundfishClimatology1980to2010}
 \title{Winter groundfish optimal estimation climatology}
-\format{a data frame with columns \code{latitude}, \code{longitude}, \code{day_number}, \code{depth},
+\format{
+a data frame with columns \code{latitude}, \code{longitude}, \code{day_number}, \code{depth},
 \code{temperature}, \code{temperature_error}, \code{salinity}, \code{salinity_error},
-\code{sigmat}, \code{sigmat_error}.}
+\code{sigmat}, \code{sigmat_error}.
+}
 \usage{
 winterGroundfishClimatology1980to2010
 }

@@ -4,8 +4,10 @@
 \name{station2monthlyData}
 \alias{station2monthlyData}
 \title{Station 2 monthly data}
-\format{a data frame with columns \code{year}, \code{month}, \code{depth},
-\code{temperature}, \code{salinity}, \code{sigmaTheta}}
+\format{
+a data frame with columns \code{year}, \code{month}, \code{depth},
+\code{temperature}, \code{salinity}, \code{sigmaTheta}
+}
 \usage{
 station2monthlyData
 }

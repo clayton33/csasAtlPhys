@@ -4,9 +4,11 @@
 \name{winterGroundfishPlotLimits}
 \alias{winterGroundfishPlotLimits}
 \title{Winter groundfish map plot limits}
-\format{a list of \code{limits}, \code{contourLevelLimits}, and \code{contourLevelLimits},
+\format{
+a list of \code{limits}, \code{contourLevelLimits}, and \code{contourLevelLimits},
 each having defined items for \code{temperature}, \code{temperatureAnomaly}, \code{salinity},
-and \code{salinityAnomaly}.}
+and \code{salinityAnomaly}.
+}
 \usage{
 winterGroundfishPlotLimits
 }

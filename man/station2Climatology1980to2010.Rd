@@ -4,8 +4,10 @@
 \name{station2Climatology1980to2010}
 \alias{station2Climatology1980to2010}
 \title{Station 2 climatology}
-\format{a data frame with columns \code{month}, \code{depth},
-\code{temperature_ltm}, \code{salinity_ltm}, \code{sigmaTheta_ltm}}
+\format{
+a data frame with columns \code{month}, \code{depth},
+\code{temperature_ltm}, \code{salinity_ltm}, \code{sigmaTheta_ltm}
+}
 \usage{
 station2Climatology1980to2010
 }

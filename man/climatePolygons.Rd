@@ -4,7 +4,9 @@
 \name{climatePolygons}
 \alias{climatePolygons}
 \title{Climate area polygons}
-\format{a data frame with \code{area}, \code{latitude}, \code{longitude}, and \code{region}.}
+\format{
+a data frame with \code{area}, \code{latitude}, \code{longitude}, and \code{region}.
+}
 \usage{
 climatePolygons
 }

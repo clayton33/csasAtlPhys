@@ -4,7 +4,9 @@
 \name{transectDepthBins}
 \alias{transectDepthBins}
 \title{Transect standard depth bins}
-\format{a data frame with columns \code{bin} and \code{tolerance}}
+\format{
+a data frame with columns \code{bin} and \code{tolerance}
+}
 \usage{
 transectDepthBins
 }

@@ -20,4 +20,4 @@ LazyData: true
 Depends: R (>= 3.6.0)
 Imports: oce, readxl, RCurl, sp, dplyr, rvest, xml2, XML, viridis
 Suggests: R.utils
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.1

@@ -4,8 +4,10 @@
 \name{winterGroundfishUtmGrid}
 \alias{winterGroundfishUtmGrid}
 \title{Winter groundfish utm grid.}
-\format{a data frame with un-named columns, but they are as follows,
-\code{latitude}, \code{longitude}, \code{depth}, ...}
+\format{
+a data frame with un-named columns, but they are as follows,
+\code{latitude}, \code{longitude}, \code{depth}, ...
+}
 \usage{
 winterGroundfishUtmGrid
 }

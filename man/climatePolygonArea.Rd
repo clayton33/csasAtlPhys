@@ -4,7 +4,9 @@
 \name{climatePolygonArea}
 \alias{climatePolygonArea}
 \title{Climate area polygon areas}
-\format{a data frame with \code{area}, \code{polyArea} and \code{region}.}
+\format{
+a data frame with \code{area}, \code{polyArea} and \code{region}.
+}
 \usage{
 climatePolygonArea
 }

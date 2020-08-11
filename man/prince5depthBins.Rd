@@ -4,7 +4,9 @@
 \name{prince5depthBins}
 \alias{prince5depthBins}
 \title{Prince 5 standard depth bins}
-\format{a data frame with columns \code{bin} and \code{tolerance}}
+\format{
+a data frame with columns \code{bin} and \code{tolerance}
+}
 \usage{
 prince5depthBins
 }

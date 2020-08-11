@@ -4,9 +4,11 @@
 \name{prince5Climatology1980to2010}
 \alias{prince5Climatology1980to2010}
 \title{Prince 5 climatology}
-\format{a data frame with columns \code{Month}, \code{Depth}, \code{Avg_Temperature},
+\format{
+a data frame with columns \code{Month}, \code{Depth}, \code{Avg_Temperature},
 \code{Std_Temperature}, \code{Years_Temperature}, \code{Avg_Salinity}, \code{Std_Salinity},
-\code{Years_Salinity}, \code{Avg_Sigmat}, \code{Std_Sigmat}, \code{Years_Sigmat}.}
+\code{Years_Salinity}, \code{Avg_Sigmat}, \code{Std_Sigmat}, \code{Years_Sigmat}.
+}
 \usage{
 prince5Climatology1980to2010
 }

@@ -4,9 +4,11 @@
 \name{transectPlotLimits}
 \alias{transectPlotLimits}
 \title{Transect plot limits}
-\format{a list of \code{limits}, \code{contourLevelLimits}, and \code{contourLevelLimits},
+\format{
+a list of \code{limits}, \code{contourLevelLimits}, and \code{contourLevelLimits},
 each having defined items for \code{temperature}, \code{temperatureAnomaly}, \code{salinity},
-\code{salinityAnomaly}, \code{sigmaTheta}, \code{sigmaThetaAnomaly}.}
+\code{salinityAnomaly}, \code{sigmaTheta}, \code{sigmaThetaAnomaly}.
+}
 \usage{
 transectPlotLimits
 }

@@ -4,8 +4,10 @@
 \name{prince5monthlyData}
 \alias{prince5monthlyData}
 \title{Prince 5 monthly data}
-\format{a data frame with columns \code{year}, \code{month}, \code{depth},
-\code{temperature}, \code{salinity}, \code{sigmaTheta}}
+\format{
+a data frame with columns \code{year}, \code{month}, \code{depth},
+\code{temperature}, \code{salinity}, \code{sigmaTheta}
+}
 \usage{
 prince5monthlyData
 }

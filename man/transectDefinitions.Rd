@@ -4,10 +4,12 @@
 \name{transectDefinitions}
 \alias{transectDefinitions}
 \title{Transect definitions}
-\format{a list which contains a list for each transect that has \code{info}, that has a handful
+\format{
+a list which contains a list for each transect that has \code{info}, that has a handful
 of other variables which is too lengthy to list here, but two that are of importance are
 \code{start_longitude} and \code{start_latitude}, \code{bottom_outline}, the bathymetry for plotting,
-and then other information that is not currently used, \code{bottom_mask}, \code{xgrid}, and \code{ygrid}.}
+and then other information that is not currently used, \code{bottom_mask}, \code{xgrid}, and \code{ygrid}.
+}
 \usage{
 transectDefinitions
 }

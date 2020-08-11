@@ -4,11 +4,13 @@
 \name{transectClimatology1980to2010}
 \alias{transectClimatology1980to2010}
 \title{Transect 1980 to 2010 climatology}
-\format{a list which contains a list for each transect that has the \code{transecAbbreviation},
+\format{
+a list which contains a list for each transect that has the \code{transecAbbreviation},
 \code{transectFullname}, \code{season}, \code{program}, and \code{climatology}, the climatology has
 column names of \code{distanceBin}, \code{depthBin}, \code{temperature}, \code{temperatureSd},
 \code{temperatureNobs}, \code{salinity}, \code{salinitySd}, \code{salinityNobs}, \code{sigmaTheta},
-\code{sigmaThetaSd}, \code{sigmaThetaNobs}.}
+\code{sigmaThetaSd}, \code{sigmaThetaNobs}.
+}
 \usage{
 transectClimatology1980to2010
 }

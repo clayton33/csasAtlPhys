@@ -4,7 +4,9 @@
 \name{sstInSituHalifax}
 \alias{sstInSituHalifax}
 \title{Sea surface temperature in-situ for Halifax site}
-\format{a data frame with columns \code{year}, \code{month}, \code{temperature}}
+\format{
+a data frame with columns \code{year}, \code{month}, \code{temperature}
+}
 \usage{
 sstInSituHalifax
 }

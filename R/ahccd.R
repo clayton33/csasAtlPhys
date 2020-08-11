@@ -54,12 +54,41 @@ read.ahccd.stations <- function(file){
   # Read the Excel spreadsheet of station information
   # can't use readLines to obtain headers due encoding of some characters
   # and keep getting incomplete final line [as of 20190724]
-  s <- read_xls(path = file, range = 'a5:k342',
-                col_names = tolower(c("PROVINCE","STATION_NAME","STNID","START_YEAR","START_MONTH","END_YEAR","END_MONTH",
-                              "LATITUDE","LONGITUDE","ELEVATION","JOINED")))
+  cnametib <- read_xls(path = file, skip = 2)
+  cnames <- names(cnametib)
+  columnNames <- mapAhccdStationHeader(cnames)
+  s <- read_xls(path = file, skip = 4, col_names = FALSE)
   # make it a data frame, read_xls makes it a tibble, ew.
   stnInfo <- as.data.frame(s)
+  names(stnInfo) <- columnNames
   stnInfo
+}
+
+#' @title Map AHCCD station column names
+#'
+#' @description In efforts to attempt to infer column names and put them in a more useable form
+#' for useage.
+#'
+#' @param x a vector of character strings
+#'
+#' @return a vector of character strings
+#'
+#' @author Chantelle Layton
+#' @export
+#'
+mapAhccdStationHeader <- function(x){
+  x <- gsub('No', 'no', x)
+  x <- gsub('StnId', 'stnId', x)
+  x <- gsub('Station name', 'stationName', x)
+  x <- gsub('Prov', 'province', x)
+  x <- gsub('From', 'startYear', x)
+  x <- gsub('To', 'endYear', x)
+  x <- gsub('%Miss', 'percentMissing', x)
+  x <- gsub('Lat\\(deg\\)', 'latitude', x)
+  x <- gsub('Long\\(deg\\)', 'longitude', x)
+  x <- gsub('Elev\\(m\\)', 'elevation', x)
+  x <- gsub('Joined', 'joined', x)
+  x
 }
 
 #' @title Read AHCCD data
@@ -118,11 +147,11 @@ read.ahccd <- function(file, longitude = NULL, latitude = NULL, elevation = NULL
                    temperature = as.numeric(data), # wondering what to name this, obviously this fn could be used to read other ahccd data...
                    flag = flag,
                    stringsAsFactors = FALSE)
-  metaEng <- trimws(strsplit(lines[grep('^\\d+,(\\w+\\s)*?\\s+,\\s+\\w+, station( not)? joined', lines)],
+  metaEng <- trimws(strsplit(lines[grep('^\\d+,\\w+\\s+,\\w+\\s+, station( not)? joined', lines)],
                              split = ',')[[1]],
                     which = 'both')
   list(stationId = metaEng[1],
-       stationName = metaEng[2],
+       stationName = gsub('_', ' ', metaEng[2]),
        province = metaEng[3],
        latitude = as.numeric(latitude),
        longitude = as.numeric(longitude),

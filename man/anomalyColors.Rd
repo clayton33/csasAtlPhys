@@ -4,7 +4,9 @@
 \name{anomalyColors}
 \alias{anomalyColors}
 \title{Anomaly colours}
-\format{a list of \code{colors} and \code{breaks}}
+\format{
+a list of \code{colors} and \code{breaks}
+}
 \usage{
 anomalyColors
 }

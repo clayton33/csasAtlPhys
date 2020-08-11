@@ -4,11 +4,13 @@
 \name{areaMonthlyTimeseries}
 \alias{areaMonthlyTimeseries}
 \title{Climate area monthly timeseries}
-\format{a list of data frames that are named by their area, for
+\format{
+a list of data frames that are named by their area, for
 example, 05 is an element in a list named \code{area05}, and so on for
 the areas defined above. Each element in the list has a data frame
 which has \code{year}, \code{month}, \code{depth}, \code{temperature},
-\code{temperatureAnomaly}, \code{salinity}, and \code{salinityAnomaly}.}
+\code{temperatureAnomaly}, \code{salinity}, and \code{salinityAnomaly}.
+}
 \usage{
 areaMonthlyTimeseries
 }

@@ -4,9 +4,11 @@
 \name{summerGroundfishOaxResults}
 \alias{summerGroundfishOaxResults}
 \title{Summer groundfish optimal estimation results}
-\format{a data frame with columns \code{year}, \code{latitude}, \code{longitude},
+\format{
+a data frame with columns \code{year}, \code{latitude}, \code{longitude},
 \code{depth}, \code{temperature}, \code{temperature_error}, \code{salinity},
-\code{salinity_error}}
+\code{salinity_error}
+}
 \usage{
 summerGroundfishOaxResults
 }

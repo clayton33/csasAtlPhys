@@ -4,11 +4,13 @@
 \name{areaClimatologies1980to2010}
 \alias{areaClimatologies1980to2010}
 \title{Climate area climatologies}
-\format{a list of data frames that are named by their area, for
+\format{
+a list of data frames that are named by their area, for
 example, 05 is an element in a list named \code{area05}, and so on for
 the areas defined above. Each element in the list has a data frame
 which has \code{depth}, \code{month}, \code{temperature_ltm},
-\code{salinity_ltm}, and \code{sigmat_ltm}.}
+\code{salinity_ltm}, and \code{sigmat_ltm}.
+}
 \usage{
 areaClimatologies1980to2010
 }
