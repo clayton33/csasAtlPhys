@@ -153,6 +153,12 @@ getLabel <- function(item, sep = ""){
   if(item == 'NAO index'){
     label <- gettext('NAO index', domain = 'R-csasAtlPhys')
   }
+  if(item == 'North Atlantic oscillation index'){
+    label <- gettext('North Atlantic oscillation index', domain = 'R-csasAtlPhys')
+  }
+  if(item == 'Index'){
+    label <- gettext('Index', domain = 'R-csasAtlPhys')
+  }
   if(item == 'Surface sea level pressure climatology'){
     label <- gettext('Surface sea level pressure climatology', domain = 'R-csasAtlPhys')
   }
@@ -264,7 +270,7 @@ getLocationName <- function(item){
     location <- gettext('4Vn', domain = 'R-csasAtlPhys')
   }
   if(item == '4Vs' | item == '4vs'){
-    location <- gettext('4Vn', domain = 'R-csasAtlPhys')
+    location <- gettext('4Vs', domain = 'R-csasAtlPhys')
   }
   if(item == '4W' | item == '4w'){
     location <- gettext('4W', domain = 'R-csasAtlPhys')

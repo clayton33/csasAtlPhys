@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: csasAtlPhys 0.0.9000\n"
-"POT-Creation-Date: 2020-07-28 14:18\n"
+"POT-Creation-Date: 2020-08-21 08:26\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -59,6 +59,12 @@ msgid "NAO"
 msgstr ""
 
 msgid "NAO index"
+msgstr ""
+
+msgid "North Atlantic oscillation index"
+msgstr ""
+
+msgid "Index"
 msgstr ""
 
 msgid "Surface sea level pressure climatology"
@@ -149,6 +155,9 @@ msgid "4XeGoM+BoF"
 msgstr ""
 
 msgid "4Vn"
+msgstr ""
+
+msgid "4Vs"
 msgstr ""
 
 msgid "4W"

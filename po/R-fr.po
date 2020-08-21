@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: csasAtlPhys 0.0.9000\n"
-"POT-Creation-Date: 2020-07-28 14:18\n"
+"POT-Creation-Date: 2020-08-21 08:26\n"
 "PO-Revision-Date: 2020-06-03 19:38-0300\n"
 "Last-Translator: <EMAIL@ADDRESS>\n"
 "Language-Team: Language R-fr\n"
@@ -74,6 +74,12 @@ msgstr "ONA"
 msgid "NAO index"
 msgstr "L'indice ONA"
 
+msgid "North Atlantic oscillation index"
+msgstr "Indice de l'oscillation nord-atlantique"
+
+msgid "Index"
+msgstr "Indice"
+
 msgid "Surface sea level pressure climatology"
 msgstr "Climatologie de la pression à la surface de l'eau"
 
@@ -140,7 +146,7 @@ msgid "Lurcher Shoal"
 msgstr "Haut-fond Lurcher"
 
 msgid "E Georges Bank"
-msgstr "E banc de Georges"
+msgstr "Banc de Georges est"
 
 msgid "St. Anns Bank"
 msgstr "Banc de Sainte-Anne"
@@ -158,13 +164,16 @@ msgid "NSC"
 msgstr "CN-E"
 
 msgid "4XSS"
-msgstr "4X n.-é."
+msgstr "4X Pl. n.-é."
 
 msgid "4XeGoM+BoF"
 msgstr "4XeGdM+BdF"
 
 msgid "4Vn"
 msgstr "4Vn"
+
+msgid "4Vs"
+msgstr "4Vs"
 
 msgid "4W"
 msgstr "4W"
