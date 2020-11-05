@@ -12,8 +12,8 @@ sstInSituHalifax
 }
 \description{
 Monthly average sea surface temperature for in-situ Halifax site
-that is located at the wharf at theMaritime museum in the Halifax harbour. The monthly averages
+that is located at the wharf at the Maritime museum in the Halifax harbour. The monthly averages
 are only up to a certain year, the purpose of this file being included is that the
-historical data is not avaliable anywhere.
+historical data is not available anywhere.
 }
 \keyword{datasets}

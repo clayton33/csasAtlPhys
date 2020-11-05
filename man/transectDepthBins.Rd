@@ -11,6 +11,6 @@ a data frame with columns \code{bin} and \code{tolerance}
 transectDepthBins
 }
 \description{
-Transect standard depth bins and tolerances definitions for verticaly averaging
+Transect standard depth bins and tolerances definitions for vertically averaging
 }
 \keyword{datasets}

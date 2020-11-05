@@ -116,8 +116,13 @@ getAnomalyLabel <- function(item, sep = "", bold = FALSE){
       label <- bquote(.(var)*" "*.(L)*degree*"C"*.(R))
     }
   }
-  if(is.null(label)) stop('Please provide a valid item, if item desired has not been implemented, please contact creator.')
-  label
+  if(is.null(label)){
+    cat('Please provide a valid item, if you believe the desired has not been implemented, please contact creator.', sep = '\n')
+    cat('Returning item')
+    item
+  } else {
+    label
+  }
 }
 
 #' @title Provide names for various labels
@@ -168,8 +173,17 @@ getLabel <- function(item, sep = ""){
   if(item == 'Total volume'){
     label <- gettext('Total volume', domain = 'R-csasAtlPhys')
   }
-  if(is.null(label)) stop('Please provide a valid item, if item desired has not been implemented, please contact creator.')
-  label
+  if(item == 'CIL thickness'){
+    var <- gettext('CIL thickness', domain = 'R-csasAtlPhys')
+    label <- bquote(.(var)*" "*.(L)*"m"*.(R))
+  }
+  if(is.null(label)){
+    cat('Please provide a valid item, if you believe the desired has not been implemented, please contact creator.', sep = '\n')
+    cat('Returning item')
+    item
+  } else {
+    label
+  }
 }
 
 #' @title Provide labels for locations.
@@ -218,7 +232,7 @@ getLocationName <- function(item){
   if(item == 'Saint John'){
     location <- gettext('Saint John', domain = 'R-csasAtlPhys')
   }
-  if(item == 'Halifax'){
+  if(item %in% c('Halifax', 'halifax', 'halifaxInshore')){
     location <- gettext('Halifax', domain = 'R-csasAtlPhys')
   }
   if(item == 'Boston'){
@@ -227,13 +241,13 @@ getLocationName <- function(item){
   if(item == 'St. Andrews' | item == 'St.Andrews'){
     location <- gettext('St. Andrews', domain = 'R-csasAtlPhys')
   }
-  if(item == 'Cabot Strait'){
+  if(item %in% c('Cabot Strait', 'cabotStrait')){
     location <- gettext('Cabot Strait', domain = 'R-csasAtlPhys')
   }
-  if(item == 'Browns Bank'){
+  if(item %in% c('Browns Bank', 'brownsBank')){
     location <- gettext('Browns Bank', domain = 'R-csasAtlPhys')
   }
-  if(item == 'Louisbourg'){
+  if(item %in% c('Louisbourg', 'louisbourg')){
     location <- gettext('Louisbourg', domain = 'R-csasAtlPhys')
   }
   if(item == 'Misaine Bank'){
@@ -245,13 +259,13 @@ getLocationName <- function(item){
   if(item == 'E Georges Bank'){
     location <- gettext('E Georges Bank', domain = 'R-csasAtlPhys')
   }
-  if(item == 'St. Anns Bank' | item == 'St Anns Bank'){
+  if(item %in% c('St. Anns Bank', 'St Anns Bank', 'stAnnsBank')){
     location <- gettext('St. Anns Bank', domain = 'R-csasAtlPhys')
   }
-  if(item == 'Northeast Channel'){
+  if(item %in% c('Northeast Channel', 'northEastChannel')){
     location <- gettext('Northeast Channel', domain = 'R-csasAtlPhys')
   }
-  if(item == 'Portsmouth'){
+  if(item %in% c('Portsmouth', 'portsmouth')){
     location <- gettext('Portsmouth', domain = 'R-csasAtlPhys')
   }
   if(item == 'Gully'){
@@ -266,6 +280,9 @@ getLocationName <- function(item){
   if(item == '4XeGoM+BoF'){
     location <- gettext('4XeGoM+BoF', domain = 'R-csasAtlPhys')
   }
+  if(item == '4V' | item == '4v'){
+    location <- gettext('4V', domain = 'R-csasAtlPhys')
+  }
   if(item == '4Vn' | item == '4vn'){
     location <- gettext('4Vn', domain = 'R-csasAtlPhys')
   }
@@ -276,13 +293,39 @@ getLocationName <- function(item){
     location <- gettext('4W', domain = 'R-csasAtlPhys')
   }
   if(item == '4X' | item == '4x'){
-    location <- gettext('4X', domain = 'R-csasAtlPhas')
+    location <- gettext('4X', domain = 'R-csasAtlPhys')
   }
   if(item == 'Prince5'){
     location <- gettext('Prince5', domain = 'R-csasAtlPhys')
   }
-  if(is.null(location)) stop('Please provide a valid location, if you believe the location has not been implemented, please contact creator.')
-  location
+  if(item == 'Scotian Shelf' | item == 'Scotian shelf'){
+    location <- gettext('Scotian Shelf', domain = 'R-csasAtlPhys')
+  }
+  if(item == 'GoM inflow ratio'){
+    location <- gettext('GoM inflow ratio', domain = 'R-csasAtlPhys')
+  }
+  if(item == 'Cabot Strait (west), nearshore'){
+    location <- gettext('Cabot Strait (west), nearshore', domain = 'R-csasAtlPhys')
+  }
+  if(item == 'Halifax, nearshore'){
+    location <- gettext('Halifax, nearshore', domain = 'R-csasAtlPhys')
+  }
+  if(item == 'Halifax, shelfbreak'){
+    location <- gettext('Halifax, shelfbreak', domain = 'R-csasAtlPhys')
+  }
+  if(item == 'Cape Sable Island, nearshore'){
+    location <- gettext('Cape Sable Island, nearshore', domain = 'R-csasAtlPhys')
+  }
+  if(item == 'Northeast Channel (inflow)'){
+    location <- gettext('Northeast Channel (inflow)', domain = 'R-csasAtlPhys')
+  }
+  if(is.null(location)){
+    cat('Please provide a valid location, if you believe the location has not been implemented, please contact creator.', sep = '\n')
+    cat('Returning item')
+    item
+  } else {
+    location
+  }
 }
 
 #' @title Get metadata translation
@@ -316,11 +359,41 @@ getMetadata <- function(item){
   if(item == 'latitude'){
     label <- gettext('Latitude', domain = 'R-csasAtlPhys')
   }
+  if(item == 'divisionLongitude'){
+    label <- gettext('Division longitude', domain = 'R-csasAtlPhys')
+  }
+  if(item == 'divisionLatitude'){
+    label <- gettext('Division latitude', domain = 'R-csasAtlPhys')
+  }
+  if(item == 'areaLongitude'){
+    label <- gettext('Area longitude', domain = 'R-csasAtlPhys')
+  }
+  if(item == 'areaLatitude'){
+    label <- gettext('Area latitude', domain = 'R-csasAtlPhys')
+  }
+  if(item == 'boundaryLongitude'){
+    label <- gettext('Boundary longitude', domain = 'R-csasAtlPhys')
+  }
+  if(item == 'boundaryLatitude'){
+    label <- gettext('Boundary latitude', domain = 'R-csasAtlPhys')
+  }
   if(item == 'stationName'){
     label <- gettext('Station name', domain = 'R-csasAtlPhys')
   }
   if(item == 'regionName'){
     label <- gettext('Region name', domain = 'R-csasAtlPhys')
+  }
+  if(item == 'divisionName'){
+    label <- gettext('Division name', domain = 'R-csasAtlPhys')
+  }
+  if(item == 'areaName'){
+    label <- gettext('Area name', domain = 'R-csasAtlPhys')
+  }
+  if(item == 'areaNumber'){
+    label <- gettext('Area number', domain = 'R-csasAtlPhys')
+  }
+  if(item == 'variable'){
+    label <- gettext('Variable', domain = 'R-csasAtlPhys')
   }
   if(item == 'stationId'){
     label <- gettext('Station ID', domain = 'R-csasAtlPhys')
@@ -328,8 +401,14 @@ getMetadata <- function(item){
   if(item == 'elevation'){
     label <- gettext('Elevation', domain = 'R-csasAtlPhys')
   }
+  if(item == 'depth'){
+    label <- gettext('Depth', domain = 'R-csasAtlPhys')
+  }
   if(item == 'slope'){
     label <- gettext('Slope', domain = 'R-csasAtlPhys')
+  }
+  if(item == 'slopeUnit'){
+    label <- gettext('Slope unit', domain = 'R-csasAtlPhys')
   }
   if(item == 'standardDeviation'){
     label <- gettext('Standard deviation', domain = 'R-csasAtlPhys')
@@ -349,8 +428,13 @@ getMetadata <- function(item){
   if(item == 'monthsAveraged'){
     label <- gettext('Months averaged', domain = 'R-csasAtlPhys')
   }
-  if(is.null(label)) stop('Please provide a valid item, if you believe the desired has not been implemented, please contact creator.')
-  label
+  if(is.null(label)){
+    cat('Please provide a valid item, if you believe the desired has not been implemented, please contact creator.', sep = '\n')
+    cat('Returning item')
+    item
+  } else {
+    label
+  }
 }
 
 #' @title Get data translation
@@ -374,6 +458,15 @@ getData <- function(item){
   if(item == 'year'){
     label <- gettext('year', domain = 'R-csasAtlPhys')
   }
+  if(item == 'Year'){
+    label <- gettext('Year', domain = 'R-csasAtlPhys')
+  }
+  if(item == 'month'){
+    label <- gettext('month', domain = 'R-csasAtlPhys')
+  }
+  if(item == 'Month'){
+    label <- gettext('Month', domain = 'R-csasAtlPhys')
+  }
   if(item == 'time'){
     label <- gettext('time', domain = 'R-csasAtlPhys')
   }
@@ -392,8 +485,28 @@ getData <- function(item){
   if(item == 'rank'){
     label <- gettext('rank', domain = 'R-csasAtlPhys')
   }
-  if(is.null(label)) stop('Please provide a valid item, if you believe the desired has not been implemented, please contact creator.')
-  label
+  if(item == 'volume'){
+    label <- gettext('volume', domain = 'R-csasAtlPhys')
+  }
+  if(item == 'temperature'){
+    label <- gettext('temperature', domain = 'R-csasAtlPhys')
+  }
+  if(item == 'minimumTemperature'){
+    label <- gettext('minimumTemperature', domain = 'R-csasAtlPhys')
+  }
+  if(item == 'sigmaThetaGradient'){
+    label <- gettext('Density gradient', domain = 'R-csasAtlPhys')
+  }
+  if(item == 'depth'){
+    label <- gettext('depth', domain = 'R-csasAtlPhys')
+  }
+  if(is.null(label)){
+    cat('Please provide a valid item, if you believe the desired has not been implemented, please contact creator.', sep = '\n')
+    cat('Returning item')
+    item
+  } else {
+    label
+  }
 }
 
 #' @title Get unit translation
@@ -466,6 +579,42 @@ makeCruiseMapTitle <- function(ctd) {
   # and the time ranges over 2 years
   nstn <- length(ctd)
   bquote(.(shipnamenumber) * ',' ~ .(start) ~ .(gettext('to', domain = 'R-csasAtlPhys')) ~ .(end) * ',' ~ .(nstn) ~ 'stations')
+}
+
+#' @title Make section plot title
+#'
+#' @description This function uses CTD for a given transect to make a nice title that
+#' includes the transect name and the date range in which measurements were obtained.
+#'
+#' @param ctd a list of CTD objects
+#'
+#' @author Chantelle Layton
+#'
+#' @export
+
+makeSectionPlotTitle <- function(ctd){
+  transectInCtd <- unlist(lapply(ctd, function(k) 'transect' %in% names(k@metadata)))
+  if(!all(transectInCtd)){
+    stop("All CTD objects do not have 'transect' in the metadata slot.")
+  }
+  transect <- unlist(lapply(ctd, function(k) k[['transect']]))
+  utransect <- unique(transect)
+  if(length(utransect) > 1){
+    stop("More than one transect has been identified in the supplied CTD objects")
+  }
+
+  transectName <- getLocationName(utransect)
+  timeRange <- as.POSIXct(range(unlist(lapply(ctd, function(x) x[['time']])), na.rm = TRUE),
+                          origin = '1970-01-01', tz = 'UTC')
+  timeRangeFormat <- format(timeRange, '%d %b %Y')
+  # right now it assumes that the profiles were all taken during the same year
+  if(timeRangeFormat[1] == timeRangeFormat[2]){
+    bquote(.(transectName) * ':' ~ .(timeRangeFormat[1]))
+  } else {
+    start <- format(timeRange[1], '%d %b')
+    end <- timeRangeFormat[2]
+    bquote(.(transectName) * ':' ~ .(start) ~ .(gettext('to', domain = 'R-csasAtlPhys')) ~ .(end))
+  }
 }
 
 #' @title Get the long name of a ship abbreviation

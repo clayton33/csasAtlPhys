@@ -14,6 +14,6 @@ sstInSituStAndrews
 Monthly average sea surface temperature for in-situ St.Andrews site
 that is located off the wharf at the St.Andrews Biological Station. The monthly averages
 are only up to a certain year, the purpose of this file being included is that the
-historical data is not avaliable anywhere.
+historical data is not available anywhere.
 }
 \keyword{datasets}

@@ -16,6 +16,23 @@
 #'
 "summerGroundfishUtmGrid"
 
+#' Summer groundfish cold intermediate layer (cil) grid.
+#'
+#' Summer groundfish cold intermediate layer (cil) grid, it is a subset of the summerGroundfishLonLatGrid
+#'
+#' @format a data frame \code{latitude} and \code{longitude}.
+#'
+"summerGroundfishCilGrid"
+
+#' Summer groundfish optimal estimation ctd input
+#'
+#' Summer groundfish optimal estimation ctd input from 1970 to present. The data was put
+#' input ctd objects from the input files for use of plotting multiple years of oax results
+#'
+#' @format a list of ctd objects
+"summerGroundfishOaxCtdInput"
+
+
 #' Summer groundfish optimal estimation results
 #'
 #' Summer groundfish optimal estimation results from 1970 to present
@@ -24,6 +41,19 @@
 #' \code{depth}, \code{temperature}, \code{temperature_error}, \code{salinity},
 #' \code{salinity_error}
 "summerGroundfishOaxResults"
+
+#' Summer groundfish optimal estimation results to use for cold intermediate layer calculations
+#'
+#' Summer groundfish optimal estimation results from 1972 to present. This is different than
+#' summerGroundfishOaxResults as the analysis was done differently. Due to low vertical resolution
+#' in the earlier years, data was combined to get better results for e.g 1972 includes data from 1970
+#' to 1974. Data from 1990 to 2017 is all high resolution data, so it is only the data from that year.
+#' This data is already subsetted to the CIL grid, except for 2019, which is the full OAX grid.
+#'
+#' @format a data frame with columns \code{year}, \code{latitude}, \code{longitude},
+#' \code{depth}, \code{temperature}, \code{salinity},
+"summerGroundfishOaxResultsForCIL"
+
 
 #' Summer groundfish optimal estimation climatology
 #'
@@ -78,6 +108,14 @@
 #' \code{day_number}, \code{depth}, \code{temperature}, \code{temperature_error}, \code{salinity},
 #' \code{salinity_error}
 "winterGroundfishOaxResults"
+
+#' Winter groundfish optimal estimation ctd input
+#'
+#' Winter groundfish optimal estimation ctd input from 2008 to present. The data was put
+#' input ctd objects from the input files for use of plotting multiple years of oax results
+#'
+#' @format a list of ctd objects
+"winterGroundfishOaxCtdInput"
 
 #' Winter groundfish optimal estimation climatology
 #'
@@ -204,6 +242,29 @@
 #' \code{temperature_ltm}, \code{salinity_ltm}, \code{sigmaTheta_ltm}
 "station2Climatology1980to2010"
 
+#' Station 2 polygon
+#'
+#' Polygon defining the bounds to look for data along the fixed Atlantic Zone Monitoring Program
+#' station, Station 2. It was carried over from previous employee.
+#'
+#' @format a list containing \code{longitude} and \code{latitude}
+"station2Polygon"
+
+#' Station 2 standard depth bins
+#'
+#' Station 2 depth bins and tolerances definitions for vertically averaging
+#' @format a data frame with columns \code{bin} and \code{tolerance}
+"station2DepthBins"
+
+#' Station plot limits
+#'
+#' Various limits for plotting station 2 section plots.
+#'
+#' @format a list of \code{limits}, \code{contourLevelLimits}, and \code{contourLevelLimits},
+#' each having defined items for \code{temperature}, \code{temperatureAnomaly}, \code{salinity},
+#' \code{salinityAnomaly}, \code{sigmaTheta}, \code{sigmaThetaAnomaly}.
+"station2PlotLimits"
+
 #' Prince 5 monthly data
 #'
 #' Prince 5 monthly and vertically averaged data for the entire timeseries.
@@ -231,9 +292,16 @@
 
 #' Transect standard depth bins
 #'
-#' Transect standard depth bins and tolerances definitions for verticaly averaging
+#' Transect standard depth bins and tolerances definitions for vertically averaging
 #' @format a data frame with columns \code{bin} and \code{tolerance}
 "transectDepthBins"
+
+#' Transect distance bins
+#'
+#' Transect distance bin for the 1981 to 2010 climatology definitions for horizontal averaging
+#' @format a list with the transect name, each with a data frame with columns \code{bin} and
+#' \code{tolerance}. Only one transect has separate definitions based on the season.
+"transectDistanceBins"
 
 #' Transect plot limits
 #'
@@ -270,9 +338,9 @@
 #' Sea surface temperature in-situ for Halifax site
 #'
 #' Monthly average sea surface temperature for in-situ Halifax site
-#' that is located at the wharf at theMaritime museum in the Halifax harbour. The monthly averages
+#' that is located at the wharf at the Maritime museum in the Halifax harbour. The monthly averages
 #' are only up to a certain year, the purpose of this file being included is that the
-#' historical data is not avaliable anywhere.
+#' historical data is not available anywhere.
 #'
 #' @format a data frame with columns \code{year}, \code{month}, \code{temperature}
 "sstInSituHalifax"
@@ -282,7 +350,7 @@
 #' Monthly average sea surface temperature for in-situ St.Andrews site
 #' that is located off the wharf at the St.Andrews Biological Station. The monthly averages
 #' are only up to a certain year, the purpose of this file being included is that the
-#' historical data is not avaliable anywhere.
+#' historical data is not available anywhere.
 #'
 #' @format a data frame with columns \code{year}, \code{month}, \code{temperature}
 "sstInSituStAndrews"
@@ -303,3 +371,112 @@
 #'
 #' @format a list of \code{colors} and \code{breaks}
 "anomalyColors"
+
+#' Browns bank polygon
+#'
+#' Polygon defining the bounds to look for data along the core Atlantic Zone Monitoring Program
+#' line, browns bank. It was constructed by finding the angle between the first point, and the sixth
+#' station, and then the sixth station to the seventh station and the line has a leg at the end. The bounding
+#' box was calculated to be 8 km wide.
+#'
+#' @format a list of \code{longitude} and \code{latitude}
+"brownsBankPolygon"
+
+#' Browns bank station polygon's
+#'
+#' Polygons defining bounds to look for data at each station along the core Atlantic Zone Monitoring Program
+#' line, browns bank.
+#'
+#' @format a list which contains \code{stationName}, \code{longitude}, \code{latitude}, \code{polyLongitude},
+#' \code{polyLatitude} for each station.
+"brownsBankStationPolygons"
+
+#' Halifax polygon
+#'
+#' Polygon defining the bounds to look for data along the core Atlantic Zone Monitoring Program
+#' line, halifax. It was constructed by finding the angle between the first point and the last point
+#' of the line, and then calculating the bounding box which is 8 km wide.
+#'
+#' @format a list of \code{longitude} and \code{latitude}
+"halifaxPolygon"
+
+#' Halifax station polygon's
+#'
+#' Polygons defining bounds to look for data at each station along the core Atlantic Zone Monitoring Program
+#' line, halifax.
+#'
+#' @format a list which contains \code{stationName}, \code{longitude}, \code{latitude}, \code{polyLongitude},
+#' \code{polyLatitude} for each station.
+"halifaxStationPolygons"
+
+#' North east channel polygon
+#'
+#' Polygon defining the bounds to look for data along the core Atlantic Zone Monitoring Program
+#' line, north east channel. It was constructed by finding the angle between the first point and the last point
+#' of the line, and then calculating the bounding box which is 8 km wide.
+#'
+#' @format a list of \code{longitude} and \code{latitude}
+"northeastChannelPolygon"
+
+#' North east channel station polygon's
+#'
+#' Polygons, a 4km box, defining bounds to look for data at each station along the core Atlantic Zone Monitoring Program
+#' line, north east channel.
+#'
+#' @format a list which contains \code{stationName}, \code{longitude}, \code{latitude}, \code{polyLongitude},
+#' \code{polyLatitude} for each station.
+"northeastChannelStationPolygons"
+
+#' Louisbourg polygon
+#'
+#' Polygon defining the bounds to look for data along the core Atlantic Zone Monitoring Program
+#' line, louisbourg. It was constructed by finding the angle between the first point and the last point
+#' of the line, and then calculating the bounding box which is 8 km wide.
+#'
+#' @format a list of \code{longitude} and \code{latitude}
+"louisbourgPolygon"
+
+#' Louisbourg channel station polygon's
+#'
+#' Polygons defining bounds to look for data at each station along the core Atlantic Zone Monitoring Program
+#' line, louisbourg.
+#'
+#' @format a list which contains \code{stationName}, \code{longitude}, \code{latitude}, \code{polyLongitude},
+#' \code{polyLatitude} for each station.
+"louisbourgStationPolygons"
+
+#' Cabot strait polygon
+#'
+#' Polygon defining the bounds to look for data along the core Atlantic Zone Monitoring Program
+#' line, Cabot strait. It was constructed by finding the angle between the first point and the last point
+#' of the line, and then calculating the bounding box which is 8 km wide.
+#'
+#' @format a list of \code{longitude} and \code{latitude}
+"cabotStraitPolygon"
+
+#' Cabot strait station polygon's
+#'
+#' Polygons defining bounds to look for data at each station along the core Atlantic Zone Monitoring Program
+#' line, cabot strait.
+#'
+#' @format a list which contains \code{stationName}, \code{longitude}, \code{latitude}, \code{polyLongitude},
+#' \code{polyLatitude} for each station.
+"cabotStraitStationPolygons"
+
+#' St.Anns Bank polygon
+#'
+#' Polygon defining the bounds to look for data along the core Atlantic Zone Monitoring Program
+#' line, St.Anns Bank. It was constructed by finding the angle between the first point and the last point
+#' of the line, and then calculating the bounding box which is 8 km wide.
+#'
+#' @format a list of \code{longitude} and \code{latitude}
+"stAnnsBankPolygon"
+
+#' St.Anns Bank station polygon's
+#'
+#' Polygons defining bounds to look for data at each station along the core Atlantic Zone Monitoring Program
+#' line, St.Anns Bank.
+#'
+#' @format a list which contains \code{stationName}, \code{longitude}, \code{latitude}, \code{polyLongitude},
+#' \code{polyLatitude} for each station.
+"stAnnsBankStationPolygons"

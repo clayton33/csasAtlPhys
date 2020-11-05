@@ -16,6 +16,7 @@
 #' @author Chantelle Layton
 #'
 #' @importFrom sp point.in.polygon
+#' @export
 #'
 #' @return a list of bin0 and bin1 which are the ranges in which data was averaged over.
 #' binArea, which is the calculated area within each bin range, npoints, which is the
@@ -77,6 +78,7 @@ binArea <- function(x, longitude, latitude, gridDiffLongitude, gridDiffLatitude,
 #' @param bins a numeric vector indicating the bins
 #' @param binarea a numeric vector of the total area calculated for the specified bin
 #'
+#' @export
 #' @author Chantelle Layton
 weightedArea <- function(bins, binarea){
   sum((bins + 0.5) * binarea, na.rm = TRUE) / sum(binarea, na.rm = TRUE)
@@ -99,6 +101,7 @@ weightedArea <- function(bins, binarea){
 #' @author Chantelle Layton
 #' @return a list with thickness with units kilometer and volume with units kilometer^3
 #' and the minimum temperature.
+#' @export
 #'
 cilVolume <- function(T, p, longitude, latitude, dlongitude, dlatitude, Tlim = 4){
   thickness <- NULL
@@ -464,5 +467,116 @@ annualMeanCutSplit <- function(x, y, minN = NULL){
                n = n)
   }
   df
+}
+
+#' @title Get transect angle
+#'
+#' @details This function calculates a neutral regression on
+#' geographical coordinates and outputs the resulting angle from
+#' the regression.
+#'
+#' @param longitude vector of longitudes
+#' @param latitude vector of latitudes
+#'
+#' @return The angle from 0 degrees pointing east, as well as the neutral regression
+#'         output.
+#' @author Chantelle Layton
+#'
+#' @export
+#' @importFrom smatr sma
+#'
+
+getTransectAngle <- function(longitude, latitude){
+  zone <- lonlat2utm(longitude = longitude[1],
+                     latitude = latitude[1])$zone
+  xy <- lonlat2utm(longitude = longitude,
+                   latitude = latitude,
+                   zone = zone)
+  {if(length(longitude) > 2){
+    m <- sma(xy$northing ~ xy$easting)
+    a <- atan(m$coef[[1]][2,1]) * 180 / pi
+  }
+    else{
+      m <- lm(xy$northing ~ xy$easting)
+      a <- atan(unname(coef(m)[2])) * 180 / pi
+    }
+  }
+  angle <- a
+  return(list(angle = angle, m = m))
+}
+
+#' @title Bin-average a CTD object in pressure space.
+#'
+#' @description Vertically average and CTD object through pressure by defined bins and tolerances.
+#'
+#' @param x a ctd object
+#' @param bin a vector of numerical values of the center of the bin
+#' @param tolerance a vector of numerical values of the tolerance for the bin
+#' @param trimBin a logical value indicating if the supplied bin values should be trimmed to the
+#' maximum pressure, default is TRUE.
+#'
+#' @return a ctd object that has the same metadata and processing log as the supplied ctd object,
+#' but with bin-averaged data.
+#'
+#' @author Chantelle Layton
+#' @importFrom methods new
+#'
+#' @export
+
+binMeanPressureCtd <- function(x, bin, tolerance, trimBin = TRUE){
+  # set up new ctd object
+  res <- new("ctd")
+  # add previous metadata and processing log
+  res@metadata <- x@metadata
+  res@processingLog <- x@processingLog
+  # vertically average the data
+  # omitting pressure, we'll get that from one of the
+  pok <- names(x@data) %in% 'pressure'
+  pressure <- x@data[pok][[1]]
+  if(trimBin) {
+    ok <- bin <= max(pressure)
+    bin <- bin[ok]
+    tolerance <- tolerance[ok]
+  }
+  for (i in seq_along(x@data)[!pok]) {
+    data <- x@data[[i]]
+    res@data[[i]] <- mapply(function(bin, tolerance) mean(data[pressure >= (bin - tolerance) & pressure < (bin + tolerance)], na.rm = TRUE),
+                            bin,
+                            tolerance)
+  }
+  res@data[[which(pok)]] <- bin
+  names(res@data) <- names(x@data)
+  res
+}
+
+#' @title Find bottom depth index for given list of longitude, latitude, and depth
+#'
+#' @description This function takes in unlisted longitude, latitude, and depth values and finds
+#' the index at which the maximum depth for each unique longitude,latitude pair occurs
+#'
+#' @param longitude a numeric vector of longitudes
+#' @param latitude a numeric vector of latitudes
+#' @param depth a numeric vector of depths
+#'
+#' @return a logical vector of TRUE/FALSE, TRUE indicating the bottom depth value for the unique
+#' longitude,latitude pair
+#' @author Chantelle Layton
+#' @export
+
+findBottomDepthIndex <- function(longitude, latitude, depth){
+  # put in a length check ?
+  ulonlat <- unique(data.frame(longitude = longitude,
+                               latitude = latitude))
+  idx <- vector(mode = 'logical', length = length(longitude))
+  for (i in 1:dim(ulonlat)[1]){
+    lonlook <- ulonlat[['longitude']][i]
+    latlook <- ulonlat[['latitude']][i]
+    oklonlat <- which(longitude == lonlook & latitude == latlook)
+    depthlook <- max(depth[oklonlat])
+    idx[oklonlat] <- FALSE
+    oklonlatdepth <- which(longitude == lonlook & latitude == latlook & depth == depthlook)
+    idx[oklonlatdepth] <- TRUE
+  }
+  idx
 }
 

@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: csasAtlPhys 0.0.9000\n"
-"POT-Creation-Date: 2020-08-21 07:51\n"
+"POT-Creation-Date: 2020-10-21 15:14\n"
 "PO-Revision-Date: 2020-06-03 19:38-0300\n"
 "Last-Translator: <EMAIL@ADDRESS>\n"
 "Language-Team: Language R-fr\n"
@@ -54,13 +54,6 @@ msgstr "Anomalie annuelle de la température de l'air"
 
 msgid "Average air temperature anomaly"
 msgstr "Anomalie de la température moyenne"
-
-msgid ""
-"Please provide a valid item, if item desired has not been implemented, "
-"please contact creator."
-msgstr ""
-"Please provide a valid item, if item desired has not been implemented, "
-"please contact creator."
 
 msgid "Sea level height"
 msgstr "Élévation du niveau de la mer"
@@ -136,7 +129,7 @@ msgid "Browns Bank"
 msgstr "Banc de Brown"
 
 msgid "Louisbourg"
-msgstr ""
+msgstr "Louisbourg"
 
 # as per chart 4045
 msgid "Misaine Bank"
@@ -146,7 +139,7 @@ msgid "Lurcher Shoal"
 msgstr "Haut-fond Lurcher"
 
 msgid "E Georges Bank"
-msgstr "E banc de Georges"
+msgstr "Banc de Georges est"
 
 msgid "St. Anns Bank"
 msgstr "Banc de Sainte-Anne"
@@ -164,13 +157,19 @@ msgid "NSC"
 msgstr "CN-E"
 
 msgid "4XSS"
-msgstr "4X n.-é."
+msgstr "4X Pl. n.-é."
 
 msgid "4XeGoM+BoF"
 msgstr "4XeGdM+BdF"
 
+msgid "4V"
+msgstr "4V"
+
 msgid "4Vn"
 msgstr "4Vn"
+
+msgid "4Vs"
+msgstr "4Vs"
 
 msgid "4W"
 msgstr "4W"
@@ -181,13 +180,26 @@ msgstr "4X"
 msgid "Prince5"
 msgstr "Prince5"
 
-#, fuzzy
-msgid ""
-"Please provide a valid location, if you believe the location has not been "
-"implemented, please contact creator."
-msgstr ""
-"Please provide a valid item, if item desired has not been implemented, "
-"please contact creator."
+msgid "Scotian Shelf"
+msgstr "Plateau néo-écossais"
+
+msgid "GoM inflow ratio"
+msgstr "ratio afflux GdM"
+
+msgid "Cabot Strait (west), nearshore"
+msgstr "Détroit de Cabot (ouest), littoral"
+
+msgid "Halifax, nearshore"
+msgstr "Halifax, littoral"
+
+msgid "Halifax, shelfbreak"
+msgstr "Halifax, rupture du plateau"
+
+msgid "Cape Sable Island, nearshore"
+msgstr "Île du cap Sable, littoral"
+
+msgid "Northeast Channel (inflow)"
+msgstr "Chenal nord-est (vers GdM)"
 
 msgid "Filename"
 msgstr "Nom du fichier"
@@ -207,11 +219,41 @@ msgstr "Longitude"
 msgid "Latitude"
 msgstr "Latitude"
 
+msgid "Division longitude"
+msgstr "Longitude de division"
+
+msgid "Division latitude"
+msgstr "Latitude de division"
+
+msgid "Area longitude"
+msgstr "Longitude de la zone"
+
+msgid "Area latitude"
+msgstr "Latitude de la zone"
+
+msgid "Boundary longitude"
+msgstr "Longitude de la limite"
+
+msgid "Boundary latitude"
+msgstr "Latitude de la limite"
+
 msgid "Station name"
 msgstr "Nom de station"
 
 msgid "Region name"
 msgstr "Nom de région"
+
+msgid "Division name"
+msgstr "Nom de division"
+
+msgid "Area name"
+msgstr "Nom de la zone"
+
+msgid "Area number"
+msgstr "Numéro de zone"
+
+msgid "Variable"
+msgstr "Variable"
 
 msgid "Station ID"
 msgstr "Identifiant de station"
@@ -219,8 +261,14 @@ msgstr "Identifiant de station"
 msgid "Elevation"
 msgstr "Élévation"
 
+msgid "Depth"
+msgstr "Profondeur"
+
 msgid "Slope"
 msgstr "Pente"
+
+msgid "Slope unit"
+msgstr "Unité de pente"
 
 msgid "Standard deviation"
 msgstr "Écart-type"
@@ -240,19 +288,20 @@ msgstr "Années de référence climatologique"
 msgid "Months averaged"
 msgstr "Moyenné mensuellement"
 
-#, fuzzy
-msgid ""
-"Please provide a valid item, if you believe the desired has not been "
-"implemented, please contact creator."
-msgstr ""
-"Please provide a valid item, if item desired has not been implemented, "
-"please contact creator."
-
 msgid "normalizedAnomaly"
 msgstr "anomalieNormalisée"
 
 msgid "year"
 msgstr "année"
+
+msgid "Year"
+msgstr "Année"
+
+msgid "month"
+msgstr "mois"
+
+msgid "Month"
+msgstr "Mois"
 
 msgid "time"
 msgstr "date"
@@ -272,11 +321,32 @@ msgstr "déviation"
 msgid "rank"
 msgstr "classement"
 
+msgid "volume"
+msgstr "Volume"
+
+msgid "temperature"
+msgstr "température"
+
+msgid "minimumTemperature"
+msgstr "températureMinimale"
+
+msgid "Density gradient"
+msgstr "Gradient de densité"
+
+msgid "depth"
+msgstr "profondeur"
+
 msgid "cm/century"
 msgstr "cm/siècle"
 
 msgid "to"
 msgstr "au"
+
+msgid "All CTD objects do not have 'transect' in the metadata slot."
+msgstr ""
+
+msgid "More than one transect has been identified in the supplied CTD objects"
+msgstr ""
 
 msgid "CCGS"
 msgstr "NGCC"
@@ -357,6 +427,29 @@ msgstr "Please provide a month."
 
 msgid "Please provide a person of contact and their e-mail address"
 msgstr ""
+
+#~ msgid ""
+#~ "Please provide a valid item, if item desired has not been implemented, "
+#~ "please contact creator."
+#~ msgstr ""
+#~ "Please provide a valid item, if item desired has not been implemented, "
+#~ "please contact creator."
+
+#, fuzzy
+#~ msgid ""
+#~ "Please provide a valid location, if you believe the location has not been "
+#~ "implemented, please contact creator."
+#~ msgstr ""
+#~ "Please provide a valid item, if item desired has not been implemented, "
+#~ "please contact creator."
+
+#, fuzzy
+#~ msgid ""
+#~ "Please provide a valid item, if you believe the desired has not been "
+#~ "implemented, please contact creator."
+#~ msgstr ""
+#~ "Please provide a valid item, if item desired has not been implemented, "
+#~ "please contact creator."
 
 #~ msgid "residual"
 #~ msgstr "résiduelle"

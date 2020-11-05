@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: csasAtlPhys 0.0.9000\n"
-"POT-Creation-Date: 2020-08-21 08:26\n"
+"POT-Creation-Date: 2020-10-28 08:49\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,6 +20,9 @@ msgid "Must provide pressure."
 msgstr ""
 
 msgid "Please provide a stationId, code not developed yet to give all data due to size."
+msgstr ""
+
+msgid "Please supply either 'ctdLongitude' and 'ctdLatitude', or 'ctd', or change useCtd to FALSE"
 msgstr ""
 
 msgid "Temperature anomaly"
@@ -44,9 +47,6 @@ msgid "Annual air temperature anomaly"
 msgstr ""
 
 msgid "Average air temperature anomaly"
-msgstr ""
-
-msgid "Please provide a valid item, if item desired has not been implemented, please contact creator."
 msgstr ""
 
 msgid "Sea level height"
@@ -74,6 +74,9 @@ msgid "Surface sea level pressure"
 msgstr ""
 
 msgid "Total volume"
+msgstr ""
+
+msgid "CIL thickness"
 msgstr ""
 
 msgid "Emerald Basin"
@@ -154,6 +157,9 @@ msgstr ""
 msgid "4XeGoM+BoF"
 msgstr ""
 
+msgid "4V"
+msgstr ""
+
 msgid "4Vn"
 msgstr ""
 
@@ -169,7 +175,25 @@ msgstr ""
 msgid "Prince5"
 msgstr ""
 
-msgid "Please provide a valid location, if you believe the location has not been implemented, please contact creator."
+msgid "Scotian Shelf"
+msgstr ""
+
+msgid "GoM inflow ratio"
+msgstr ""
+
+msgid "Cabot Strait (west), nearshore"
+msgstr ""
+
+msgid "Halifax, nearshore"
+msgstr ""
+
+msgid "Halifax, shelfbreak"
+msgstr ""
+
+msgid "Cape Sable Island, nearshore"
+msgstr ""
+
+msgid "Northeast Channel (inflow)"
 msgstr ""
 
 msgid "Filename"
@@ -190,10 +214,40 @@ msgstr ""
 msgid "Latitude"
 msgstr ""
 
+msgid "Division longitude"
+msgstr ""
+
+msgid "Division latitude"
+msgstr ""
+
+msgid "Area longitude"
+msgstr ""
+
+msgid "Area latitude"
+msgstr ""
+
+msgid "Boundary longitude"
+msgstr ""
+
+msgid "Boundary latitude"
+msgstr ""
+
 msgid "Station name"
 msgstr ""
 
 msgid "Region name"
+msgstr ""
+
+msgid "Division name"
+msgstr ""
+
+msgid "Area name"
+msgstr ""
+
+msgid "Area number"
+msgstr ""
+
+msgid "Variable"
 msgstr ""
 
 msgid "Station ID"
@@ -202,7 +256,13 @@ msgstr ""
 msgid "Elevation"
 msgstr ""
 
+msgid "Depth"
+msgstr ""
+
 msgid "Slope"
+msgstr ""
+
+msgid "Slope unit"
 msgstr ""
 
 msgid "Standard deviation"
@@ -223,13 +283,19 @@ msgstr ""
 msgid "Months averaged"
 msgstr ""
 
-msgid "Please provide a valid item, if you believe the desired has not been implemented, please contact creator."
-msgstr ""
-
 msgid "normalizedAnomaly"
 msgstr ""
 
 msgid "year"
+msgstr ""
+
+msgid "Year"
+msgstr ""
+
+msgid "month"
+msgstr ""
+
+msgid "Month"
 msgstr ""
 
 msgid "time"
@@ -250,10 +316,31 @@ msgstr ""
 msgid "rank"
 msgstr ""
 
+msgid "volume"
+msgstr ""
+
+msgid "temperature"
+msgstr ""
+
+msgid "minimumTemperature"
+msgstr ""
+
+msgid "Density gradient"
+msgstr ""
+
+msgid "depth"
+msgstr ""
+
 msgid "cm/century"
 msgstr ""
 
 msgid "to"
+msgstr ""
+
+msgid "All CTD objects do not have 'transect' in the metadata slot."
+msgstr ""
+
+msgid "More than one transect has been identified in the supplied CTD objects"
 msgstr ""
 
 msgid "CCGS"

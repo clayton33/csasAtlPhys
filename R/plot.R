@@ -296,11 +296,19 @@ plotMonthlyBar <- function(df, ylim, years, plotYear, yearLabel = FALSE, yearLab
 #' @description This function will plot a stacked bar plot that has negative and
 #' positive values. It also has the option to plot the average of values provided.
 #'
-#' @param d a matrix with the columns being the x-axis and the rows being items
+#' @param x a vector indicating what the columns represent for \code{z}
+#' @param y a vector indicating what the rows represent for \code{z}
+#' @param z a matrix with the columns being the x-axis and the rows being items
 #' that wish to be stacked.
 #' @param plotAverage a logical value indicating whether or not to add the average value
-#' from matrix d.
-#' @param stationNames a character vector of equal length to the number of rows in d.
+#' from matrix z.
+#' @param ylab1 name for the y-axis on side 2, default is \code{NULL}
+#' @param ylab2 name for the y-axis on side 4 if \code{plotAverage = TRUE}, ignored otherwise, default is
+#' \code{NULL}.
+#' @param ylim1 limits for the y-axis on side 2, if not supplied, it will be inferred from \code{z}
+#' @param ylim2 limits for the y-axis on side 4 if \code{plotAverage = TRUE}, ignored otherwise. If not
+#' supplied, it will be inferred from the data.
+#' @param ncol supplied to legend, the number of columns in which to set the legend items, default is 1.
 #'
 #' @author Chantelle Layton
 #'
@@ -310,64 +318,85 @@ plotMonthlyBar <- function(df, ylim, years, plotYear, yearLabel = FALSE, yearLab
 #' @export
 #'
 
-plotMonthlyStackedBarplot <- function(d, plotAverage = TRUE, stationNames){
+plotStackedBarplot <- function(x, y, z, plotAverage = TRUE, ylab1 = NULL, ylab2 = NULL,
+                               ylim1, ylim2, ncol = 1){
   mround <- function(x, base) {base * round(x/base)}
   is.even <- function(x) x %% 2 == 0
+  # check to see if ylim1 is given
+  if(missing(ylim1)){
+    ylim1 <- range(z, na.rm = TRUE)
+  }
   # have to split up the matrix into negative and positive
-  dPos <- d
-  dPos[dPos < 0] <- 0
-  dPos[is.na(dPos)] <- 0
-  dNeg <- d
-  dNeg[dNeg > 0] <- 0
-  dNeg[is.na(dNeg)] <- 0
+  zPos <- z
+  zPos[zPos < 0] <- 0
+  zPos[is.na(zPos)] <- 0
+  zNeg <- z
+  zNeg[zNeg > 0] <- 0
+  zNeg[is.na(zNeg)] <- 0
 
   cexaxis <- 0.8
   # first do the positive values
-  bppos <- barplot(dPos, ylim = c(-15, 15), col = viridis(n = 6), xaxt = 'n',
-                   legend = stationNames, args.legend = list(x = 'topleft', bty = 'n'), border = NA,
+  bppos <- barplot(zPos, ylim = ylim1, col = viridis(n = 6), xaxt = 'n',
+                   #legend = y, args.legend = list(x = 'topleft', bty = 'n'), border = NA,
                    cex.axis = cexaxis)
   # need to set up the nice xaxis labels using some information from the bar plot
   # this will be used again below when actually labelling the x-axis, but some information
   # is needed to do dotted guidelines
   bp <- c(bppos, bppos[length(bppos)] + mean(diff(bppos)))
   # need to do some fudging when close to decade ending
-  stackedBpYears <- c(stackedBpYears, stackedBpYears[length(stackedBpYears)] + 1)
-  xlim <- mround(range(stackedBpYears),5)
-  xat <- seq(round(xlim[1], digits = -1), round(xlim[2], digits = -1), 10) # tick every decade
-  centuries <- c(1800, 1900, 2000)
-  okcentury <- centuries %in% xat
-  centuryIdx <- unlist(lapply(centuries[okcentury], function(k) which(k == xat)))
-  # if centuryIdx[1] is even, start xlabel idx at 2, if odd, at 1
-  xlabels <- seq(ifelse(is.even(centuryIdx[1]), 2, 1), length(xat), 2) # label every second decade, make sure centuries are labelled
-  okIdxLab <- unlist(lapply(xat[xlabels], function(k) which(k == stackedBpYears)))
-  okIdxAt <- unlist(lapply(xat, function(k) which(k == stackedBpYears)))
+  stackedx <- c(x, x[length(x)] + 1)
+  xlim <- mround(range(stackedx),5)
+  if(diff(xlim) > 50){
+    xat <- seq(round(xlim[1], digits = -1), round(xlim[2], digits = -1), 10) # tick every decade
+    centuries <- c(1800, 1900, 2000)
+    okcentury <- centuries %in% xat
+    centuryIdx <- unlist(lapply(centuries[okcentury], function(k) which(k == xat)))
+    # if centuryIdx[1] is even, start xlabel idx at 2, if odd, at 1
+    xlabels <- seq(ifelse(is.even(centuryIdx[1]), 2, 1), length(xat), 2) # label every second decade, make sure centuries are labelled
+    okIdxLab <- unlist(lapply(xat[xlabels], function(k) which(k == stackedx)))
+    okIdxAt <- unlist(lapply(xat, function(k) which(k == stackedx)))
+  } else {
+    xat <- pretty(xlim)
+    okIdxAt <- okIdxLab <- unlist(lapply(xat, function(k) which(k == stackedx)))
+  }
 
   # horizontal and vertical guidelines
-  abline(h = seq(-15,15, 5), lty = 'dotted', col = 'lightgrey')
+  hline <- pretty(ylim1)
+  # positive will include zero
+  abline(h = hline[hline >= 0], lty = 'dotted', col = 'lightgrey')
   abline(v = bp[okIdxAt], lty = 'dotted', col = 'lightgrey')
 
-  # add the bar plot back on top to get things on top of the guidelines
-  barplot(dPos, ylim = c(-15, 15), col = viridis(n = 6), xaxt = 'n',
-          legend = stationNames, args.legend = list(x = 'topleft', bty = 'n'), border = NA, add = TRUE,
-          cex.axis = cexaxis)
-  box()
+
   # negative values
-  bpneg <- barplot(dNeg, ylim = c(-15, 15), col = viridis(n = 6), xaxt = 'n',
+  bpneg <- barplot(zNeg, ylim = ylim1, col = viridis(n = 6), xaxt = 'n',
                    border = NA, cex.axis = cexaxis, add = TRUE)
   axis(side = 1, at = bp[okIdxAt], labels = FALSE)
-  axis(side = 1, at = bp[okIdxLab], labels = stackedBpYears[okIdxLab])
-  abline(h = seq(-15, 0, 5), lty = 'dotted', col = 'lightgrey')
+  axis(side = 1, at = bp[okIdxLab], labels = stackedx[okIdxLab])
+
+  abline(h = hline[hline < 0], lty = 'dotted', col = 'lightgrey')
   abline(v = bp[okIdxAt], lty = 'dotted', col = 'lightgrey')
-  bpneg <- barplot(dNeg, ylim = c(-15, 15), col = viridis(n = 6), xaxt = 'n',
+  # add neg bar plot again to get things on top of guidelines
+  bpneg <- barplot(zNeg, ylim = ylim1, col = viridis(n = 6), xaxt = 'n',
                    border = NA, add = TRUE, cex.axis = cexaxis)
+
+  # add the bar plot back on top to get things on top of the guidelines
+  barplot(zPos, ylim = ylim1, col = viridis(n = 6), xaxt = 'n',
+          legend = y, args.legend = list(x = 'topleft', bty = 'n', ncol = ncol), border = NA, add = TRUE,
+          cex.axis = cexaxis)
+  box()
+
   if(plotAverage){
     par(new = TRUE)
-    mtanom <- apply(d, 2, mean, na.rm = TRUE)
+    mtanom <- apply(z, 2, mean, na.rm = TRUE)
+    # check if ylim2 given
+    if(missing(ylim2)){
+      ylim2 <- range(mtanom, na.rm = TRUE)
+    }
     usr <- par('usr')
     xr <- (usr[2] - usr[1]) / 27
     xlim <- c(usr[1] + xr, usr[2] - xr)
     plot(bp[1:(length(bp)-1)], as.vector(mtanom), type = 'l',
-         ylim = c(-2.5, 2.5), xlim = xlim, lwd = 1,
+         ylim = ylim2 , xlim = xlim, lwd = 1,
          axes = FALSE, bty = 'n', xlab = '', ylab = '')
     axis(side = 4, cex.axis = cexaxis)
     legend('topright', lty = 1, col = 'black',
@@ -375,8 +404,27 @@ plotMonthlyStackedBarplot <- function(d, plotAverage = TRUE, stationNames){
            legend = gettext('average', domain = 'R-csasAtlPhys'))
     box()
   }
-  R <- ' ['
-  L <- ' ]'
-  mtext(side = 2, text = getAnomalyLabel('annualAirTemperatureAnomaly'), line = 2)
-  if(plotAverage) mtext(side = 4, text = getAnomalyLabel('averageAirTemperatureAnomaly'), line = 2)
+  if(!is.null(ylab1)) {mtext(side = 2, text = ylab1, line = 2)}
+  if(plotAverage & !is.null(ylab2)) mtext(side = 4, text = ylab2, line = 2)
+}
+
+#' @title Plot station locations
+#'
+#' @description Plots station locations at the top of plots using the points function
+#'
+#' @param distance a numerical vector indicating the distance
+#' @param plabel a numerical vector indication the placement of the labels
+#' @param cex a numerical value indicating the magnification
+#' @param pch a numerical value indicating the symbol
+#' @param col a character string indicating the color
+#'
+#' @author Chantelle Layton
+#'
+#' @importFrom graphics par
+#' @importFrom graphics points
+#' @export
+plotStationLocations <- function(distance, plabel, cex = 9/10, pch = 25, col = 'black'){
+  par(xpd = NA)
+  points(distance, rep(plabel, length(distance)), pch = pch, bg = col, col = col, cex = cex)
+  par(xpd = FALSE)
 }
