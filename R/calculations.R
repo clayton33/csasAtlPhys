@@ -546,6 +546,50 @@ binMeanPressureCtd <- function(x, bin, tolerance, trimBin = TRUE){
   }
   res@data[[which(pok)]] <- bin
   names(res@data) <- names(x@data)
+  # set some 'metadata' things in 'data' if they are na
+  # assumes that if time is na, then longitude and latitude will be as well
+  if(is.na(res[['time']][1])){
+    res@data$time[1] <- res@data$time[2]
+    res@data$longitude[1] <- res@data$longitude[2]
+    res@data$latitude[1] <- res@data$latitude[2]
+  }
+  res
+}
+
+#' @title Average a list of CTD objects.
+#'
+#' @description Average and list of CTD objects. This function will take all available data within all of the ctd objects
+#' and will average in pressure space. It takes all unique pressure values from all ctd objects, and then averages
+#' all availble data for each unique pressure values. Therefore, it's best if the data have already been vertically averaged.
+#'
+#' @param x a list of ctd objects
+#'
+#' @return a ctd object that has the same metadata and processing log as the supplied ctd object,
+#' but with bin-averaged data.
+#'
+#' @author Chantelle Layton
+#' @importFrom methods new
+#'
+#' @export
+
+averageCtds <- function(x){
+  # set up new ctd object
+  res <- new("ctd")
+  # add previous metadata and processing log
+  res@metadata <- x[[1]]@metadata
+  res@processingLog <- x[[1]]@processingLog
+  res[['startTime']] <- as.POSIXct(mean(unlist(lapply(x, function(k) k[['startTime']]))), origin = '1970-01-01', tz = 'UTC')
+  udatanames <- unique(unlist(lapply(x, function(k) names(k@data))))
+  # get all the data out of all the ctd objects
+  df <- do.call('rbind', lapply(x, function(k) {alld <- lapply(udatanames, function(kk) if(kk %in% names(k@data)) k[[kk]] else rep(NA, length(k[['pressure']])));
+  m <- do.call('cbind', alld);
+  colnames(m) <- udatanames;
+  as.data.frame(m)}))
+  upressure <- unique(df[['pressure']])
+  dfavg <- as.data.frame(do.call('rbind', lapply(upressure, function(k) {ok <- df[['pressure']] %in% k;
+  dfsub <- df[ok, ];
+  apply(dfsub, 2, mean, na.rm = TRUE)})))
+  res@data <- as.list(dfavg)
   res
 }
 
