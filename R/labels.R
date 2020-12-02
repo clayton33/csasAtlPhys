@@ -180,6 +180,9 @@ getLabel <- function(item, sep = ""){
   if(item == 'Annual'){
     label <- gettext('Annual', domain = 'R-csasAtlPhys')
   }
+  if(item == 'oxygenPercentSaturation'){
+    label <- gettext('Oxygen saturation', domain = 'R-csasAtlPhys')
+  }
   if(is.null(label)){
     cat('Please provide a valid item, if you believe the desired has not been implemented, please contact creator.', sep = '\n')
     cat('Returning item')

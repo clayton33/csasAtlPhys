@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: csasAtlPhys 0.0.9000\n"
-"POT-Creation-Date: 2020-11-06 09:48\n"
+"POT-Creation-Date: 2020-11-25 10:34\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -80,6 +80,9 @@ msgid "CIL thickness"
 msgstr ""
 
 msgid "Annual"
+msgstr ""
+
+msgid "Oxygen saturation"
 msgstr ""
 
 msgid "Emerald Basin"

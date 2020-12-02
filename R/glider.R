@@ -19,7 +19,6 @@
 #' @export
 #'
 read.gliderDat <- function(file) {
-  require(oce)
   dd <- read.table(file, header = TRUE)
   time <- as.POSIXct(paste(paste(dd$Year, dd$Month, dd$Day, sep = '-'), paste(dd$Hour, dd$Min, dd$Sec, sep = ':'), sep = ' '), tz = 'UTC')
   pressure <- as.vector(dd$P)
