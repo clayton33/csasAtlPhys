@@ -563,6 +563,15 @@ binMeanPressureCtd <- function(x, bin, tolerance, trimBin = TRUE){
 #' all availble data for each unique pressure values. Therefore, it's best if the data have already been vertically averaged.
 #'
 #' @param x a list of ctd objects
+#' @param bin an optional vector of numerical values of the center of the bin to average the data
+#' @param tolerance an optional vector of numerical values of the tolerance for the bin
+#'
+#' @details There are three different schemes for averaging based on which combination of `bin` and `tolerance`
+#' is supplied. If `bin = tolerance = NULL`, then profiles are averaged by unique pressure values in all
+#' of the ctd profiles. If `bin` and `tolerance` are supplied, then the data is averaged using the supplied
+#' values such that intervals are closed on the left and open on the right. If `bin` is supplied and `tolerance = NULL`
+#' then the data is averaged by combining `cut()` and `split()`, and for consistency to other schemes the intervals
+#' are closed on the left and open on the right.
 #'
 #' @return a ctd object that has the same metadata and processing log as the supplied ctd object,
 #' but with bin-averaged data.
@@ -572,7 +581,7 @@ binMeanPressureCtd <- function(x, bin, tolerance, trimBin = TRUE){
 #'
 #' @export
 
-averageCtds <- function(x){
+averageCtds <- function(x, bin = NULL, tolerance = NULL){
   # set up new ctd object
   res <- new("ctd")
   # add previous metadata and processing log
@@ -585,10 +594,41 @@ averageCtds <- function(x){
   m <- do.call('cbind', alld);
   colnames(m) <- udatanames;
   as.data.frame(m)}))
-  upressure <- unique(df[['pressure']])
-  dfavg <- as.data.frame(do.call('rbind', lapply(upressure, function(k) {ok <- df[['pressure']] %in% k;
-  dfsub <- df[ok, ];
-  apply(dfsub, 2, mean, na.rm = TRUE)})))
+  # profiles probably have already been vertically averaged
+  if(is.null(bin) & is.null(tolerance)){
+    upressure <- unique(df[['pressure']])
+    dfavg <- as.data.frame(do.call('rbind', lapply(upressure, function(k) {ok <- df[['pressure']] %in% k;
+                                                                           dfsub <- df[ok, ];
+                                                                           apply(dfsub, 2, mean, na.rm = TRUE)})))
+    dfavg <- data.frame(pressure = upressure,
+                        dfavg)
+
+  }
+  # use cut split method with right = FALSE, meaning left closed (included) right open (excluded)
+  if(!is.null(bin) & is.null(tolerance)){
+    notpressure <- !names(df) %in% 'pressure'
+    pressure <- df[,!notpressure]
+    dfavg <- apply(df[,notpressure], 2, function(k) unlist(lapply(split(k, cut(pressure, bin, right = FALSE)), mean, na.rm = TRUE)))
+    dfn <- apply(df[,notpressure], 2, function(k) unlist(lapply(split(k, cut(pressure, bin, right = FALSE)), function(x) length(which(!is.na(x))))))
+    dfavg <- data.frame(pressure = bin[2:length(bin)] - (diff(bin)/2),
+                        dfavg)
+  }
+  # bin the data
+  if(!is.null(bin) & !is.null(tolerance)){
+    dfavg <- mapply(function(bin, tolerance) {ok <- df[['pressure']] >= (bin - tolerance) & df[['pressure']] < (bin + tolerance);
+                                              dfsub <- df[ok, ];
+                                              apply(dfsub, 2, mean, na.rm = TRUE)},
+                            bin,
+                            tolerance)
+    dfavg <- as.data.frame(t(dfavg))
+    dfavg[['pressure']] <- bin
+  }
+
+  # remove time and scan because it means nothing
+  if(any(c('scan', 'time') %in% names(dfavg))){
+    ok <- !names(dfavg) %in% c('scan', 'time')
+    dfavg <- dfavg[, ok]
+  }
   res@data <- as.list(dfavg)
   res
 }

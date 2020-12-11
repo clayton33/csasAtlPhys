@@ -480,3 +480,77 @@
 #' @format a list which contains \code{stationName}, \code{longitude}, \code{latitude}, \code{polyLongitude},
 #' \code{polyLatitude} for each station.
 "stAnnsBankStationPolygons"
+
+#' Portsmouth polygon
+#'
+#' Polygon defining the bounds to look for data along the core Atlantic Zone Monitoring Program
+#' line, Portsmouth. It was constructed by finding the angle between the first point and the last point
+#' of the line, and then calculating the bounding box which is 8 km wide.
+#'
+#' @format a list of \code{longitude} and \code{latitude}
+"portsmouthPolygon"
+
+#' Portsmouth station polygon's
+#'
+#' Polygons defining bounds to look for data at each station along the core Atlantic Zone Monitoring Program
+#' line, Portsmouth.
+#'
+#' @format a list which contains \code{stationName}, \code{longitude}, \code{latitude}, \code{polyLongitude},
+#' \code{polyLatitude} for each station.
+"portsmouthStationPolygons"
+
+#' Yarmouth polygon
+#'
+#' Polygon defining the bounds to look for data along the core Atlantic Zone Monitoring Program
+#' line, Yarmouth. It was constructed by finding the angle between the first point and the last point
+#' of the line, and then calculating the bounding box which is 8 km wide.
+#'
+#' @format a list of \code{longitude} and \code{latitude}
+"yarmouthPolygon"
+
+#' Yarmouth station polygon's
+#'
+#' Polygons defining bounds to look for data at each station along the core Atlantic Zone Monitoring Program
+#' line, Yarmouth.
+#'
+#' @format a list which contains \code{stationName}, \code{longitude}, \code{latitude}, \code{polyLongitude},
+#' \code{polyLatitude} for each station.
+"yarmouthStationPolygons"
+
+#' Laurentian Channel Mouth polygon
+#'
+#' Polygon defining the bounds to look for data along the core Atlantic Zone Monitoring Program
+#' line, Laurentian Channel Mouth. It was constructed by finding the angle between the first point and the last point
+#' of the line, and then calculating the bounding box which is 8 km wide.
+#'
+#' @format a list of \code{longitude} and \code{latitude}
+"laurentianChannelMouthPolygon"
+
+#' Laurentian Channel Mouth station polygon's
+#'
+#' Polygons defining bounds to look for data at each station along the core Atlantic Zone Monitoring Program
+#' line, Laurentian Channel Mouth. Note that the bounding box around each station is 4km due to station spacing.
+#'
+#' @format a list which contains \code{stationName}, \code{longitude}, \code{latitude}, \code{polyLongitude},
+#' \code{polyLatitude} for each station.
+"laurentianChannelMouthStationPolygons"
+
+#' St.Pierre Bank polygon
+#'
+#' Polygon defining the bounds to look for data along the core Atlantic Zone Monitoring Program
+#' line, St.Pierre Bank. It was constructed by finding the angle between the first point and the last point
+#' of the line, and then calculating the bounding box which is 8 km wide.
+#'
+#' @format a list of \code{longitude} and \code{latitude}
+"stPierreBankPolygon"
+
+#' St.Pierre Bank station polygon's
+#'
+#' Polygons defining bounds to look for data at each station along the core Atlantic Zone Monitoring Program
+#' line, St.Pierre. Note that the bounding box around each station is 4km due to station spacing.
+#'
+#' @format a list which contains \code{stationName}, \code{longitude}, \code{latitude}, \code{polyLongitude},
+#' \code{polyLatitude} for each station.
+"stPierreBankStationPolygons"
+
+

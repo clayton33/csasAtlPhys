@@ -4,10 +4,14 @@
 \alias{averageCtds}
 \title{Average a list of CTD objects.}
 \usage{
-averageCtds(x)
+averageCtds(x, bin = NULL, tolerance = NULL)
 }
 \arguments{
 \item{x}{a list of ctd objects}
+
+\item{bin}{an optional vector of numerical values of the center of the bin to average the data}
+
+\item{tolerance}{an optional vector of numerical values of the tolerance for the bin}
 }
 \value{
 a ctd object that has the same metadata and processing log as the supplied ctd object,
@@ -17,6 +21,14 @@ but with bin-averaged data.
 Average and list of CTD objects. This function will take all available data within all of the ctd objects
 and will average in pressure space. It takes all unique pressure values from all ctd objects, and then averages
 all availble data for each unique pressure values. Therefore, it's best if the data have already been vertically averaged.
+}
+\details{
+There are three different schemes for averaging based on which combination of \code{bin} and \code{tolerance}
+is supplied. If \code{bin = tolerance = NULL}, then profiles are averaged by unique pressure values in all
+of the ctd profiles. If \code{bin} and \code{tolerance} are supplied, then the data is averaged using the supplied
+values such that intervals are closed on the left and open on the right. If \code{bin} is supplied and \code{tolerance = NULL}
+then the data is averaged by combining \code{cut()} and \code{split()}, and for consistency to other schemes the intervals
+are closed on the left and open on the right.
 }
 \author{
 Chantelle Layton

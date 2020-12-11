@@ -23,7 +23,7 @@ read.sealevel2 <- function(file, combineData = TRUE){
     dd <- read.sealevel(file)
     dl <- list(stationNumber = dd[['stationNumber']],
                stationName = dd[['stationName']],
-               longitude = dd[['longitude']],
+               longitude = dd[['longitude']] * -1, # assuming longitude always needs to be changed to negative
                latitude = dd[['latitude']],
                data = data.frame(time = dd[['time']],
                                  elevation = dd[['elevation']]
@@ -33,7 +33,7 @@ read.sealevel2 <- function(file, combineData = TRUE){
     if(combineData){
       dl <- list(stationNumber = dd[[1]][['stationNumber']],
                  stationName = dd[[1]][['stationName']],
-                 longitude = dd[[1]][['longitude']],
+                 longitude = dd[[1]][['longitude']] * -1, # see above
                  latitude = dd[[1]][['latitude']],
                  data = data.frame(time = as.POSIXct(unlist(lapply(dd, function(k) k[['time']])),
                                                      origin = '1970-01-01',
@@ -42,7 +42,7 @@ read.sealevel2 <- function(file, combineData = TRUE){
     } else {
       dl <- lapply(dd, function(k) list(stationNumber = k[['stationNumber']],
                                         stationName = k[['stationName']],
-                                        longitude = k[['longitude']],
+                                        longitude = k[['longitude']] * -1,
                                         latitude = k[['latitude']],
                                         data = data.frame(time = as.POSIXct(k[['time']],
                                                                             origin = '1970-01-01',
