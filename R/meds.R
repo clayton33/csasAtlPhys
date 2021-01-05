@@ -9,7 +9,7 @@
 #' and month specified does not necessarily mean that the data contained in
 #' those files was aquired during the year and month in question. The data file
 #' will contain all the data received by MEDS during that year and month. For each
-#' requested year and or month will download two files, a `.hdr`and a `.prf`
+#' requested year and or month will download two files, a `.hdr` and a `.prf`
 #' file. Both are required when reading the data as the `.hdr` file contains
 #' some basic metadata, and `.prf` contains all of the data.
 #'
@@ -17,7 +17,7 @@
 #' @param month Optional number indicating the month
 #' @param destdir Optional string indicating the directory in which to store
 #' downloaded files. If not supplied, `"."` is used, i.e. the data file
-#' is stored in the present working directory. Also, if the directory will be created
+#' is stored in the present working directory. Also, the directory will be created
 #' if not already done so.
 #'
 #' @author Chantelle Layton
@@ -62,7 +62,7 @@ download.meds <- function(year, month, destdir = '.') {
                     destfile = paste(destdir, file, sep = '/'))
     }
   } else {
-    message(paste0('No files found for', year, ifelse(!missing(month), paste0('and month', month), ''),'.'))
+    message(paste('No files found for', year, ifelse(!missing(month), paste('and month', month), ''),'.'))
   }
 }
 
@@ -88,7 +88,7 @@ download.meds <- function(year, month, destdir = '.') {
 #' @importFrom dplyr left_join
 #' @importFrom oce as.ctd
 #' @importFrom oce oceSetMetadata
-#'
+#' @export
 #'
 
 read.meds <- function(hdrfile, prffile, exclusionLon = NULL, exclusionLat = NULL){

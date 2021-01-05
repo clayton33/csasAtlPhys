@@ -13,7 +13,7 @@ download.meds(year, month, destdir = ".")
 
 \item{destdir}{Optional string indicating the directory in which to store
 downloaded files. If not supplied, \code{"."} is used, i.e. the data file
-is stored in the present working directory. Also, if the directory will be created
+is stored in the present working directory. Also, the directory will be created
 if not already done so.}
 }
 \description{
@@ -27,7 +27,7 @@ Users have the option of supplying the year and or month. Note that the year
 and month specified does not necessarily mean that the data contained in
 those files was aquired during the year and month in question. The data file
 will contain all the data received by MEDS during that year and month. For each
-requested year and or month will download two files, a \code{.hdr}and a \code{.prf}
+requested year and or month will download two files, a \code{.hdr} and a \code{.prf}
 file. Both are required when reading the data as the \code{.hdr} file contains
 some basic metadata, and \code{.prf} contains all of the data.
 }
