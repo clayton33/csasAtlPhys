@@ -4,12 +4,21 @@
 \alias{plotStationLocations}
 \title{Plot station locations}
 \usage{
-plotStationLocations(distance, plabel, cex = 9/10, pch = 25, col = "black")
+plotStationLocations(
+  distance,
+  plabel,
+  distanceOffset = NULL,
+  cex = 9/10,
+  pch = 25,
+  col = "black"
+)
 }
 \arguments{
 \item{distance}{a numerical vector indicating the distance}
 
 \item{plabel}{a numerical vector indication the placement of the labels}
+
+\item{distanceOffset}{a numerical value indicating the value to add and subtract from distace that will plot a line, default value is NULL}
 
 \item{cex}{a numerical value indicating the magnification}
 

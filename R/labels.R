@@ -455,6 +455,7 @@ getMetadata <- function(item){
 #' @export
 #'
 getData <- function(item){
+  label <- NULL
   if(item == 'anomaly'){
     label <- gettext('anomaly', domain = 'R-csasAtlPhys')
   }

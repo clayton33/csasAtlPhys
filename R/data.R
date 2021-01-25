@@ -203,6 +203,25 @@
 #' \code{temperatureAnomaly}, \code{salinity}, and \code{salinityAnomaly}.
 "areaMonthlyTimeseries"
 
+#' Density gradient monthly climatology 1981 to 2010
+#'
+#' Relevant parameters used to calculate the density gradient across the scotian shelf
+#'
+#' @format a data.frame that has the climatology monthly average for areas 1 to 29
+#' of the Scotian-Fundy polygons. Variables include the value at 0m and 50m for temperature,
+#' salinity, and sigmaTheta, and the number of profiles used in the calculation. Also, the
+#' salinity and sigmaTheta gradient, as well as the number of profiles used for the gradient calculations.
+"densityGradientMonthlyClimatology1981to2010"
+
+#' Density gradient weighted anomaly
+#'
+#' Previously calculated anomaly values for variables associated with density gradient analysis.
+#'
+#' @format a data.frame that has year and the weighted anomaly, weighted anomaly standard deviation, and number
+#' of regions for variables at 0m and 50m for salinity, temperature, and sigmaTheta, along with the salinity
+#' and sigma theta gradient
+"densityGradientWeightedAnomaly"
+
 #' Climate area polygons
 #'
 #' Defined climate area polygons for all four Fisheries and Oceans Canada
@@ -224,6 +243,12 @@
 #'
 #' @format a data frame with \code{area}, \code{polyArea} and \code{region}.
 "climatePolygonArea"
+
+#' Area standard depth bins
+#'
+#' Area standard depth bins and tolerances definitions for vertically averaging
+#' @format a data frame with columns \code{bin} and \code{tolerance}
+"areaDepthBins"
 
 
 #' Station 2 monthly data
@@ -354,6 +379,14 @@
 #'
 #' @format a data frame with columns \code{year}, \code{month}, \code{temperature}
 "sstInSituStAndrews"
+
+#' Sea surface temperature in-situ polygons for two sites
+#'
+#' Longitude and latitude polygon definitions that were manually created to help facilitate
+#' finding data.
+#'
+#' @format a list of length two, both of which have the station name and the longitude and latitude
+"sstInSituPolygons"
 
 #' NAFO zones for Maritimes regions
 #'

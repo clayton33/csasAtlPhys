@@ -414,6 +414,7 @@ plotStackedBarplot <- function(x, y, z, plotAverage = TRUE, ylab1 = NULL, ylab2 
 #'
 #' @param distance a numerical vector indicating the distance
 #' @param plabel a numerical vector indication the placement of the labels
+#' @param distanceOffset a numerical value indicating the value to add and subtract from distace that will plot a line, default value is NULL
 #' @param cex a numerical value indicating the magnification
 #' @param pch a numerical value indicating the symbol
 #' @param col a character string indicating the color
@@ -423,8 +424,11 @@ plotStackedBarplot <- function(x, y, z, plotAverage = TRUE, ylab1 = NULL, ylab2 
 #' @importFrom graphics par
 #' @importFrom graphics points
 #' @export
-plotStationLocations <- function(distance, plabel, cex = 9/10, pch = 25, col = 'black'){
+plotStationLocations <- function(distance, plabel, distanceOffset = NULL, cex = 9/10, pch = 25, col = 'black'){
   par(xpd = NA)
   points(distance, rep(plabel, length(distance)), pch = pch, bg = col, col = col, cex = cex)
+  if(!is.null(distanceOffset)){
+    lines(distance + c(-distanceOffset, distanceOffset), rep(plabel, 2), lty = 1, col = col, cex = cex)
+  }
   par(xpd = FALSE)
 }
