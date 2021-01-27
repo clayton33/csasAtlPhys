@@ -22,14 +22,14 @@
 #'
 #' @importFrom oce as.ctd
 #'
+#' @export
 
 read.minilog <- function(file, skipStart = NA, skipEnd = NA, skip = 8, pressure) {
   csvdata <- read.table(file,
                         header=FALSE, skip = skip, sep=",",
                         col.names = c("DATE","TIME","TEMPERATURE"),stringsAsFactors = FALSE)
-  sst <- as.data.frame(DATE = as.POSIXct(paste(csvdata$DATE,csvdata$TIME), tryFormats=c("%d/%m/%Y %H:%M:%S",
-                                                                         "%Y-%m-%d %H:%M:%S"),
-                          tz="UTC",origin="1970-01-01"),
+  sst <- data.frame(DATE = as.POSIXct(paste(csvdata$DATE,csvdata$TIME), tryFormats=c("%d/%m/%Y %H:%M:%S",
+                                                                         "%Y-%m-%d %H:%M:%S"), tz="UTC",origin="1970-01-01"),
                        TEMPERATURE = csvdata$TEMPERATURE)
   #colnames(sst) <- c("DATE", "TEMPERATURE")
   #sst <- as.data.frame(sst)
@@ -73,6 +73,7 @@ read.minilog <- function(file, skipStart = NA, skipEnd = NA, skip = 8, pressure)
 #' @importFrom oce as.ctd
 #' @importFrom utils read.csv
 #'
+#' @export
 
 read.stAndrewsTemperature <- function(file, skip = 0, header = TRUE, pressure){
   ss <- strsplit(x = file, split = '\\.')[[1]]
@@ -164,6 +165,7 @@ read.stAndrewsTemperature <- function(file, skip = 0, header = TRUE, pressure){
 #'
 #' @return a ctd object with `deploymentType = "moored"`.
 #'
+#' @export
 
 read.sealogT <- function(file, skipStart = NA, skipEnd = NA, pressure){
   rl <- readLines(file)
