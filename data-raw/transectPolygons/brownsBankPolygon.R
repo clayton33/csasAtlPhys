@@ -151,6 +151,7 @@ for(i in 1:length(bblon)){
   stnpoly[[i]][['latitude']] <- bblat[i]
   stnpoly[[i]][['polyLongitude']] <- cornerlonlat$longitude
   stnpoly[[i]][['polyLatitude']] <- cornerlonlat$latitude
+  stnpoly[[i]][['transectName']] <- 'brownsBank'
 }
 
 brownsBankStationPolygons <- stnpoly

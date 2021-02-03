@@ -160,6 +160,126 @@ plotAnnualAnomaly <- function(x, y, xlim, ylim, xlab = TRUE, climatologyYears, y
   }
 }
 
+#' @title Plot monthly time series
+#'
+#' @author Chantelle Layton
+#'
+#' @description Creates a time-series plot of annual temperature anomaly in the style required for
+#' AZMP reporting.
+#'
+#' @param x a vector indicating the times of observations
+#' @param y a vector indicating the observations
+#' @param xlim Optional limit for x axis
+#' @param ylim Optional limit for y axis
+#' @param xlab Logical indicating whether to label the x axis
+#' @param climatologyYears Vector of length two indicating the climatology years
+#' @param ylabel Logical indicating whether to label the y axis
+#' @param plotSd Logical indicating whether to add +/- 0.5 standard deviation lines on plot of
+#' the annual anomaly over the defined climatology period.
+#' @param yaxs Logical indicating whether to have a labelled y-axis
+#' @param plotPoints Logical indicating whether or not to plot data as points, or as lines with lty = 2.
+#'
+#' @details The current format of the figure is for a specific user. It is similar in nature to
+#' plotAnnualAnomaly, but is behind in development as it is not frequently used.
+#'
+#' @importFrom stats sd
+#' @importFrom graphics axis.POSIXct
+#' @importFrom graphics plot
+#' @importFrom graphics abline
+#' @importFrom graphics axis
+#' @importFrom graphics lines
+#' @importFrom graphics mtext
+#' @importFrom graphics points
+#' @importFrom graphics legend
+#'
+#' @export
+
+
+plotMonthlyAnomaly <- function(x, y, xlim, ylim, xlab = TRUE, climatologyYears, ylabel = TRUE,
+                               plotSd = TRUE, yaxs = TRUE, plotPoints = TRUE){
+  is.even <- function(x) x %% 2 == 0
+  # ylabel
+  L <- '['
+  R <- ']'
+  ylab <- bquote('Temperature Anomaly ' * .(L) * degree * "C" * .(R))
+  # xlim
+  # set it if not given
+  xlimGiven <- !missing(xlim)
+  if(!xlimGiven){
+    xlim <- range(as.numeric(names(x)), na.rm = TRUE)
+  }
+  # ylim
+  # set it if not given
+  ylimGiven <- !missing(ylim)
+  if(!ylimGiven){
+    ylim <- range(x, na.rm = TRUE)
+  }
+
+  plot(x = x,
+       y = y, col = 'white',
+       lwd = 0.6,
+       type = 'n',
+       xlim = as.POSIXct(paste(xlim, c(01, 12), c(01, 31), sep = '/'), tz = 'UTC'),
+       ylim = ylim,
+       xaxt = 'n', yaxt = 'n',
+       xlab = '', ylab = '')
+  #...)
+  # x-axis, x-axis labels
+  xat <- seq(round(xlim[1], digits = -1), round(xlim[2], digits = -1), 10) # tick every decade
+  centuries <- c(1800, 1900, 2000)
+  okcentury <- centuries %in% xat
+  centuryIdx <- unlist(lapply(centuries[okcentury], function(k) which(k == xat)))
+  # if centuryIdx[1] is even, start xlabel idx at 2, if odd, at 1
+  xlabels <- seq(ifelse(is.even(centuryIdx[1]), 2, 1), length(xat), 2) # label every second decade, make sure centuries are labelled
+  axis(side = 1, at = as.POSIXct(paste(xat, '01', '01', sep = '/'), tz = 'UTC'), labels = FALSE)
+  if(xlab){
+    axis.POSIXct(side = 1,
+                 at = as.POSIXct(paste(xat[xlabels], '01', '01', sep = '/'), tz = 'UTC'),
+                 labels = TRUE,
+                 format = '%Y')
+  }
+  # y-axis, y-axis labels, y-axis label
+  if(yaxs){
+    {if(diff(ylim) < 20){ # kind of bad logic
+      yat <- seq(round(ylim[1], digits = 0), round(ylim[2], digits = 0), 1) # label every one
+    } else {
+      yat <- pretty(ylim)
+    }
+    }
+    axis(side = 2, at = yat, labels = yat)
+  }
+
+  if(ylabel) mtext(text = ylab, side = 2, line = 2, cex = 4/5)
+  # grid
+  # ugh, function grid() not working when nx and ny given
+  abline(v = as.POSIXct(paste(xat, '01', '01', sep = '/'), tz = 'UTC'), col = 'lightgray', lty = 'dotted')
+  if(yaxs) abline(h = yat, col = 'lightgray', lty = 'dotted')
+  # replot initial lines so its over the grid
+  if(plotPoints){
+    lines(x = x, y = y, col = 'black')
+    points(x = x, y = y, pch = 21, col = 'black', bg = 'white')
+  } else {
+    lines(x = x, y = y, col = 'black', lty = 2)
+  }
+  # add additional stuff to plot
+  # climatology standard deviation
+  if(plotSd){
+    okclim <- as.numeric(names(x)) >= climatologyYears[1] & as.numeric(names(x)) <= climatologyYears[2]
+    aasd <- sd(x[okclim], na.rm = TRUE)
+    {if(diff(ylim) > 20) {
+      cmean <- mean(x[okclim], na.rm = TRUE)
+      abline(h = cmean, lty = 1, lwd = 2)
+      abline(h = (aasd/2) + cmean, lty = 2, lwd = 2)
+      abline(h = (-aasd/2) + cmean, lty = 2, lwd = 2)
+    } else {
+      abline(h = 0)
+      abline(h = aasd/2, lty = 2, lwd = 2)
+      abline(h = -aasd/2, lty = 2, lwd = 2)
+    }
+    }
+  }
+}
+
 
 #' @title Plot monthly bar plots
 #'

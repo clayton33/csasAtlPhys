@@ -95,6 +95,7 @@ for(i in 1:length(hfxlon)){
         stnpoly[[i]][['latitude']] <- hfxlat[i]
         stnpoly[[i]][['polyLongitude']] <- cornerlonlat$longitude
         stnpoly[[i]][['polyLatitude']] <- cornerlonlat$latitude
+        stnpoly[[i]][['transectName']] <- 'halifaxInshore'
 
 }
 halifaxStationPolygons <- stnpoly

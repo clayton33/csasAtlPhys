@@ -93,6 +93,7 @@ for(i in 2:length(lon)){ # LL_01 will be covered in louisbourgPolygon.R
   stnpoly[[cnt]][['latitude']] <- lat[i]
   stnpoly[[cnt]][['polyLongitude']] <- cornerlonlat$longitude
   stnpoly[[cnt]][['polyLatitude']] <- cornerlonlat$latitude
+  stnpoly[[i]][['transectName']] <- 'stAnnsBank'
   cnt <- cnt + 1
 
 }

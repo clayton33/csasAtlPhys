@@ -93,6 +93,7 @@ for(i in 1:length(neclon)){
         stnpoly[[i]][['latitude']] <- neclat[i]
         stnpoly[[i]][['polyLongitude']] <- cornerlonlat$longitude
         stnpoly[[i]][['polyLatitude']] <- cornerlonlat$latitude
+        stnpoly[[i]][['transectName']] <- 'northeastChannel'
 
 }
 
