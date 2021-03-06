@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: csasAtlPhys 0.0.9000\n"
-"POT-Creation-Date: 2020-11-25 10:34\n"
+"POT-Creation-Date: 2021-02-22 10:35\n"
 "PO-Revision-Date: 2020-06-03 19:38-0300\n"
 "Last-Translator: <EMAIL@ADDRESS>\n"
 "Language-Team: Language R-fr\n"
@@ -163,6 +163,14 @@ msgstr "Chenal nord-est"
 
 msgid "Portsmouth"
 msgstr "Portsmouth"
+
+#, fuzzy
+msgid "Laurentian Channel Mouth"
+msgstr "Chenal Laurentien"
+
+#, fuzzy
+msgid "St. Pierre Bank"
+msgstr "Banc de Sainte-Anne"
 
 msgid "Gully"
 msgstr "Gully"
@@ -420,6 +428,14 @@ msgstr "'"
 
 msgid "Please provide either a year or ship."
 msgstr "Please provide either a year or ship."
+
+msgid ""
+"Must supply all three parameters, buoyName, startDate, and endDate, in order "
+"to download data."
+msgstr ""
+
+msgid "All data is bad for buoy"
+msgstr ""
 
 msgid ""
 "Must provide a valid value for which, please read parameter description for "

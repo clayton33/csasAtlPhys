@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: csasAtlPhys 0.0.9000\n"
-"POT-Creation-Date: 2020-11-06 09:48\n"
+"POT-Creation-Date: 2020-11-25 10:34\n"
 "PO-Revision-Date: 2020-06-03 19:38-0300\n"
 "Last-Translator: <EMAIL@ADDRESS>\n"
 "Language-Team: Language R-fr\n"
@@ -92,6 +92,9 @@ msgstr "Épaisseur de la CIF"
 
 msgid "Annual"
 msgstr "Annuel"
+
+msgid "Oxygen saturation"
+msgstr "Saturation d'oxygène"
 
 msgid "Emerald Basin"
 msgstr "Bassin d'Émeraude"

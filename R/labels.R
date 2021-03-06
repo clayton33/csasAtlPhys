@@ -229,7 +229,7 @@ getLocationName <- function(item){
   if(item == 'North Sydney'){
     location <- gettext('North Sydney', domain = 'R-csasAtlPhys')
   }
-  if(item == 'Yarmouth'){
+  if(item %in% c('Yarmouth', 'yarmouth')){
     location <- gettext('Yarmouth', domain = 'R-csasAtlPhys')
   }
   if(item == 'Sable Island'){
@@ -273,6 +273,12 @@ getLocationName <- function(item){
   }
   if(item %in% c('Portsmouth', 'portsmouth')){
     location <- gettext('Portsmouth', domain = 'R-csasAtlPhys')
+  }
+  if(item %in% c('Laurentian Channel Mouth', 'laurentianChannelMouth')){
+    location <- gettext('Laurentian Channel Mouth', domain = 'R-csasAtlPhys')
+  }
+  if(item %in% c('St. Pierre Bank', 'stPierreBank')){
+    location <- gettext('St. Pierre Bank', domain = 'R-csasAtlPhys')
   }
   if(item == 'Gully'){
     location <- gettext('Gully', domain = 'R-csasAtlPhys')

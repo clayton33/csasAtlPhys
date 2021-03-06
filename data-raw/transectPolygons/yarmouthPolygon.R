@@ -2,6 +2,7 @@ rm(list=ls())
 library(usethis)
 library(oce)
 library(csasAtlPhys)
+plot <- FALSE
 
 # yarmouth, nova scotia (PL01) to portsmouth, new hampshire (PL10)
 lon <- c(-70.2724, -70.0098, -69.5574, -69.1064, -68.6643, -68.2124, -67.7534, -67.3023, -66.8513, -66.4003)
@@ -95,25 +96,27 @@ yarmouthStationPolygons <- stnpoly
 usethis::use_data(yarmouthStationPolygons, compress = 'xz', overwrite = TRUE)
 
 # for debugging purposes to double check polygon and station polygons
-# library(ocedata)
-# data("coastlineWorldFine")
-# proj <- '+proj=merc'
-# fillcol <- 'lightgrey'
-# lonlim <- range(c(lon, startcorner$longitude, endcorner$longitude)) + c(-0.5, 0.5)
-# latlim <- range(c(lat, startcorner$latitude, startcorner$latitude)) + c(-0.5, 0.5)
-#
-# #png('00_cabotStraitPolygon.png', width = 6, height = 4, unit = 'in', res = 200, pointsize = 12)
-# par(mar = c(3.5, 3.5, 1, 1))
-# mapPlot(coastlineWorldFine,
-#         longitudelim = lonlim,
-#         latitudelim = latlim,
-#         col = fillcol,
-#         proj = proj,
-#         grid = c(2,1))
-# mapPoints(lon, lat, pch = 20, col = 'black')
-# mapPoints(eastlon, eastlat, col = 'red', pch = 20)
-# mapPoints(westlon, westlat, col = 'red', pch = 20)
-# mapPolygon(c(startcorner$longitude, endcorner$longitude),
-#            c(startcorner$latitude, endcorner$latitude))
-# lapply(stnpoly, function(k) mapPolygon(k[['polyLongitude']], k[['polyLatitude']], border = 'red'))
-# #dev.off()
+if(plot){
+library(ocedata)
+data("coastlineWorldFine")
+proj <- '+proj=merc'
+fillcol <- 'lightgrey'
+lonlim <- range(c(lon, startcorner$longitude, endcorner$longitude)) + c(-0.5, 0.5)
+latlim <- range(c(lat, startcorner$latitude, startcorner$latitude)) + c(-0.5, 0.5)
+
+#png('00_cabotStraitPolygon.png', width = 6, height = 4, unit = 'in', res = 200, pointsize = 12)
+par(mar = c(3.5, 3.5, 1, 1))
+mapPlot(coastlineWorldFine,
+        longitudelim = lonlim,
+        latitudelim = latlim,
+        col = fillcol,
+        proj = proj,
+        grid = c(2,1))
+mapPoints(lon, lat, pch = 20, col = 'black')
+mapPoints(eastlon, eastlat, col = 'red', pch = 20)
+mapPoints(westlon, westlat, col = 'red', pch = 20)
+mapPolygon(c(startcorner$longitude, endcorner$longitude),
+           c(startcorner$latitude, endcorner$latitude))
+lapply(stnpoly, function(k) mapPolygon(k[['polyLongitude']], k[['polyLatitude']], border = 'red'))
+#dev.off()
+}

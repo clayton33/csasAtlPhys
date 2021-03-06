@@ -2,6 +2,7 @@ rm(list=ls())
 library(usethis)
 library(oce)
 library(csasAtlPhys)
+plot <- FALSE
 
 # cabot strait, cape breton to newfoundland
 lon <- c(-60.2167, -60.1167, -59.9917, -59.7833, -59.5583, -59.3417)
@@ -59,28 +60,33 @@ cabotStraitPolygon <- list(longitude = cspolyx,
 usethis::use_data(cabotStraitPolygon, compress = 'xz', overwrite = TRUE)
 
 # next calculate the station polygons using same methods as above
+dist <- NULL
+for(i in 1:(length(lon)-1)){
+        stndist <- geodDist(longitude1 = lon[i], latitude1 = lat[i],
+                            longitude2 = lon[(i+1)], latitude2 = lat[(i+1)])
+        dist <- c(dist, stndist)
+}
+distheight <- dist/2
+distheight <- c(head(distheight,1), distheight, tail(distheight,1))
+distheight[distheight > 8] <- 8
+distwidth <- 8
+distheight <- distheight * 1000
+distwidth <- distwidth * 1000
 stnpoly <- vector(mode = 'list', length = length(lon))
 for(i in 1:length(lon)){
         zone <- lonlat2utm(longitude = lon[i],
                            latitude = lat[i])$zone
         ptutm <- lonlat2utm(longitude = lon[i],
                             latitude = lat[i])
-        dist <- 8 * 1000
-        eastingadd <- dist * c(cos((angle + 180) * pi/180), # start
-                               cos(angle * pi/180)) # end
-        northingadd <- dist * c(sin((angle + 180) * pi/180), # start
-                                sin(angle * pi/180)) # end
-        cornereasting <- c(dist * cos((angle + 90) * pi/180),
-                           dist * cos((angle + 270) * pi/180))
-        cornernorthing <- c(dist * sin((angle + 90) * pi/180),
-                            dist * sin((angle + 270) * pi/180))
-
-        pteasting <- c(ptutm$easting + eastingadd[1] + cornereasting,
-                       ptutm$easting + eastingadd[2] + rev(cornereasting))
-        ptnorthing <- c(ptutm$northing + northingadd[1] + cornernorthing,
-                        ptutm$northing + northingadd[2] + rev(cornernorthing))
-        cornerlonlat <- utm2lonlat(easting = pteasting,
-                                   northing = ptnorthing,
+        angleadj <- 45 + 0:3 * 90
+        eastingadj <- cos(angleadj * pi/180)
+        northingadj <- sin(angleadj * pi/180)
+        ptnorthing <- (distwidth * eastingadj)
+        pteasting <- c(distheight[(i+1)], distheight[(i+1)],distheight[i], distheight[i]) * northingadj
+        pteastingrotate <- pteasting * cos(angle * pi/180) - ptnorthing * sin(angle * pi/180)
+        ptnorthingrotate <- pteasting * sin(angle * pi/180) + ptnorthing * cos(angle * pi/180)
+        cornerlonlat <- utm2lonlat(easting = ptutm$easting + pteastingrotate,
+                                   northing = ptutm$northing + ptnorthingrotate,
                                    zone = zone)
         stnpoly[[i]][['stationName']] <- names[i]
         stnpoly[[i]][['longitude']] <- lon[i]
@@ -93,23 +99,27 @@ for(i in 1:length(lon)){
 cabotStraitStationPolygons <- stnpoly
 usethis::use_data(cabotStraitStationPolygons, compress = 'xz', overwrite = TRUE)
 
-# proj <- '+proj=merc'
-# fillcol <- 'lightgrey'
-# lonlim <- range(c(lon, startcorner$longitude, endcorner$longitude)) + c(-0.5, 0.5)
-# latlim <- range(c(lat, startcorner$latitude, startcorner$latitude)) + c(-0.5, 0.5)
-#
-# png('00_cabotStraitPolygon.png', width = 6, height = 4, unit = 'in', res = 200, pointsize = 12)
-# par(mar = c(3.5, 3.5, 1, 1))
-# mapPlot(coastlineWorldFine,
-#         longitudelim = lonlim,
-#         latitudelim = latlim,
-#         col = fillcol,
-#         proj = proj,
-#         grid = c(2,1))
-# mapPoints(lon, lat, pch = 20, col = 'black')
-# mapPoints(eastlon, eastlat, col = 'red', pch = 20)
-# mapPoints(westlon, westlat, col = 'red', pch = 20)
-# mapPolygon(c(startcorner$longitude, endcorner$longitude),
-#            c(startcorner$latitude, endcorner$latitude))
-# lapply(stnpoly, function(k) mapPolygon(k[['polyLongitude']], k[['polyLatitude']], border = 'red'))
-# dev.off()
+if(plot){
+        library(ocedata)
+        data(coastlineWorldFine)
+proj <- '+proj=merc'
+fillcol <- 'lightgrey'
+lonlim <- range(c(lon, startcorner$longitude, endcorner$longitude)) + c(-0.5, 0.5)
+latlim <- range(c(lat, startcorner$latitude, startcorner$latitude)) + c(-0.5, 0.5)
+
+#png('00_cabotStraitPolygon.png', width = 6, height = 4, unit = 'in', res = 200, pointsize = 12)
+par(mar = c(3.5, 3.5, 1, 1))
+mapPlot(coastlineWorldFine,
+        longitudelim = lonlim,
+        latitudelim = latlim,
+        col = fillcol,
+        proj = proj,
+        grid = c(2,1))
+mapPoints(lon, lat, pch = 20, col = 'black')
+mapPoints(eastlon, eastlat, col = 'red', pch = 20)
+mapPoints(westlon, westlat, col = 'red', pch = 20)
+mapPolygon(c(startcorner$longitude, endcorner$longitude),
+           c(startcorner$latitude, endcorner$latitude))
+lapply(stnpoly, function(k) mapPolygon(k[['polyLongitude']], k[['polyLatitude']], border = 'red'))
+#dev.off()
+}

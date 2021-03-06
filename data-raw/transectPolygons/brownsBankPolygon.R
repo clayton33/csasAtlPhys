@@ -2,6 +2,7 @@ rm(list=ls())
 library(usethis)
 library(oce)
 library(csasAtlPhys)
+plot <- FALSE
 
 # browns bank line coordinates
 # obtained from cruise planning documents
@@ -119,6 +120,18 @@ usethis::use_data(brownsBankPolygon, compress = 'xz', overwrite = TRUE)
 
 
 # next calculate the station polygons using same methods as above.
+dist <- NULL
+for(i in 1:(length(bblon)-1)){
+  stndist <- geodDist(longitude1 = bblon[i], latitude1 = bblat[i],
+                      longitude2 = bblon[(i+1)], latitude2 = bblat[(i+1)])
+  dist <- c(dist, stndist)
+}
+distheight <- dist/2
+distheight <- c(head(distheight,1), distheight, tail(distheight,1))
+distheight[distheight > 8] <- 8
+distwidth <- 8
+distheight <- distheight * 1000
+distwidth <- distwidth * 1000
 stnpoly <- vector(mode = 'list', length = length(bblon))
 for(i in 1:length(bblon)){
   zone <- lonlat2utm(longitude = bblon[i],
@@ -126,25 +139,16 @@ for(i in 1:length(bblon)){
   ptutm <- lonlat2utm(longitude = bblon[i],
                       latitude = bblat[i],
                       zone = zone)
-  dist <- 8 * 1000
-
   ang <- ifelse(i == 7, angle2, angle)
-  eastingadd <- dist * c(cos((ang + 180) * pi/180), # end
-                         cos(ang * pi/180)) # start
-  northingadd <- dist * c(sin((ang + 180) * pi/180), # end
-                          sin(ang * pi/180)) # start
-  cornereasting <- dist * c(cos((ang + 90) * pi/180),
-                            cos((ang + 270) * pi/180))
-  cornernorthing <- dist * c(sin((ang + 90) * pi/180),
-                             sin((ang + 270) * pi/180))
-
-  pteasting <- c(ptutm$easting + eastingadd[2] + cornereasting,
-                 ptutm$easting + eastingadd[1] + rev(cornereasting))
-  ptnorthing <- c(ptutm$northing + northingadd[2] + cornernorthing,
-                  ptutm$northing + northingadd[1] + rev(cornernorthing))
-
-  cornerlonlat <- utm2lonlat(easting = pteasting,
-                             northing = ptnorthing,
+  angleadj <- 45 + 0:3 * 90
+  eastingadj <- cos(angleadj * pi/180)
+  northingadj <- sin(angleadj * pi/180)
+  ptnorthing <- (distwidth * eastingadj)
+  pteasting <- c(distheight[(i+1)], distheight[(i+1)],distheight[i], distheight[i]) * northingadj
+  pteastingrotate <- pteasting * cos(ang * pi/180) - ptnorthing * sin(ang * pi/180)
+  ptnorthingrotate <- pteasting * sin(ang * pi/180) + ptnorthing * cos(ang * pi/180)
+  cornerlonlat <- utm2lonlat(easting = ptutm$easting + pteastingrotate,
+                             northing = ptutm$northing + ptnorthingrotate,
                              zone = zone)
   stnpoly[[i]][['stationName']] <- bbnames[i]
   stnpoly[[i]][['longitude']] <- bblon[i]
@@ -157,3 +161,27 @@ for(i in 1:length(bblon)){
 brownsBankStationPolygons <- stnpoly
 usethis::use_data(brownsBankStationPolygons, compress = 'xz', overwrite = TRUE)
 
+# for debugging purposes to double check polygon and station polygons
+if(plot){
+  library(ocedata)
+  data("coastlineWorldFine")
+  proj <- '+proj=merc'
+  fillcol <- 'lightgrey'
+  lonlim <- range(c(bblon, startcorner$longitude, endcorner$longitude)) + c(-0.5, 0.5)
+  latlim <- range(c(bblat, startcorner$latitude, startcorner$latitude)) + c(-0.5, 0.5)
+
+  #png('00_cabotStraitPolygon.png', width = 6, height = 4, unit = 'in', res = 200, pointsize = 12)
+  par(mar = c(3.5, 3.5, 1, 1))
+  mapPlot(coastlineWorldFine,
+          longitudelim = lonlim,
+          latitudelim = latlim,
+          col = fillcol,
+          proj = proj,
+          grid = c(2,1))
+  mapPoints(bblon, bblat, pch = 20, col = 'black')
+  mapPoints(startlon, startlat, col = 'red', pch = 20)
+  mapPoints(endlon, endlat, col = 'red', pch = 20)
+  mapPolygon(bbpolyx, bbpolyy)
+  lapply(stnpoly, function(k) mapPolygon(k[['polyLongitude']], k[['polyLatitude']], border = 'red'))
+  #dev.off()
+}

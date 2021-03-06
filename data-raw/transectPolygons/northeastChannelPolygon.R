@@ -2,6 +2,7 @@ rm(list=ls())
 library(usethis)
 library(oce)
 library(csasAtlPhys)
+plot <- FALSE
 
 # north each channel coordinates
 # obtained from on of the cruises
@@ -65,28 +66,33 @@ usethis::use_data(northeastChannelPolygon, compress = 'xz', overwrite = TRUE)
 
 # next calculate the station polygons using same methods as above
 # since the stations are closer together, i'll be using 4km instead of 8km
+dist <- NULL
+for(i in 1:(length(neclon)-1)){
+        stndist <- geodDist(longitude1 = neclon[i], latitude1 = neclat[i],
+                            longitude2 = neclon[(i+1)], latitude2 = neclat[(i+1)])
+        dist <- c(dist, stndist)
+}
+distheight <- dist/2
+distheight <- c(head(distheight,1), distheight, tail(distheight,1))
+distheight[distheight > 8] <- 8
+distwidth <- 8
+distheight <- distheight * 1000
+distwidth <- distwidth * 1000
 stnpoly <- vector(mode = 'list', length = length(neclon))
 for(i in 1:length(neclon)){
         zone <- lonlat2utm(longitude = neclon[i],
                            latitude = neclat[i])$zone
         ptutm <- lonlat2utm(longitude = neclon[i],
                             latitude = neclat[i])
-        dist <- 4 * 1000
-        eastingadd <- dist * c(cos((angle + 180) * pi/180), # start
-                               cos(angle * pi/180)) # end
-        northingadd <- dist * c(sin((angle + 180) * pi/180), # start
-                                sin(angle * pi/180)) # end
-        cornereasting <- c(dist * cos((angle + 90) * pi/180),
-                           dist * cos((angle + 270) * pi/180))
-        cornernorthing <- c(dist * sin((angle + 90) * pi/180),
-                            dist * sin((angle + 270) * pi/180))
-
-        pteasting <- c(ptutm$easting + eastingadd[1] + cornereasting,
-                       ptutm$easting + eastingadd[2] + rev(cornereasting))
-        ptnorthing <- c(ptutm$northing + northingadd[1] + cornernorthing,
-                        ptutm$northing + northingadd[2] + rev(cornernorthing))
-        cornerlonlat <- utm2lonlat(easting = pteasting,
-                                   northing = ptnorthing,
+        angleadj <- 45 + 0:3 * 90
+        eastingadj <- cos(angleadj * pi/180)
+        northingadj <- sin(angleadj * pi/180)
+        ptnorthing <- (distwidth * eastingadj)
+        pteasting <- c(distheight[(i+1)], distheight[(i+1)],distheight[i], distheight[i]) * northingadj
+        pteastingrotate <- pteasting * cos(angle * pi/180) - ptnorthing * sin(angle * pi/180)
+        ptnorthingrotate <- pteasting * sin(angle * pi/180) + ptnorthing * cos(angle * pi/180)
+        cornerlonlat <- utm2lonlat(easting = ptutm$easting + pteastingrotate,
+                                   northing = ptutm$northing + ptnorthingrotate,
                                    zone = zone)
         stnpoly[[i]][['stationName']] <- necnames[i]
         stnpoly[[i]][['longitude']] <- neclon[i]
@@ -101,24 +107,29 @@ for(i in 1:length(neclon)){
 northeastChannelStationPolygons <- stnpoly
 usethis::use_data(northeastChannelStationPolygons, compress = 'xz', overwrite = TRUE)
 
+if(plot){
+        library(ocedata)
+        data("coastlineWorldFine")
+proj <- '+proj=merc'
+fillcol <- 'lightgrey'
+lonlim <- range(c(neclon, startcorner$longitude, endcorner$longitude)) + c(-0.5, 0.5)
+latlim <- range(c(neclat, startcorner$latitude, startcorner$latitude)) + c(-0.5, 0.5)
 
-# proj <- '+proj=merc'
-# fillcol <- 'lightgrey'
-# lonlim <- range(c(neclon, startcorner$longitude, endcorner$longitude)) + c(-0.5, 0.5)
-# latlim <- range(c(neclat, startcorner$latitude, startcorner$latitude)) + c(-0.5, 0.5)
-#
-# png('00_necPolygon.png', width = 6, height = 4, unit = 'in', res = 200, pointsize = 12)
-# par(mar = c(3.5, 3.5, 1, 1))
-# mapPlot(coastlineWorldFine,
-#         longitudelim = lonlim,
-#         latitudelim = latlim,
-#         col = fillcol,
-#         proj = proj,
-#         grid = c(2,1))
-# mapPoints(neclon, neclat, pch = 20, col = 'black')
-# mapPoints(neceastlon, neceastlat, col = 'red', pch = 20)
-# mapPoints(necwestlon, necwestlat, col = 'red', pch = 20)
-# mapPolygon(c(startcorner$longitude, endcorner$longitude),
-#            c(startcorner$latitude, endcorner$latitude))
-# dev.off()
+#png('00_necPolygon.png', width = 6, height = 4, unit = 'in', res = 200, pointsize = 12)
+par(mar = c(3.5, 3.5, 1, 1))
+mapPlot(coastlineWorldFine,
+        longitudelim = lonlim,
+        latitudelim = latlim,
+        col = fillcol,
+        proj = proj,
+        grid = c(2,1))
+mapPoints(neclon, neclat, pch = 20, col = 'black')
+mapPoints(neceastlon, neceastlat, col = 'red', pch = 20)
+mapPoints(necwestlon, necwestlat, col = 'red', pch = 20)
+mapPolygon(c(startcorner$longitude, endcorner$longitude),
+           c(startcorner$latitude, endcorner$latitude))
+lapply(stnpoly, function(k) mapPolygon(k[['polyLongitude']], k[['polyLatitude']], border = 'red'))
+
+#dev.off()
+}
 

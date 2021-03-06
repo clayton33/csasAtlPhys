@@ -544,7 +544,7 @@ binMeanPressureCtd <- function(x, bin, tolerance, trimBin = TRUE){
                             bin,
                             tolerance)
   }
-  res@data[[which(pok)]] <- bin
+  res@data[[which(pok)]] <- bin + tolerance
   names(res@data) <- names(x@data)
   # set some 'metadata' things in 'data' if they are na
   # assumes that if time is na, then longitude and latitude will be as well
