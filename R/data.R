@@ -418,7 +418,9 @@
 #' Browns bank station polygon's
 #'
 #' Polygons defining bounds to look for data at each station along the core Atlantic Zone Monitoring Program
-#' line, browns bank.
+#' line, browns bank. Defining bounds are determined by station spacing. If the spacing is less than 8km,
+#' then it is modified to half of the distance between the adjacent spacing. Note that this mean that the spacing
+#' on either side can be uneven.
 #'
 #' @format a list which contains \code{stationName}, \code{longitude}, \code{latitude}, \code{polyLongitude},
 #' \code{polyLatitude} for each station.
@@ -436,7 +438,9 @@
 #' Halifax station polygon's
 #'
 #' Polygons defining bounds to look for data at each station along the core Atlantic Zone Monitoring Program
-#' line, halifax.
+#' line, Halifax. Defining bounds are determined by station spacing. If the spacing is less than 8km,
+#' then it is modified to half of the distance between the adjacent spacing. Note that this mean that the spacing
+#' on either side can be uneven.
 #'
 #' @format a list which contains \code{stationName}, \code{longitude}, \code{latitude}, \code{polyLongitude},
 #' \code{polyLatitude} for each station.
@@ -454,7 +458,9 @@
 #' North east channel station polygon's
 #'
 #' Polygons, a 4km box, defining bounds to look for data at each station along the core Atlantic Zone Monitoring Program
-#' line, north east channel.
+#' line, north east channel. Defining bounds are determined by station spacing. If the spacing is less than 8km,
+#' then it is modified to half of the distance between the adjacent spacing. Note that this mean that the spacing
+#' on either side can be uneven.
 #'
 #' @format a list which contains \code{stationName}, \code{longitude}, \code{latitude}, \code{polyLongitude},
 #' \code{polyLatitude} for each station.
@@ -472,7 +478,9 @@
 #' Louisbourg channel station polygon's
 #'
 #' Polygons defining bounds to look for data at each station along the core Atlantic Zone Monitoring Program
-#' line, louisbourg.
+#' line, Louisbourg. Defining bounds are determined by station spacing. If the spacing is less than 8km,
+#' then it is modified to half of the distance between the adjacent spacing. Note that this mean that the spacing
+#' on either side can be uneven.
 #'
 #' @format a list which contains \code{stationName}, \code{longitude}, \code{latitude}, \code{polyLongitude},
 #' \code{polyLatitude} for each station.
@@ -490,7 +498,9 @@
 #' Cabot strait station polygon's
 #'
 #' Polygons defining bounds to look for data at each station along the core Atlantic Zone Monitoring Program
-#' line, cabot strait.
+#' line, Cabot Strait. Defining bounds are determined by station spacing. If the spacing is less than 8km,
+#' then it is modified to half of the distance between the adjacent spacing. Note that this mean that the spacing
+#' on either side can be uneven.
 #'
 #' @format a list which contains \code{stationName}, \code{longitude}, \code{latitude}, \code{polyLongitude},
 #' \code{polyLatitude} for each station.
@@ -508,7 +518,9 @@
 #' St.Anns Bank station polygon's
 #'
 #' Polygons defining bounds to look for data at each station along the core Atlantic Zone Monitoring Program
-#' line, St.Anns Bank.
+#' line, St.Anns Bank. Defining bounds are determined by station spacing. If the spacing is less than 8km,
+#' then it is modified to half of the distance between the adjacent spacing. Note that this mean that the spacing
+#' on either side can be uneven.
 #'
 #' @format a list which contains \code{stationName}, \code{longitude}, \code{latitude}, \code{polyLongitude},
 #' \code{polyLatitude} for each station.
@@ -526,7 +538,9 @@
 #' Portsmouth station polygon's
 #'
 #' Polygons defining bounds to look for data at each station along the core Atlantic Zone Monitoring Program
-#' line, Portsmouth.
+#' line, Portsmouth. Defining bounds are determined by station spacing. If the spacing is less than 8km,
+#' then it is modified to half of the distance between the adjacent spacing. Note that this mean that the spacing
+#' on either side can be uneven.
 #'
 #' @format a list which contains \code{stationName}, \code{longitude}, \code{latitude}, \code{polyLongitude},
 #' \code{polyLatitude} for each station.
@@ -544,7 +558,9 @@
 #' Yarmouth station polygon's
 #'
 #' Polygons defining bounds to look for data at each station along the core Atlantic Zone Monitoring Program
-#' line, Yarmouth.
+#' line, Yarmouth. Defining bounds are determined by station spacing. If the spacing is less than 8km,
+#' then it is modified to half of the distance between the adjacent spacing. Note that this mean that the spacing
+#' on either side can be uneven.
 #'
 #' @format a list which contains \code{stationName}, \code{longitude}, \code{latitude}, \code{polyLongitude},
 #' \code{polyLatitude} for each station.
@@ -562,7 +578,9 @@
 #' Laurentian Channel Mouth station polygon's
 #'
 #' Polygons defining bounds to look for data at each station along the core Atlantic Zone Monitoring Program
-#' line, Laurentian Channel Mouth. Note that the bounding box around each station is 4km due to station spacing.
+#' line, Laurentian Channel Mouth. Defining bounds are determined by station spacing. If the spacing is less than 8km,
+#' then it is modified to half of the distance between the adjacent spacing. Note that this mean that the spacing
+#' on either side can be uneven.
 #'
 #' @format a list which contains \code{stationName}, \code{longitude}, \code{latitude}, \code{polyLongitude},
 #' \code{polyLatitude} for each station.
@@ -580,10 +598,73 @@
 #' St.Pierre Bank station polygon's
 #'
 #' Polygons defining bounds to look for data at each station along the core Atlantic Zone Monitoring Program
-#' line, St.Pierre. Note that the bounding box around each station is 4km due to station spacing.
+#' line, St.Pierre. Defining bounds are determined by station spacing. If the spacing is less than 8km,
+#' then it is modified to half of the distance between the adjacent spacing. Note that this mean that the spacing
+#' on either side can be uneven.
 #'
 #' @format a list which contains \code{stationName}, \code{longitude}, \code{latitude}, \code{polyLongitude},
 #' \code{polyLatitude} for each station.
 "stPierreBankStationPolygons"
+
+#' Sable Island Bank polygon
+#'
+#' Polygon defining the bounds to look for data along the core Atlantic Zone Monitoring Program
+#' line, Sable Island Bank. It was constructed by finding the angle between the first point and the last point
+#' of the line, and then calculating the bounding box which is 8 km wide.
+#'
+#' @format a list of \code{longitude} and \code{latitude}
+"sableIslandBankPolygon"
+
+#' Sable Island Bank station polygon's
+#'
+#' Polygons defining bounds to look for data at each station along the core Atlantic Zone Monitoring Program
+#' line, Sable Island Bank. Defining bounds are determined by station spacing. If the spacing is less than 8km,
+#' then it is modified to half of the distance between the adjacent spacing. Note that this mean that the spacing
+#' on either side can be uneven.
+#'
+#' @format a list which contains \code{stationName}, \code{longitude}, \code{latitude}, \code{polyLongitude},
+#' \code{polyLatitude} for each station.
+"sableIslandBankStationPolygons"
+
+#' Roseway polygon
+#'
+#' Polygon defining the bounds to look for data along the core Atlantic Zone Monitoring Program
+#' line, Roseway. It was constructed by finding the angle between the first point and the last point
+#' of the line, and then calculating the bounding box which is 8 km wide.
+#'
+#' @format a list of \code{longitude} and \code{latitude}
+"rosewayPolygon"
+
+#' Roseway station polygon's
+#'
+#' Polygons defining bounds to look for data at each station along the core Atlantic Zone Monitoring Program
+#' line, Roseway. Stations include RL_00, RL_02 : RL_08, RL_01 is omitted as it is not along the transect.
+#' Defining bounds are determined by station spacing. If the spacing is less than 8km,
+#' then it is modified to half of the distance between the adjacent spacing. Note that this mean that the spacing
+#' on either side can be uneven.
+#'
+#' @format a list which contains \code{stationName}, \code{longitude}, \code{latitude}, \code{polyLongitude},
+#' \code{polyLatitude} for each station.
+"rosewayStationPolygons"
+
+#' La Have Bank polygon
+#'
+#' Polygon defining the bounds to look for data along the core Atlantic Zone Monitoring Program
+#' line, La Have Bank. It was constructed by finding the angle between the first point and the last point
+#' of the line, and then calculating the bounding box which is 8 km wide.
+#'
+#' @format a list of \code{longitude} and \code{latitude}
+"laHavePolygon"
+
+#' La Have Bank station polygon's
+#'
+#' Polygons defining bounds to look for data at each station along the core Atlantic Zone Monitoring Program
+#' line, La Have Bank. Defining bounds are determined by station spacing. If the spacing is less than 8km,
+#' then it is modified to half of the distance between the adjacent spacing. Note that this mean that the spacing
+#' on either side can be uneven.
+#'
+#' @format a list which contains \code{stationName}, \code{longitude}, \code{latitude}, \code{polyLongitude},
+#' \code{polyLatitude} for each station.
+"laHaveBankStationPolygons"
 
 
