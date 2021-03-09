@@ -568,7 +568,7 @@
 
 #' Laurentian Channel Mouth polygon
 #'
-#' Polygon defining the bounds to look for data along the core Atlantic Zone Monitoring Program
+#' Polygon defining the bounds to look for data along the ancillary Atlantic Zone Monitoring Program
 #' line, Laurentian Channel Mouth. It was constructed by finding the angle between the first point and the last point
 #' of the line, and then calculating the bounding box which is 8 km wide.
 #'
@@ -577,7 +577,7 @@
 
 #' Laurentian Channel Mouth station polygon's
 #'
-#' Polygons defining bounds to look for data at each station along the core Atlantic Zone Monitoring Program
+#' Polygons defining bounds to look for data at each station along the ancillary Atlantic Zone Monitoring Program
 #' line, Laurentian Channel Mouth. Defining bounds are determined by station spacing. If the spacing is less than 8km,
 #' then it is modified to half of the distance between the adjacent spacing. Note that this mean that the spacing
 #' on either side can be uneven.
@@ -588,7 +588,7 @@
 
 #' St.Pierre Bank polygon
 #'
-#' Polygon defining the bounds to look for data along the core Atlantic Zone Monitoring Program
+#' Polygon defining the bounds to look for data along the ancillary Atlantic Zone Monitoring Program
 #' line, St.Pierre Bank. It was constructed by finding the angle between the first point and the last point
 #' of the line, and then calculating the bounding box which is 8 km wide.
 #'
@@ -597,7 +597,7 @@
 
 #' St.Pierre Bank station polygon's
 #'
-#' Polygons defining bounds to look for data at each station along the core Atlantic Zone Monitoring Program
+#' Polygons defining bounds to look for data at each station along the ancillary Atlantic Zone Monitoring Program
 #' line, St.Pierre. Defining bounds are determined by station spacing. If the spacing is less than 8km,
 #' then it is modified to half of the distance between the adjacent spacing. Note that this mean that the spacing
 #' on either side can be uneven.
@@ -608,17 +608,19 @@
 
 #' Sable Island Bank polygon
 #'
-#' Polygon defining the bounds to look for data along the core Atlantic Zone Monitoring Program
+#' Polygon defining the bounds to look for data along the ancillary Atlantic Zone Monitoring Program
 #' line, Sable Island Bank. It was constructed by finding the angle between the first point and the last point
-#' of the line, and then calculating the bounding box which is 8 km wide.
+#' of the line, and then calculating the bounding box which is 8 km wide. Note that nominal station coordinates
+#' could not be located. They were pulled from a cruise report.
 #'
 #' @format a list of \code{longitude} and \code{latitude}
 "sableIslandBankPolygon"
 
 #' Sable Island Bank station polygon's
 #'
-#' Polygons defining bounds to look for data at each station along the core Atlantic Zone Monitoring Program
-#' line, Sable Island Bank. Defining bounds are determined by station spacing. If the spacing is less than 8km,
+#' Polygons defining bounds to look for data at each station along the ancillary Atlantic Zone Monitoring Program
+#' line, Sable Island Bank. Defining bounds are determined by station spacing. Note that nominal station coordinates
+#' could not be located. They were pulled from a cruise report. If the spacing is less than 8km,
 #' then it is modified to half of the distance between the adjacent spacing. Note that this mean that the spacing
 #' on either side can be uneven.
 #'
@@ -628,17 +630,22 @@
 
 #' Roseway polygon
 #'
-#' Polygon defining the bounds to look for data along the core Atlantic Zone Monitoring Program
+#' Polygon defining the bounds to look for data along the ancillary Atlantic Zone Monitoring Program
 #' line, Roseway. It was constructed by finding the angle between the first point and the last point
-#' of the line, and then calculating the bounding box which is 8 km wide.
+#' of the line, and then calculating the bounding box which is 8 km wide. Stations include
+#' RL_00, RL_02 : RL_08, RL_01 is omitted as it is not along the transect.
+#' Note that nominal station locations could not be located, therefore, locations were pulled when the full
+#' transect was occupied during HUD2001009.
 #'
 #' @format a list of \code{longitude} and \code{latitude}
 "rosewayPolygon"
 
 #' Roseway station polygon's
 #'
-#' Polygons defining bounds to look for data at each station along the core Atlantic Zone Monitoring Program
+#' Polygons defining bounds to look for data at each station along the ancillary Atlantic Zone Monitoring Program
 #' line, Roseway. Stations include RL_00, RL_02 : RL_08, RL_01 is omitted as it is not along the transect.
+#' Note that nominal station locations could not be located, therefore, locations were pulled when the full
+#' transect was occupied during HUD2001009.
 #' Defining bounds are determined by station spacing. If the spacing is less than 8km,
 #' then it is modified to half of the distance between the adjacent spacing. Note that this mean that the spacing
 #' on either side can be uneven.
@@ -649,7 +656,7 @@
 
 #' La Have Bank polygon
 #'
-#' Polygon defining the bounds to look for data along the core Atlantic Zone Monitoring Program
+#' Polygon defining the bounds to look for data along the ancillary Atlantic Zone Monitoring Program
 #' line, La Have Bank. It was constructed by finding the angle between the first point and the last point
 #' of the line, and then calculating the bounding box which is 8 km wide.
 #'
@@ -658,7 +665,7 @@
 
 #' La Have Bank station polygon's
 #'
-#' Polygons defining bounds to look for data at each station along the core Atlantic Zone Monitoring Program
+#' Polygons defining bounds to look for data at each station along the ancillary Atlantic Zone Monitoring Program
 #' line, La Have Bank. Defining bounds are determined by station spacing. If the spacing is less than 8km,
 #' then it is modified to half of the distance between the adjacent spacing. Note that this mean that the spacing
 #' on either side can be uneven.
@@ -667,4 +674,25 @@
 #' \code{polyLatitude} for each station.
 "laHaveBankStationPolygons"
 
+
+#' The Gully polygon
+#'
+#' Polygon defining the bounds to look for data along the Atlantic Zone Monitoring Program
+#' sampling area, The Gully. It was constructed by calculating the angle between the head and mouth stations,
+#' and then the two shelf stations, resulting in a 'T' shaped polygon.
+#'
+#' @format a list of \code{longitude} and \code{latitude}
+"laHavePolygon"
+
+#' The Gully  station polygon's
+#'
+#' Polygons defining bounds to look for data at each station along the Atlantic Zone Monitoring Program
+#' sampling area, The Gully. Due to the unique shape of the sampling done in The Gully, a box 8km by 7.6km was
+#' constructed around each station. For the head and mouth stations, GULD_03 and GULD_04 respectively, the angle
+#' between those two stations was used to construct the bounding box. For the two shelf stations, SG_23 and SG_28,
+#' the angle between those two stations was used to construct the bounding box.
+#'
+#' @format a list which contains \code{stationName}, \code{longitude}, \code{latitude}, \code{polyLongitude},
+#' \code{polyLatitude} for each station.
+"laHaveBankStationPolygons"
 

@@ -94,7 +94,7 @@ for(i in 1:length(lon)){
         stnpoly[[i]][['latitude']] <- lat[i]
         stnpoly[[i]][['polyLongitude']] <- cornerlonlat$longitude
         stnpoly[[i]][['polyLatitude']] <- cornerlonlat$latitude
-        stnpoly[[i]][['transectName']] <- 'louisbourg'
+        stnpoly[[i]][['transectName']] <- 'sableIslandBank'
 
 }
 sableIslandBankStationPolygons <- stnpoly
