@@ -2,7 +2,7 @@ rm(list=ls())
 library(usethis)
 library(oce)
 library(csasAtlPhys)
-plot <- FALSE
+plot <- TRUE
 
 # halifax line stations
 # (HL01 - HL07, HL3.3, HL5.5, HL6.3, HL6.7)
@@ -80,6 +80,14 @@ distheight[distheight > 8] <- 8
 distwidth <- 8
 distheight <- distheight * 1000
 distwidth <- distwidth * 1000
+
+# HL_07 was moved at one point and is now slightly southwest of the original
+# location. It is far away such that not all occupations will be caught
+# so i'll add the second locations
+hfxlon <- c(hfxlon, -61.4333)
+hfxlat <- c(hfxlat, 42.475)
+hfxnames <- c(hfxnames, 'HL_07')
+distheight <- c(distheight, distwidth)
 stnpoly <- vector(mode = 'list', length = length(hfxlon))
 for(i in 1:length(hfxlon)){
         zone <- lonlat2utm(longitude = hfxlon[i],
@@ -132,6 +140,7 @@ mapPoints(HL1lon, HL1lat, col = 'red', pch = 20)
 mapPolygon(c(startcorner$longitude, endcorner$longitude),
            c(startcorner$latitude, endcorner$latitude))
 lapply(stnpoly, function(k) mapPolygon(k[['polyLongitude']], k[['polyLatitude']], border = 'red'))
+mapPoints(-61.4333, 42.475, pch = 20, col = 'blue')
 #dev.off()
 }
 

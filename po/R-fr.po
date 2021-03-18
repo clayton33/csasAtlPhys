@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: csasAtlPhys 0.0.9000\n"
-"POT-Creation-Date: 2021-02-22 10:35\n"
+"POT-Creation-Date: 2021-03-09 14:37\n"
 "PO-Revision-Date: 2020-06-03 19:38-0300\n"
 "Last-Translator: <EMAIL@ADDRESS>\n"
 "Language-Team: Language R-fr\n"
@@ -174,6 +174,20 @@ msgstr "Banc de Sainte-Anne"
 
 msgid "Gully"
 msgstr "Gully"
+
+#, fuzzy
+msgid "The Gully"
+msgstr "Gully"
+
+msgid "La Have Bank"
+msgstr ""
+
+#, fuzzy
+msgid "Sable Island Bank"
+msgstr "Île de Sable"
+
+msgid "Roseway"
+msgstr ""
 
 msgid "NSC"
 msgstr "CN-E"

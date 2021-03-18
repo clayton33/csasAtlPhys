@@ -283,6 +283,18 @@ getLocationName <- function(item){
   if(item == 'Gully'){
     location <- gettext('Gully', domain = 'R-csasAtlPhys')
   }
+  if(item == 'theGully'){
+    location <- gettext('The Gully', domain = 'R-csasAtlPhys')
+  }
+  if(item == 'laHaveBank'){
+    location <- gettext('La Have Bank', domain = 'R-csasAtlPhys')
+  }
+  if(item == 'sableIslandBank'){
+    location <- gettext('Sable Island Bank', domain = 'R-csasAtlPhys')
+  }
+  if(item == 'roseway'){
+    location <- gettext('Roseway', domain = 'R-csasAtlPhys')
+  }
   if(item == 'NSC'){
     location <- gettext('NSC', domain = 'R-csasAtlPhys')
   }
