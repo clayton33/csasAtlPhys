@@ -66,6 +66,9 @@ usethis::use_data(northeastChannelPolygon, compress = 'xz', overwrite = TRUE)
 
 # next calculate the station polygons using same methods as above
 # since the stations are closer together, i'll be using 4km instead of 8km
+neclon <- rev(neclon)
+neclat <- rev(neclat)
+necnames <- rev(necnames)
 dist <- NULL
 for(i in 1:(length(neclon)-1)){
         stndist <- geodDist(longitude1 = neclon[i], latitude1 = neclat[i],
