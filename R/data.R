@@ -661,7 +661,7 @@
 #' of the line, and then calculating the bounding box which is 8 km wide.
 #'
 #' @format a list of \code{longitude} and \code{latitude}
-"laHavePolygon"
+"laHaveBankPolygon"
 
 #' La Have Bank station polygon's
 #'
@@ -682,7 +682,7 @@
 #' and then the two shelf stations, resulting in a 'T' shaped polygon.
 #'
 #' @format a list of \code{longitude} and \code{latitude}
-"laHavePolygon"
+"theGullyPolygon"
 
 #' The Gully  station polygon's
 #'
@@ -694,5 +694,5 @@
 #'
 #' @format a list which contains \code{stationName}, \code{longitude}, \code{latitude}, \code{polyLongitude},
 #' \code{polyLatitude} for each station.
-"laHaveBankStationPolygons"
+"theGullyStationPolygons"
 
