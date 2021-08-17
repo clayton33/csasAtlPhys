@@ -241,11 +241,12 @@ findValidSnowCrabGridPoints <- function(longitude, latitude, pressure = NULL,
 
 #' @title Calculate monthly climatology
 #'
-#' @description This function calculates the monthly climatology
+#' @description This function calculates the monthly climatology, along with the standard deviation
 #'
 #' @param d a data.frame containing at least a column named month and one other variable
 #' @param climatologyYears a vector of length two indicating the range of years
 #' to calculate the climatology
+#' @param standardDeviation a logical vector indicating if (`TRUE`) the standard deviation should be calculated.
 #'
 #' @return the results of aggregate
 #'
@@ -255,10 +256,15 @@ findValidSnowCrabGridPoints <- function(longitude, latitude, pressure = NULL,
 #'
 #' @export
 
-monthlyClimatology <- function(d, climatologyYears){
+monthlyClimatology <- function(d, climatologyYears, standardDeviation = FALSE){
   okclim <- d$year >= climatologyYears[1] & d$year <= climatologyYears[2]
   dd <- d[okclim, ]
   mm <- aggregate(temperature ~ month, dd, mean, na.rm = TRUE)
+  if(standardDeviation){
+    mmsd <- aggregate(temperature ~ month, dd, sd, na.rm = TRUE)
+    mm <- data.frame(mm,
+                     temperatureSd = mmsd[['temperature']])
+  }
   mm
 }
 
