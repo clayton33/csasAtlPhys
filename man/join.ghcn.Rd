@@ -4,7 +4,7 @@
 \alias{join.ghcn}
 \title{Join GHCN station data}
 \usage{
-join.ghcn(ghcn1, ghcn2, minYear = NULL)
+join.ghcn(ghcn1, ghcn2, minYear = NULL, meanData = TRUE)
 }
 \arguments{
 \item{ghcn1}{a list that was output in using \code{read.ghcn}, this is the primary station}
@@ -13,6 +13,9 @@ join.ghcn(ghcn1, ghcn2, minYear = NULL)
 
 \item{minYear}{a numeric value indicating the minimum year to subset the data, default is \code{NULL}
 to retain the entire time series.}
+
+\item{meanData}{a logical value indicating if (\code{TRUE}) the data should be averaged in the event there
+are multiple values for a single year and month.}
 }
 \description{
 This function will join the data of two sites that might need to be combined

@@ -4,19 +4,21 @@
 \alias{monthlyClimatology}
 \title{Calculate monthly climatology}
 \usage{
-monthlyClimatology(d, climatologyYears)
+monthlyClimatology(d, climatologyYears, standardDeviation = FALSE)
 }
 \arguments{
 \item{d}{a data.frame containing at least a column named month and one other variable}
 
 \item{climatologyYears}{a vector of length two indicating the range of years
 to calculate the climatology}
+
+\item{standardDeviation}{a logical vector indicating if (\code{TRUE}) the standard deviation should be calculated.}
 }
 \value{
 the results of aggregate
 }
 \description{
-This function calculates the monthly climatology
+This function calculates the monthly climatology, along with the standard deviation
 }
 \author{
 Chantelle Layton

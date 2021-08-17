@@ -13,6 +13,8 @@ northeastChannelStationPolygons
 }
 \description{
 Polygons, a 4km box, defining bounds to look for data at each station along the core Atlantic Zone Monitoring Program
-line, north east channel.
+line, north east channel. Defining bounds are determined by station spacing. If the spacing is less than 8km,
+then it is modified to half of the distance between the adjacent spacing. Note that this mean that the spacing
+on either side can be uneven.
 }
 \keyword{datasets}

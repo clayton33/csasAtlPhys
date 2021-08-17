@@ -11,7 +11,7 @@ a list of \code{longitude} and \code{latitude}
 stPierreBankPolygon
 }
 \description{
-Polygon defining the bounds to look for data along the core Atlantic Zone Monitoring Program
+Polygon defining the bounds to look for data along the ancillary Atlantic Zone Monitoring Program
 line, St.Pierre Bank. It was constructed by finding the angle between the first point and the last point
 of the line, and then calculating the bounding box which is 8 km wide.
 }
