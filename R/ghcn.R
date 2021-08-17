@@ -128,6 +128,8 @@ read.ghcn <- function(dataFile, metadataFile, stationId = NULL){
 #' @param ghcn2 a list that was output using `read.ghcn`, this is the secondary station
 #' @param minYear a numeric value indicating the minimum year to subset the data, default is `NULL`
 #' to retain the entire time series.
+#' @param meanData a logical value indicating if (`TRUE`) the data should be averaged in the event there
+#' are multiple values for a single year and month.
 #'
 #' @author Chantelle Layton
 #'
@@ -135,7 +137,7 @@ read.ghcn <- function(dataFile, metadataFile, stationId = NULL){
 #' @export
 #'
 
-join.ghcn <- function(ghcn1, ghcn2, minYear = NULL){
+join.ghcn <- function(ghcn1, ghcn2, minYear = NULL, meanData = TRUE){
   # just do a quick check that the stations provided are close together
   # here we've defined 25 km
   ok <- geodDist(longitude1 = as.numeric(ghcn1[['longitude']]),
@@ -147,12 +149,19 @@ join.ghcn <- function(ghcn1, ghcn2, minYear = NULL){
     data1 <- ghcn1[['data']]
     data2 <- ghcn2[['data']]
     # since data1 is primary, from data2, we only want what is NOT in data1
-    okdata2 <- apply(data2, 1, function(k) {!(k[['year']] %in% data1[['year']] & k[['month']] %in% data2[['month']])})
+    okdata2 <- apply(data2, 1, function(k) {!(k[['year']] %in% data1[['year']] & k[['month']] %in% data1[['month']])})
     data <- rbind(data1, data2[okdata2, ])
     data <- data[with(data, order(year, month)), ]
     if(!is.null(minYear)){
       data <- data[data$year > minYear, ]
     }
+    if(meanData){
+      yearmonth <- data.frame(year = data[['year']], month = data[['month']])
+      uym <- unique(yearmonth)
+      davg <- apply(uym, 1, function(k) mean(data[['temperature']][(data[['year']] == k[['year']] & data[['month']] == k[['month']])], na.rm = TRUE))
+      data <- data.frame(uym, temperature = davg)
+    }
+
     list(stationId = ghcn1[['stationId']],
          stationId2 = ghcn2[['stationId']],
          stationName = ghcn1[['stationName']],
