@@ -79,16 +79,25 @@ plotAnnualAnomaly <- function(x, y, xlim, ylim, xlab = TRUE, climatologyYears, y
        xlab = '', ylab = '')
   #...)
   # x-axis, x-axis labels
-  xat <- seq(round(xlim[1], digits = -1), round(xlim[2], digits = -1), 10) # tick every decade
-  centuries <- c(1800, 1900, 2000)
-  okcentury <- centuries %in% xat
-  centuryIdx <- unlist(lapply(centuries[okcentury], function(k) which(k == xat)))
-  # if centuryIdx[1] is even, start xlabel idx at 2, if odd, at 1
-  xlabels <- seq(ifelse(is.even(centuryIdx[1]), 2, 1), length(xat), 2) # label every second decade, make sure centuries are labelled
-  axis(side = 1, at = xat, labels = FALSE)
-  if(xlab){
-    #axis(side = 1, at = xat[xlabels], labels = xat[xlabels])
-    axis(side = 1, at = xat, labels = xat) # try this for now
+  if(abs(diff(xlim)) > 10){
+    xat <- seq(round(xlim[1], digits = -1), round(xlim[2], digits = -1), 10) # tick every decade
+    centuries <- c(1800, 1900, 2000)
+    okcentury <- centuries %in% xat
+    centuryIdx <- unlist(lapply(centuries[okcentury], function(k) which(k == xat)))
+    # if centuryIdx[1] is even, start xlabel idx at 2, if odd, at 1
+    xlabels <- seq(ifelse(is.even(centuryIdx[1]), 2, 1), length(xat), 2) # label every second decade, make sure centuries are labelled
+    axis(side = 1, at = xat, labels = FALSE)
+    if(xlab){
+      #axis(side = 1, at = xat[xlabels], labels = xat[xlabels])
+      axis(side = 1, at = xat, labels = xat) # try this for now
+    }
+  } else {
+    xat <- pretty(xlim)
+    if(xlab){
+      axis(side = 1, at = xat)
+    } else {
+      axis(side = 1, at = xat, labels = FALSE)
+    }
   }
   # y-axis, y-axis labels, y-axis label
   if(yaxs){
@@ -551,4 +560,278 @@ plotStationLocations <- function(distance, plabel, distanceOffset = NULL, cex = 
     lines(distance + c(-distanceOffset, distanceOffset), rep(plabel, 2), lty = 1, col = col, cex = cex)
   }
   par(xpd = FALSE)
+}
+
+#' @title Plot monthly timeseries with anomaly bar
+#'
+#' @description Creates a time series plot with the monthly anomaly and annual
+#' anomaly scorecard below.
+#'
+#' @details This is the plot style that is used in many of Peter Galbraith's
+#' research documents. Was translated to R in efforts to better represent
+#' some data.
+#'
+#' @param xYear a numeric vector of the associated year
+#' @param xMonth a numeric vector of the associated month
+#' @param y a numeric vector of the associated year month value
+#' @param yAnomaly a numeric vector of the associated anomaly year month value
+#' @param xAnnualAnomaly a numeric vector of the year for the annual anomaly
+#' @param yAnnualAnomaly a numeric vector of the annual anomaly
+#' @param xClimatology a numeric vector of the months for the monthly climatology
+#' @param yClimatology a numeric vector of the climatology values for associated month
+#' @param sdClimatology a numeric vector of the standard deviation for the associated month
+#' @param xlim the x limits (x1, x2) of the plot
+#' @param ylim the y limits (y1, y2) of the plot
+#' @param anomalyColors a list that contains the colors and breaks of the desired color bar for the anomaly scorecard
+#'
+#' @author Chantelle Layton
+#'
+#' @importFrom graphics image
+#' @importFrom graphics polygon
+#' @importFrom graphics text
+#'
+#' @export
+
+plotMonthlyTimeseriesWAnomalyBar <- function(xYear, xMonth, y, yAnomaly,
+                                             xAnnualAnomaly, yAnnualAnomaly,
+                                             xClimatology, yClimatology, sdClimatology,
+                                             xlim, ylim, anomalyColors){
+  # 1. set arguments if missing
+  if(missing(xlim)){
+    xlim <- range(xMonth)
+  }
+  if(missing(ylim)){
+    ylim <- range(y)
+  }
+
+  # 2. construct climatology polygon
+  uyear <- unique(xYear)
+  uyear <- c(uyear, max(uyear) + 1) # add the next year for boundary
+  x1 <- as.POSIXct(paste(unlist(lapply(uyear, rep, times = 12)) , 1:12, '15', sep = '-'), tz = 'UTC')
+  x2 <- as.POSIXct(paste(unlist(lapply(rev(uyear), rep, times = 12)), 12:1, '15', sep = '-'), tz = 'UTC')
+  xpoly <- c(x1, x2)
+  y1 <- rep(yClimatology - (sdClimatology/2), times = length(uyear))
+  y2 <- rep(rev(yClimatology + (sdClimatology/2)), times = length(uyear))
+  ypoly <- c(y1, y2)
+  # for debugging polygon
+  # ok <- (as.POSIXlt(xpoly)$year + 1900) %in% c(max(uyear) - 2, max(uyear) - 1)
+  # xpolyb <- xpoly[ok]
+  # ypolyb <- ypoly[ok]
+
+  # plot bottom scorecard first, some code taken from drawPalette()
+  # set up margins
+  omai <- par("mai")
+  mai <- rep(0, 4)
+  # arguments for paletteCalculations
+  pos <- 1
+  debug <- 3
+  zlab <- ""
+  pc <- paletteCalculations(maidiff=mai, pos=pos, zlab=zlab, debug=debug-1)
+  # plot
+  time <- as.POSIXct(paste(xYear, xMonth, '15', sep = '-'), tz = 'UTC')
+  palette <- time # this is x
+  # don't think I need colormap calls b/c image does it.
+  #cm <- colormap(z = yAnomaly, breaks = anomalyColors[['breaks']], col = anomalyColors[['colors']], missingColor = 'lightgray')
+  #col <- cm$zcol
+  uxYear <- unique(xYear)
+  zannual <- NULL
+  for(iy in 1:length(uxYear)){
+    lookyear <- uxYear[iy]
+    ok <- xYear == lookyear
+    nmon <- length(xMonth[ok])
+    okannual <- xAnnualAnomaly == lookyear
+    aa <- yAnnualAnomaly[okannual]
+    if(any(okannual)){
+      annualadd <- rep(yAnnualAnomaly[okannual], nmon)
+    } else {
+      annualadd <- rep(NA, nmon)
+    }
+    zannual <- c(zannual, annualadd)
+  }
+  #zannual <- unlist(lapply(yAnnualAnomaly, rep, 12))
+  z <- matrix(nrow = length(time), ncol = 2)
+  z[, 2] <- yAnomaly
+  #z[, 1] <- zannual[1:length(time)] # watch this
+  z[, 1] <- zannual
+  #col[is.na(col)] <- 'lightgray'
+  # plot it
+  par(mai = ifelse(pc$mai1 > 0, pc$mai1, 0))
+  image(x = palette, y = c(1,2), z = z,
+        xlim = xlim,
+        axes = FALSE, xlab="", ylab="",
+        col = anomalyColors[['colors']],
+        breaks = anomalyColors[['breaks']])
+  box()
+  # axis and labels
+  at <- seq(xlim[1], xlim[2], by = 'month')
+  #abline(v = at)
+  lapply(at, function(k) lines(x = rep(k, 2), y = c(1,2) + 0.5)) # vertical lines for monthly
+  abline(h = 1.5) # separate monthly and annual
+  # month axis labels
+  lapply(at[as.POSIXlt(at)$mon + 1 == 1], function(k) lines(x = rep(k, 2), y = c(0, 1) + 0.5))
+  label <- rep(substring(month.abb, 1, 1), 2)
+  xlimyear <- as.POSIXlt(xlim)$year + 1900
+  labelat <- unlist(lapply(xlimyear, function(k) as.POSIXct(paste(k, 1:12, '16', sep = '-'), tz = 'UTC')))
+  axis(side=1, at= at, labels= FALSE, mgp=c(2.5, 0.7, 0))
+  axis(side = 1, at = labelat, labels = label, mgp=c(2.5, 0.7, 0), tick = FALSE, line = -0.7)
+  # year axis labels
+  bigtickat <- unlist(lapply(xlimyear[2:length(xlimyear)], function(k) as.POSIXct(paste(k, '01', '01', sep = '-'), tz = 'UTC')))
+  axis(side = 1, at = bigtickat, labels = FALSE, mgp=c(2.5, 0.7, 0), tck = -0.6)
+  yearlabelat <- as.POSIXct(paste(xlimyear, '07', '02', sep = '-'), tz = 'UTC')
+  axis(side = 1, labels = xlimyear, at = yearlabelat, mgp = c(2.5, 0.7, 0), tck = FALSE)
+  # put numbers in boxes
+  ## monthly
+  textcol <- rep('black', length(yAnomaly))
+  whitetext <- yAnomaly <= -3.0 | (yAnomaly >= 3.0 & yAnomaly < 3.5)
+  if(any(!whitetext)) text(x = palette[!whitetext == TRUE], y = 2, labels = sprintf('%.1f', yAnomaly[!whitetext == TRUE]), col = 'black', srt = 90, cex = 0.8)
+  if(any(whitetext)) text(x = palette[whitetext == TRUE], y = 2, labels = sprintf('%.1f', yAnomaly[whitetext == TRUE]), col = 'white', srt = 90, cex = 0.8)
+  ## annual
+  textcol <- rep('black', length(yAnnualAnomaly))
+  whitetext <- yAnnualAnomaly <= -3.0 | (yAnnualAnomaly >= 3.0 & yAnnualAnomaly < 3.5)
+  annualtextat <- as.POSIXct(paste(xAnnualAnomaly, '07', '02', sep = '-'), tz = 'UTC')
+  if(any(!whitetext)) text(x = annualtextat[!whitetext == TRUE], y = 1, labels = sprintf('%.1f', yAnnualAnomaly[!whitetext == TRUE]), col = 'black', cex = 0.8)
+  if(any(whitetext)) text(x = annualtextat[whitetext == TRUE], y = 1, labels = sprintf('%.1f', yAnnualAnomaly[whitetext == TRUE]), col = 'white', cex = 0.8)
+
+  # reset mai, prep for primary plot
+  par(new=TRUE, mai=pc$mai2)
+
+  # monthly plot with climatology
+  par(mar = par('mar') * c(0, 1, 1, 1) + c(5.5, 0, 0, 0)) # have to change first term of second addition if changes made to colorbar height
+  #time <- as.POSIXct(paste(d[['data']][['year']], d[['data']][['month']], '15', sep = '-'), tz = 'UTC')
+  plot(time, y,
+       xlim = xlim, ylim = ylim,
+       xaxs = 'i',
+       xaxt = 'n', yaxt = 'n',
+       xlab = '', ylab = '',
+       type = 'l')
+  abline(v = at[seq(1, length(at), 2)], lty = 2, col = 'lightgrey')
+  axis(2)
+  abline(h = pretty(ylim), lty = 2, col = 'lightgrey')
+  polygon(x = xpoly, y = ypoly,
+          density = NA,
+          col = 'lightblue')
+  lines(time, y)
+  box()
+  # for debugging polygon
+  # polygon(x = xpolyb, y = ypolyb,
+  #         density = NA,
+  #         col = 'lightblue')
+  # points(x = xpolyb,
+  #        y = ypolyb)
+  # text(x = xpolyb,
+  #      y = ypolyb,
+  #      labels = 1:length(xpolyb))
+}
+
+#' @title palette calculations
+#' @param separation a numeric value
+#' @param width a numeric value
+#' @param pos a numeric value indicating the side
+#' @param zlab a character
+#' @param maidiff a numeric value
+#' @param debug a numeric value
+#' @importFrom graphics frame
+#' @importFrom oce oceDebug
+paletteCalculations <- function(separation=par('cin')[2]/2 + 0.1 - 0.05 - 0.0125, # changed this, orig when just 1 it was 0.1/2
+                                width=par('cin')[2] + 0.2 - 0.05 - 0.0125, # changed this, orig when just 1 it was 0.1
+                                pos=4,
+                                zlab, maidiff=c(0, 0, 0, 0),
+                                debug=getOption("oceDebug"))
+{
+  # NOTE from CL : many of the comments below are from imagep.R from the oce package, so disregard if trying to debug this
+  # code, this function is for use in plotMonthlyTimeseriesWAnomalyBar
+  ## This returns a list with the following entries:
+  ##   mai0  = before this call
+  ##   mai1  = just before plotting palette (i.e. lots of white space on one side)
+  ##   mai1f = set before plotting fullpage palette
+  ##   mai2  = ready for post-palette drawing (i.e. good for a diagram beside palette)
+  if (!(pos %in% 1:4))
+    stop("'pos' must be 1, 2, 3 or 4")
+  oceDebug(debug, "paletteCalculations(separation=", separation,
+           ", width=", width, ", pos=", pos,
+           ", zlab=", if (missing(zlab)) "(missing)" else zlab,
+           ", maidiff=c(", paste(maidiff, collapse=","), ")",
+           ", debug=", debug, ") {\n", sep="", style="bold", unindent=1)
+  haveZlab <- !missing(zlab) && !is.null(zlab) && sum(nchar(zlab)) > 0
+
+  ## 2014-04-02 {
+  ## Below, we will be using e.g. par('mai') to find margins.  If the user
+  ## is employing layout(), the call will not give the right answer until the plot
+  ## has been established or initialized (not sure on right term).  So, we use
+  ## a trick: call frame() to establish/initialize the plot, then call
+  ## plot(new=TRUE) to prevent advancing to the next panel of the layout.
+  ## A secondary trick is also required: we set to zero margins before
+  ## calling frame(), because otherwise there can be a "figure margins
+  ## too large" error from frame(), if the layout is tight.
+  omar <- par('mar')
+  par(mar=rep(0, 4))
+  frame()
+  par(mar=omar)
+  par(new=TRUE)
+  ## OK, done with the trick now.  PS: the long comments given here
+  ## are a result of persistent problems with large-margin errors,
+  ## and I don't want this new approach to get lost in code.
+  ## } 2014-04-02
+
+  lineHeight <- par("cin")[2]  # character height in inches
+  oceDebug(debug, "lineHeight:", lineHeight, "from cin\n")
+  oceDebug(debug, "par('csi'):", par('csi'), "\n")
+  tickSpace <- abs(par("tcl")) * lineHeight # inches (not sure on this)
+  textSpace <- 1.25 * (lineHeight + if (haveZlab) lineHeight else 0)
+  figureWidth <- par("fin")[1]
+  figureHeight <- par("fin")[2]
+  oceDebug(debug, "figureWidth:", format(figureWidth, digits=2), "in\n")
+  oceDebug(debug, "figureHeight:", format(figureHeight, digits=2), "in\n")
+  oceDebug(debug, "tickSpace:", tickSpace, "in\n")
+  oceDebug(debug, "textSpace:", textSpace, "in\n")
+  pc <- list(mai0=par('mai'))
+  pc$mai1 <- pc$mai0
+  pc$mai1f <- pc$mai0
+  pc$mai2 <- pc$mai0
+  ##P <- separation + width
+  P <- width
+  A <- tickSpace + textSpace
+  if (pos == 1) {
+    ## alter top and bottom margins
+    pc$mai1[1] <- A
+    pc$mai1[3] <- figureHeight - P - A
+    pc$mai1f[2] <- 0
+    pc$mai1f[4] <- A
+    pc$mai2[1] <- P + A + pc$mai0[1]
+    pc$mai2[3] <- pc$mai0[3]
+  } else if (pos == 2) {
+    ## alter left and right margins
+    pc$mai1[2] <- A
+    pc$mai1[4] <- figureWidth - P - A
+    pc$mai1f[4] <- 0
+    pc$mai1f[2] <- A
+    pc$mai2[2] <- P + A + pc$mai0[2]
+    pc$mai2[4] <- pc$mai0[4]
+  } else if (pos == 3) {
+    ## alter top and bottom margins
+    pc$mai1[1] <- figureHeight - P - A
+    pc$mai1[3] <- A
+    pc$mai1f[1] <- 0
+    pc$mai1f[3] <- A
+    pc$mai2[1] <- pc$mai0[1]
+    pc$mai2[3] <- P + A + pc$mai0[3]
+  } else if (pos == 4) {
+    ## DEVELOPER: work here first since it's the common case
+    ## alter left and right margins
+    pc$mai1[2] <- figureWidth - P - A
+    pc$mai1[4] <- A
+    pc$mai1f[2] <- 0
+    pc$mai1f[4] <- A
+    pc$mai2[2] <- pc$mai0[2]
+    pc$mai2[4] <- P + A + pc$mai0[4]
+  } else {
+    stop("pos must be in 1:4") # never reached
+  }
+  ## Adjust palette margins (mai1); FIXME: should this also alter mai2?
+  pc$mai1 <- pc$mai1 + maidiff
+  pc$mai1f <- pc$mai1f + maidiff
+  oceDebug(debug, "pc$mail1: ", paste(round(pc$mai1, 2), sep=" "), "\n")
+  oceDebug(debug, "pc$mailf: ", paste(round(pc$mai1f, 2), sep=" "), "\n")
+  oceDebug(debug, "} # paletteCalculations\n", style="bold", sep="", unindent=1)
+  pc
 }
