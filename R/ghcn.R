@@ -96,6 +96,10 @@ read.ghcn <- function(dataFile, metadataFile, stationId = NULL){
     alldata <- rbind(alldata, mdf)
   }
   alldata <- alldata[with(alldata, order(year,month)), ]
+  # remove any NA values of the most recent year
+  maxyear <- max(alldata[['year']])
+  remove <- alldata[['year']] == maxyear & is.na(alldata[['temperature']])
+  alldata <- alldata[!remove, ]
   #tiballdata <- as_tibble(alldata)
   #alldatajoin <- left_join(tiballdata, tibmeta, by = 'stationId')
   #df <- as.data.frame(alldatajoin)
