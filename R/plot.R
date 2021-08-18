@@ -589,6 +589,7 @@ plotStationLocations <- function(distance, plabel, distanceOffset = NULL, cex = 
 #' @importFrom graphics image
 #' @importFrom graphics polygon
 #' @importFrom graphics text
+#' @importFrom graphics rect
 #'
 #' @export
 
@@ -661,6 +662,13 @@ plotMonthlyTimeseriesWAnomalyBar <- function(xYear, xMonth, y, yAnomaly,
         axes = FALSE, xlab="", ylab="",
         col = anomalyColors[['colors']],
         breaks = anomalyColors[['breaks']])
+  rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "lightgray")
+  image(x = palette, y = c(1,2), z = z,
+        xlim = xlim,
+        axes = FALSE, xlab="", ylab="",
+        col = anomalyColors[['colors']],
+        breaks = anomalyColors[['breaks']],
+        add = TRUE)
   box()
   # axis and labels
   at <- seq(xlim[1], xlim[2], by = 'month')
