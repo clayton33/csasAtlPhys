@@ -554,10 +554,64 @@ binMeanPressureCtd <- function(x, bin, tolerance, trimBin = TRUE){
   names(res@data) <- names(x@data)
   # set some 'metadata' things in 'data' if they are na
   # assumes that if time is na, then longitude and latitude will be as well
-  if(is.na(res[['time']][1])){
-    res@data$time[1] <- res@data$time[2]
-    res@data$longitude[1] <- res@data$longitude[2]
-    res@data$latitude[1] <- res@data$latitude[2]
+  if(!is.null(res[['time']])){
+    if(is.na(res[['time']][1])){
+      res@data$time[1] <- res@data$time[2]
+      res@data$longitude[1] <- res@data$longitude[2]
+      res@data$latitude[1] <- res@data$latitude[2]
+    }
+  }
+  res
+}
+
+#' @title Linearly interpolate a CTD object in pressure space.
+#'
+#' @description Vertically average and CTD object through pressure by defined bins and tolerances.
+#'
+#' @param x a ctd object
+#' @param bin a vector of numerical values of the center of the bin
+#' @param trimBin a logical value indicating if the supplied bin values should be trimmed to the
+#' maximum pressure, default is FALSE.
+#'
+#' @return a ctd object that has the same metadata and processing log as the supplied ctd object,
+#' but with bin-averaged data.
+#'
+#' @author Chantelle Layton
+#' @importFrom methods new
+#' @importFrom stats approx
+#'
+#' @export
+approxPressureCtd <- function(x, bin, trimBin = FALSE){
+  # set up new ctd object
+  res <- new("ctd")
+  # add previous metadata and processing log
+  res@metadata <- x@metadata
+  res@processingLog <- x@processingLog
+  # vertically average the data
+  # omitting pressure, we'll get that from one of the
+  pok <- names(x@data) %in% 'pressure'
+  pressure <- x@data[pok][[1]]
+  if(trimBin) {
+    ok <- bin <= max(pressure)
+    bin <- bin[ok]
+    tolerance <- tolerance[ok]
+  }
+  for (i in seq_along(x@data)[!pok]) {
+    data <- x@data[[i]]
+    res@data[[i]] <- approx(x = pressure,
+                            y = data,
+                            xout = bin)$y
+  }
+  res@data[[which(pok)]] <- bin #+ tolerance # check this, not sure when I added + tolerance
+  names(res@data) <- names(x@data)
+  # set some 'metadata' things in 'data' if they are na
+  # assumes that if time is na, then longitude and latitude will be as well
+  if(!is.null(res[['time']])){
+    if(is.na(res[['time']][1])){
+      res@data$time[1] <- res@data$time[2]
+      res@data$longitude[1] <- res@data$longitude[2]
+      res@data$latitude[1] <- res@data$latitude[2]
+    }
   }
   res
 }
