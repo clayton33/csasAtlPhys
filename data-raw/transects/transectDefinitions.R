@@ -17,7 +17,9 @@ for(it in 1:length(transectDefinitions)){
   }
 }
 
-# re-name lines based on my definitions
+# re-name lines based on my definitions and some renaming of lines
+okbq <- which(names(transectDefinitions) == 'banquereau')
+names(transectDefinitions)[okbq] <- 'laurentianChannelMouth'
 okyl <- which(names(transectDefinitions) == 'yarmouth_line')
 names(transectDefinitions)[okyl] <- 'yarmouth'
 okpm <- which(names(transectDefinitions) == 'portsmouth_line')
