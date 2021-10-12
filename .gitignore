@@ -2,3 +2,5 @@
 .Rhistory
 .RData
 .Ruserdata
+# various data things
+data-raw/transects/*.nc

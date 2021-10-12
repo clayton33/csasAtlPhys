@@ -2,6 +2,7 @@ rm(list=ls())
 library(usethis)
 
 load('data-raw/transects/TRANSECT_DEFINITIONS.RData')
+load('data-raw/transects/gullyNewTransectDefinition.RData')
 
 # first re-name the list
 transectDefinitions <- TRANSECT_DEFINITIONS
@@ -43,5 +44,11 @@ oksp <- which(names(transectDefinitions) == 'stpierre_bank')
 names(transectDefinitions)[oksp] <- 'stPierreBank'
 oksi <- which(names(transectDefinitions) == 'sableisland_bank')
 names(transectDefinitions)[oksi] <- 'sableIslandBank'
+# add gully
+gtd <- list(gullyTransectDef)
+names(gtd) <- 'theGullyNew'
+
+transectDefinitions <- c(transectDefinitions, gtd)
+
 
 usethis::use_data(transectDefinitions, compress = 'xz', overwrite = TRUE)

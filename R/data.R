@@ -446,6 +446,27 @@
 #' \code{polyLatitude} for each station.
 "halifaxStationPolygons"
 
+#' Halifax extended polygon
+#'
+#' Polygon defining the bounds to look for data along the core Atlantic Zone Offshore Monitoring Program
+#' line, Halifax extended. It was constructed by finding the angle between the first point and the last point
+#' of the line, and then calculating the bounding box which is 8 km wide. As of now, 20211003, it only includes
+#' HL_08 to HL_12.
+#'
+#' @format a list of \code{longitude} and \code{latitude}
+"halifaxExtendedPolygon"
+
+#' Halifax station polygon's
+#'
+#' Polygons defining bounds to look for data at each station along the core Atlantic Zone Offshore Monitoring Program
+#' line, Halifax extended. Defining bounds are determined by station spacing. If the spacing is less than 8km,
+#' then it is modified to half of the distance between the adjacent spacing. Note that this mean that the spacing
+#' on either side can be uneven. As of now, 20211003, it only includes HL_08 to HL_12.
+#'
+#' @format a list which contains \code{stationName}, \code{longitude}, \code{latitude}, \code{polyLongitude},
+#' \code{polyLatitude} for each station.
+"halifaxExtendedStationPolygons"
+
 #' North east channel polygon
 #'
 #' Polygon defining the bounds to look for data along the core Atlantic Zone Monitoring Program
@@ -695,4 +716,23 @@
 #' @format a list which contains \code{stationName}, \code{longitude}, \code{latitude}, \code{polyLongitude},
 #' \code{polyLatitude} for each station.
 "theGullyStationPolygons"
+
+#' The Gully polygon
+#'
+#' Polygon defining the bounds to look for data along the Atlantic Zone Monitoring Program
+#' sampling area, The Gully. After a report completed in 2021, new stations were decided on.
+#' Therefore this is referred to as the "new" Gully.
+#'
+#' @format a list of \code{longitude} and \code{latitude}
+"theGullyNewPolygon"
+
+#' The Gully station polygon's
+#'
+#' Polygons defining bounds to look for data at each station along the Atlantic Zone Monitoring Program
+#' sampling area, The Gully. It was constructed by finding the angle between the first two stations,
+#' and the last two stations, and then calculating the bounding box which is 8 km wide.
+#'
+#' @format a list which contains \code{stationName}, \code{longitude}, \code{latitude}, \code{polyLongitude},
+#' \code{polyLatitude} for each station.
+"theGullyNewStationPolygons"
 

@@ -286,6 +286,9 @@ getLocationName <- function(item){
   if(item == 'theGully'){
     location <- gettext('The Gully', domain = 'R-csasAtlPhys')
   }
+  if(item == 'theGullyNew'){
+    location <- gettext('The Gully', domain = 'R-csasAtlPhys')
+  }
   if(item == 'laHaveBank'){
     location <- gettext('La Have Bank', domain = 'R-csasAtlPhys')
   }
