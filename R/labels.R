@@ -672,6 +672,9 @@ getShipnameLong <- function(x){
   if (x == 'TEL'){
     long <- paste(gettext('CCGS', domain = 'R-csasAtlPhys'),  'Teleost')
   }
+  if (x == 'CAR'){
+    long <- paste(gettext('CCGS', domain = 'R-csasAtlPhys'), 'Capt. Jacques Cartier')
+  }
 
   if(is.null(long)){
     cat('Ship abbreviation not found, please contact author and provide abbreviation and long name', sep = '\n')
