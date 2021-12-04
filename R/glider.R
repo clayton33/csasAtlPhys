@@ -20,10 +20,19 @@
 #'
 read.gliderDat <- function(file) {
   dd <- read.table(file, header = TRUE)
-  time <- as.POSIXct(paste(paste(dd$Year, dd$Month, dd$Day, sep = '-'), paste(dd$Hour, dd$Min, dd$Sec, sep = ':'), sep = ' '), tz = 'UTC')
+  okyear <- names(dd) %in% c('Year', 'Yr')
+  okmonth <- names(dd) %in% c('Month', 'Mth')
+  okday <- names(dd) %in% c('Day')
+  okhour <- names(dd) %in% c('Hour', 'Hr')
+  okminute <- names(dd) %in% c('Min', 'Mn')
+  oksecond <- names(dd) %in% c('Sec')
+  time <- as.POSIXct(paste(paste(dd[, okyear], dd[,okmonth], dd[, okday], sep = '-'),
+                           paste(dd[,okhour], dd[,okminute], dd[,oksecond], sep = ':'), sep = ' '), tz = 'UTC')
   pressure <- as.vector(dd$P)
-  latitude <- as.vector(dd$Lat)
-  longitude <- as.vector(dd$Long)
+  oklatitude <- names(dd) %in% c('Lat')
+  oklongitude <- names(dd) %in% c('Long', 'Lon')
+  latitude <- as.vector(dd[, oklatitude])
+  longitude <- as.vector(dd[, oklongitude])
   #npos <- as.vector(dd[['npos']])
   temperature <- dd$T
   #ndataT <- dd[['ndatatw']]
