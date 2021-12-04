@@ -7,6 +7,41 @@
 #'
 "summerGroundfishLonLatGrid"
 
+#' Summer groundfish grid.
+#'
+#' Summer groundfish grid used interpolation
+#'
+#' @format a data frame columns \code{x}, or the longitude, \code{y}, or the latitude,
+#' \code{depth}, \code{tolerance}, and \code{isBottom} which is a logical column indicating
+#' if the point is considered a bottom depth of the grid.
+#'
+"summerGroundfishGrid"
+
+#' Summer groundfish standard grid depths.
+#'
+#' Summer groundfish standard grid depths used in summerGroundfishGrid
+#'
+#' @format a numeric vector
+#'
+"summerGroundfishStandardDepths"
+
+#' Summer groundfish xg for input into barnes interpolation.
+#'
+#' Summer groundfish standard x-grid points used in summerGroundfishGrid
+#'
+#' @format a numeric vector
+#'
+"summerGroundfishXg"
+
+#' Summer groundfish yg for input into barnes interpolation.
+#'
+#' Summer groundfish standard y-grid points used in summerGroundfishGrid
+#'
+#' @format a numeric vector
+#'
+"summerGroundfishYg"
+
+
 #' Summer groundfish utm grid.
 #'
 #' Summer groundfish utm grid used for optimal estimation analysis (oax)

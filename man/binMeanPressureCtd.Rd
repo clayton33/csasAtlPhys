@@ -4,7 +4,7 @@
 \alias{binMeanPressureCtd}
 \title{Bin-average a CTD object in pressure space.}
 \usage{
-binMeanPressureCtd(x, bin, tolerance, trimBin = TRUE)
+binMeanPressureCtd(x, bin, tolerance, trimBin = TRUE, method = "mean")
 }
 \arguments{
 \item{x}{a ctd object}
@@ -15,6 +15,9 @@ binMeanPressureCtd(x, bin, tolerance, trimBin = TRUE)
 
 \item{trimBin}{a logical value indicating if the supplied bin values should be trimmed to the
 maximum pressure, default is TRUE.}
+
+\item{method}{a character vector indicating the type of averaging to do. Ones that are currently
+available include \code{'mean'} and \verb{'triangleWeight}. \code{'mean'} is the default.}
 }
 \value{
 a ctd object that has the same metadata and processing log as the supplied ctd object,

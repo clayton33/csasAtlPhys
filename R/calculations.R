@@ -107,20 +107,22 @@ cilVolume <- function(T, p, longitude, latitude, dlongitude, dlatitude, Tlim = 4
   thickness <- NULL
   idx <- NULL
   for (i in 1:length(p)){
-    if(T[i] <= Tlim){
-      {if(i == 1){ # first point
-        thick <- (p[i] + p[(i+1)])/ 2
-        thickness <- c(thickness, thick)
-        idx <- c(idx, i)
-      } else if(i == length(p)){ # bottom point
-        thick <- (p[i] - p[(i-1)]) / 2
-        thickness <- c(thickness, thick)
-        idx <- c(idx, i)
-      } else{ # interior point
-        thick <- (p[(i+1)] - p[(i-1)]) / 2
-        thickness <- c(thickness, thick)
-        idx <- c(idx, i)
-      }
+    if(!is.na(T[i])){
+      if(T[i] <= Tlim){
+        {if(i == 1){ # first point
+          thick <- (p[i] + p[(i+1)])/ 2
+          thickness <- c(thickness, thick)
+          idx <- c(idx, i)
+        } else if(i == length(p)){ # bottom point
+          thick <- (p[i] - p[(i-1)]) / 2
+          thickness <- c(thickness, thick)
+          idx <- c(idx, i)
+        } else{ # interior point
+          thick <- (p[(i+1)] - p[(i-1)]) / 2
+          thickness <- c(thickness, thick)
+          idx <- c(idx, i)
+        }
+        }
       }
     }
   }
@@ -520,6 +522,8 @@ getTransectAngle <- function(longitude, latitude){
 #' @param tolerance a vector of numerical values of the tolerance for the bin
 #' @param trimBin a logical value indicating if the supplied bin values should be trimmed to the
 #' maximum pressure, default is TRUE.
+#' @param method a character vector indicating the type of averaging to do. Ones that are currently
+#' available include `'mean'` and `'triangleWeight`. `'mean'` is the default.
 #'
 #' @return a ctd object that has the same metadata and processing log as the supplied ctd object,
 #' but with bin-averaged data.
@@ -529,7 +533,16 @@ getTransectAngle <- function(longitude, latitude){
 #'
 #' @export
 
-binMeanPressureCtd <- function(x, bin, tolerance, trimBin = TRUE){
+binMeanPressureCtd <- function(x, bin, tolerance, trimBin = TRUE, method = 'mean'){
+  # for triangleWeight method
+  triangle <- function(n){
+    # check if even or odd
+    N <- n
+    n <- seq(-floor(N/2), floor(N/2), 1)
+    wn <- 1 - (abs(n) / N)
+    # return warning message that length of wn will be 1 more if n is even
+    wn
+  }
   # set up new ctd object
   res <- new("ctd")
   # add previous metadata and processing log
@@ -545,12 +558,36 @@ binMeanPressureCtd <- function(x, bin, tolerance, trimBin = TRUE){
     tolerance <- tolerance[ok]
   }
   for (i in seq_along(x@data)[!pok]) {
-    data <- x@data[[i]]
-    res@data[[i]] <- mapply(function(bin, tolerance) mean(data[pressure >= (bin - tolerance) & pressure < (bin + tolerance)], na.rm = TRUE),
-                            bin,
-                            tolerance)
-  }
+      data <- x@data[[i]]
+      if(names(x@data)[i] == 'time'){
+        res@data[[i]] <- mapply(function(bin, tolerance) mean(data[pressure >= (bin - tolerance) & pressure < (bin + tolerance)], na.rm = TRUE),
+                                bin,
+                                tolerance)
+      } else {
+          if(method == 'mean'){
+             res@data[[i]] <- mapply(function(bin, tolerance) mean(data[pressure >= (bin - tolerance) & pressure < (bin + tolerance)], na.rm = TRUE),
+                              bin,
+                              tolerance)
+        }
+          if(method == 'triangleWeight'){
+          res@data[[i]] <- mapply(function(bin, tolerance) {lookbin <- (bin - floor(tolerance/2)):(bin + ceiling(tolerance/2));
+                                                            # get triangle weight
+                                                            weight <- triangle(n = length(lookbin));
+                                                            dataidx <- unlist(lapply(lookbin, function(k) which(pressure == k))); # not sure what will happen if there is no match
+                                                            weightidx <- unlist(lapply(pressure, function(k) which(lookbin == k)));
+                                                            x <- data[dataidx];
+                                                            w <- weight[weightidx];
+                                                            ok <- !is.na(x);
+                                                            if(all(!ok)) {NA} else {sum(x[ok] * w[ok], na.rm = TRUE) / sum(w[ok], na.rm = TRUE)}},
+                                                            #if(all(is.na(data[dataidx]))){NA} else {sum(data[dataidx] * weight[weightidx], na.rm = TRUE) / sum(weight[weightidx], na.rm = TRUE)}},
+                                  bin,
+                                  tolerance)
+        }
+      }
+
+    }
   res@data[[which(pok)]] <- bin #+ tolerance # check this, not sure when I added + tolerance
+
   names(res@data) <- names(x@data)
   # set some 'metadata' things in 'data' if they are na
   # assumes that if time is na, then longitude and latitude will be as well
@@ -722,5 +759,239 @@ findBottomDepthIndex <- function(longitude, latitude, depth){
     idx[oklonlatdepth] <- TRUE
   }
   idx
+}
+
+#' @title Shelf survey barnes interpolation method
+#'
+#' @description This function applies the appropriate methodology decided on for interpolating shelf survey
+#' CTD measurements that has been tailored to the scotian shelf.
+#'
+#' @param ctd a list of [ctd-class] objects
+#' @param fullgrid a data.frame containing the full original grid which contains columns, `x` which is the longitude,
+#' `y` which is the latitude, `depth`, and `isBottom` which indicates if the grid point is the bottom depth.
+#' @param grid a data.frame containing the grid points that data should be interpolated. This includes columns
+#' `y` which is the latitude, `x`, which is the longitude, `depth`, a positive value, `tolerance`, a positive value
+#' indicating a depth range used to get an average value at the given depth, `isBottom`, an optional column
+#' indicating if the grid point is a bottom depth point.
+#' @param variable a character value specifying which variable to extract from the `ctd` profiles.
+#' @param xg,yg vectors defining x and y grids, see [interpBarnes] for additional clarification.
+#' @param xr,yr lengths of the x and y grids for barnes interpolation, see [interpBarnes] for additional clarification.
+#' @param iterations number of iterations for barnes interpolation, see [interpBarnes] for additional clarification.
+#' @param gamma grid-focussing parameter for barnes interpolation, see [interpBarnes] for additional clarification.
+#' @param averagingMethod a character vector of length one indicating how to vertically average the data to input
+#' into the barnes interpolation. Current options include `mean` and `triangleWeight`.
+#' @param trimOutput a logical value indicating if the barnes output should trim the grid output based on the input
+#' data. If `TRUE`, any grid points which don't have any data within the value supplied to `trimDistance`.
+#' @param trimDistance a numeric value indicating the distance, in kilometers, where barnes interpolation
+#' output will be deemed valid if supplied data falls within the given distance. If not, the barnes output
+#' at that grid point will be assigned a value of `NA`.
+#' @param debug a logical value indicating if some debug messages should be displayed.
+#'
+#' @return a data.frame of the barnes interpolation output at each grid point defined in full grid, if the given
+#' depth value and or grid points are specified in grid. The data.frame includes `x` the longitude, `y` the latitude,
+#' `depth` the depth, and `data` the barnes output of the smoothed interpolated data for the given variable.
+#'
+#' @author Chantelle Layton
+#' @export
+#'
+#' @importFrom oce interpBarnes
+#' @importFrom oce lonlat2utm
+#' @importFrom oce geodDist
+
+shelfSurveyInterpBarnes <- function(ctd, fullgrid, grid, variable, xg, yg, xr, yr, iterations, gamma, averagingMethod, trimOutput, trimDistance, debug = FALSE) {
+  # add some checks to see if parameters are supplied
+
+  # functions that don't need to be their own ... yet ...
+  # for vertical weighted averaging
+  triangle <- function(n){
+    # check if even or odd
+    N <- n
+    n <- seq(-floor(N/2), floor(N/2), 1)
+    wn <- 1 - (abs(n) / N)
+    # return warning message that length of wn will be 1 more if n is even
+    wn
+  }
+
+  # essentially code from AZMPreporting/climatology/summerGroundfish/17_interparnes1981to2010climatology.R
+  catpts <- seq(0, dim(grid)[1], 50) # for debug and development purposes
+  expgrid <- expand.grid(x = xg, y = yg)
+  barnesd <- NULL
+  for (id in 1:dim(grid)[1]){
+    if(id %in% catpts){
+      cat(paste('Doing barnes interp for pt', id ,'/', dim(grid)[1]), sep = '\n')
+    }
+    griddfsub <- grid[id, ]
+    lookdepth <- griddfsub[['depth']]
+    looktolerance <- griddfsub[['tolerance']]
+
+    # subset the grid to either the depth or the bottom point
+    if(griddfsub[['isBottom']]){
+      subgrid <- griddfsub
+      gridmask <- TRUE
+    } else {
+      ok <- fullgrid[['depth']] == lookdepth
+      subgrid <- fullgrid[ok, ]
+      gridmask <- apply(expgrid, 1, function(k) {any(subgrid[['x']] %in% k[['x']] & subgrid[['y']] %in% k[['y']])})
+    }
+
+    # prep the data
+    alllookdepth <- (lookdepth - floor(looktolerance/2)):(lookdepth + ceiling(looktolerance/2))
+    # get triangle weight
+    if(averagingMethod == 'triangleWeight'){weight <- triangle(n = length(alllookdepth))}
+    x <- y <- z <- NULL
+    xlon <- ylat <- NULL
+    for (i in 1:length(ctd)){
+      # 1. subset the data
+      dd <- ctd[[i]]
+      pressure <- dd[['pressure']]
+      okp <- pressure %in% alllookdepth
+      #ddsub <- subset(dd, pressure %in% alllookdepth)
+      #if(length(ddsub[[variable]]) == 0){
+      if(all(!okp)){
+        next
+      } else{
+        # 1. get x and y
+        # utm <- lonlat2utm(longitude = ddsub[['longitude']][1], latitude = ddsub[['latitude']][1], zone = zone, km = TRUE)
+        # x <- c(x, utm$easting)
+        # y <- c(y, utm$northing)
+
+        #xlon <- c(xlon, ddsub[['longitude']][1])
+        #ylat <- c(ylat, ddsub[['latitude']][1])
+
+        xlon <- c(xlon, dd[['longitude']][1])
+        ylat <- c(ylat, dd[['latitude']][1])
+        # 2. get z
+        #data <- ddsub[[variable]]
+        #datapressure <- ddsub[['pressure']]
+        data <- dd[[variable]][okp]
+        datapressure <- dd[['pressure']][okp]
+
+        if(averagingMethod == 'triangleWeight'){
+          # match up datapressure with alllookdepth
+          dataidx <- unlist(lapply(alllookdepth, function(k) which(datapressure == k))) # not sure what will happen if there is no match
+          weightidx <- unlist(lapply(datapressure, function(k) which(alllookdepth == k)))
+          x <- data[dataidx]
+          w <- weight[weightidx]
+          ok <- !is.na(x)
+          wa <- if(all(!ok)) {NA} else {sum(x[ok] * w[ok], na.rm = TRUE) / sum(w[ok], na.rm = TRUE)}
+        }
+        if(averagingMethod == 'mean'){
+          wa <- mean(data[dataidx], na.rm = TRUE)
+        }
+        z <- c(z, wa)
+      }
+    }
+    # do barnes interpolation
+    # if there is no data to input, spit out a NA data frame
+    if(is.null(z)){
+      if(griddfsub[['isBottom']]){
+        if(debug) cat(paste('No data points for bottom depth', lookdepth, ' m.'), sep = '\n')
+      } else {
+        if(debug) cat(paste('No data points for depth', lookdepth, ' m.'), sep = '\n')
+      }
+
+      if(griddfsub[['isBottom']]){
+        #cat(paste('Appending bottom depth pt, length of ib$xg is', length(ib$xg)), sep = '\n')
+        if(debug) cat(paste('Appending NA bottom depth pt'), sep = '\n')
+        barnesdadd <- data.frame(#x = ib$xg,
+                                 #y = ib$yg,
+                                 x = griddfsub[['x']],
+                                 y = griddfsub[['y']],
+                                 depth = lookdepth,
+                                 data = NA,
+                                 isBottom = griddfsub[['isBottom']])
+      }
+      else {
+        barnesdadd <- data.frame(x = expgrid$x[gridmask],
+                                 y = expgrid$y[gridmask],
+                                 depth = rep(lookdepth, times = length(expgrid$x[gridmask])),
+                                 data = NA,
+                                 isBottom = griddfsub[['isBottom']])
+      }
+      if(trimOutput){
+        barnesdadd <- data.frame(barnesdadd,
+                                 dataTrimmed = NA)
+      }
+    } else {
+    # do barnes based on either entire grid or just bottom point
+    if(griddfsub[['isBottom']]){
+      ib <- interpBarnes(x = xlon, y = ylat, z = z,
+                         xg = griddfsub[['x']], yg = griddfsub[['y']],
+                         xr = xr, yr = yr,
+                         gamma = gamma,
+                         iterations = iterations
+                         #trim = 0.2
+                         #debug = 33
+      )
+    } else {
+      ib <- interpBarnes(x = xlon, y = ylat, z = z,
+                         xg = xg, yg = yg,
+                         xr = xr, yr = yr,
+                         gamma = gamma,
+                         iterations = iterations
+                         #trim = 0.2
+                         #debug = 33
+      )
+    }
+
+    # NA out any barnes output where there isn't a data point within xr,yr radius
+    #   note that i'll use Rdist here for simplicity
+    if(trimOutput){
+      blon <- ib[['xg']]
+      blat <- ib[['yg']]
+      zgNew <- matrix(data = NA, nrow = dim(ib[['zg']])[1], ncol = dim(ib[['zg']])[2])
+      for(ilon in 1:length(blon)){
+        lonlook <- blon[ilon]
+        for(ilat in 1:length(blat)){
+          latlook <- blat[ilat]
+          distToGridPt <- geodDist(longitude2 = lonlook,
+                                   latitude2 = latlook,
+                                   longitude1 = xlon,
+                                   latitude1 = ylat)
+          # zgNew already filled with NA so no need to do else case
+          if(any(distToGridPt < trimDistance)){
+            zgNew[ilon, ilat] <- ib[['zg']][ilon, ilat]
+          }
+        }
+      }
+      ib[['zgTrimmed']] <- zgNew
+    }
+
+    # save some things from interpBarnes
+    # want only the grid values, not the entire expanded grid
+      if(griddfsub[['isBottom']]){
+        if(debug) cat(paste('Appending bottom depth pt, length of ib$xg is', length(ib$xg)), sep = '\n')
+        barnesdadd <- data.frame(x = ib$xg,
+                                 y = ib$yg,
+                                 depth = lookdepth,
+                                 data = ib$zg,
+                                 isBottom = griddfsub[['isBottom']])
+      }
+      else {
+            barnesdadd <- data.frame(x = expgrid$x[gridmask],
+                             y = expgrid$y[gridmask],
+                             depth = rep(lookdepth, times = length(expgrid$x[gridmask])),
+                             data = ib$zg[gridmask],
+                             isBottom = griddfsub[['isBottom']])
+      }
+
+    if(trimOutput){
+      barnesdadd <- data.frame(barnesdadd,
+                               dataTrimmed = ib$zgTrimmed[gridmask])
+    }
+    } # closes is.na(z)
+    dim1 <- if(is.null(barnesd)) 0 else dim(barnesd)[1]
+    if(debug) cat(dim1, sep = '\n')
+    if(is.null(barnesd)){
+      barnesd <- barnesdadd
+    } else {
+      barnesd <- rbind(barnesd,
+                       barnesdadd)
+    }
+    if(debug) dim2 <- dim(barnesd)[1]
+    if(debug) cat(paste('Added', dim2 - dim1, 'points'), sep = '\n')
+    #rmsezd <- rmse(z[!is.na(z)], ib$zd)
+  } # closes grid for loop
+  barnesd
 }
 
