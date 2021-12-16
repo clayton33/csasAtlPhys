@@ -135,6 +135,40 @@
 #'
 "winterGroundfishUtmGrid"
 
+#' Winter groundfish grid.
+#'
+#' Winter groundfish grid used interpolation
+#'
+#' @format a data frame columns \code{x}, or the longitude, \code{y}, or the latitude,
+#' \code{depth}, \code{tolerance}, and \code{isBottom} which is a logical column indicating
+#' if the point is considered a bottom depth of the grid.
+#'
+"winterGroundfishGrid"
+
+#' Winter groundfish standard grid depths.
+#'
+#' Winter groundfish standard grid depths used in winterGroundfishGrid
+#'
+#' @format a numeric vector
+#'
+"winterGroundfishStandardDepths"
+
+#' Winter groundfish xg for input into barnes interpolation.
+#'
+#' Winter groundfish standard x-grid points used in winterGroundfishGrid
+#'
+#' @format a numeric vector
+#'
+"winterGroundfishXg"
+
+#' Winter groundfish yg for input into barnes interpolation.
+#'
+#' Winter groundfish standard y-grid points used in winterGroundfishGrid
+#'
+#' @format a numeric vector
+#'
+"winterGroundfishYg"
+
 #' Winter groundfish optimal estimation results
 #'
 #' Winter groundfish optimal estimation results from 1970 to present

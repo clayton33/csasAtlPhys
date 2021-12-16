@@ -17,7 +17,8 @@ shelfSurveyInterpBarnes(
   gamma,
   averagingMethod,
   trimOutput,
-  trimDistance
+  trimDistance,
+  debug = FALSE
 )
 }
 \arguments{
@@ -50,6 +51,8 @@ data. If \code{TRUE}, any grid points which don't have any data within the value
 \item{trimDistance}{a numeric value indicating the distance, in kilometers, where barnes interpolation
 output will be deemed valid if supplied data falls within the given distance. If not, the barnes output
 at that grid point will be assigned a value of \code{NA}.}
+
+\item{debug}{a logical value indicating if some debug messages should be displayed.}
 }
 \value{
 a data.frame of the barnes interpolation output at each grid point defined in full grid, if the given
