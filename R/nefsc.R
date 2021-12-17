@@ -164,13 +164,17 @@ read.nefsc <- function(file){
                         as.numeric(substr(longitudeUnformat, 4,5))/60 +
                         as.numeric(paste0('.',substr(longitudeUnformat, 6, 6))) * (60 / 3600))
     time <- paste(substr(timeUnformat, 1, 2), substr(timeUnformat, 3, 4), sep = ":")
-    startTime <- as.POSIXct(paste(paste(as.numeric(year),
+    # header in files before year 2000 appear to have '19' missing from year
+    startTime <- as.POSIXct(paste(paste(ifelse(nchar(as.numeric(year)) == 2, as.numeric(year) + 1900, as.numeric(year)),
                                         as.numeric(month),
                                         as.numeric(day), sep = '-'),
                                   time, sep = " "), tz = 'UTC')
     temperature <- as.numeric(paste(substr(T, 1, 2), substr(T, 3, 4), sep ='.'))
+    temperature[temperature == 99] <- NA
     salinity <- as.numeric(paste(substr(S, 1, 2), substr(S, 3, 5), sep = '.'))
+    salinity[salinity == 99] <- NA
     sigmaTheta <- as.numeric(paste(substr(sigT, 1, 2), substr(sigT, 3, 4), sep= '.'))
+    sigmaTheta[salinity == 99 | temperature == 99] <- NA
     # likley not to have any oxy, chl, fluor, and par
     # implement other logic
     ## 20190926 : not concerned with these other variable so don't use them
@@ -181,7 +185,10 @@ read.nefsc <- function(file){
     # chlorophyll <- as.numeric(unlist(lapply(chl, function(k) ifelse(grepl('^\\s*$', k),
     #                                                                 NA,
     #                                                                 paste(substr(k, 1, 2), substr(k, 3, 4), sep = ".")))))
-    ctd[[i]] <- as.ctd(salinity = salinity,
+
+    # construct a cruiseNumber that looks like ours
+    cruiseNumber <- paste0(ship, ifelse(nchar(as.numeric(year)) == 2, as.numeric(year) + 1900, as.numeric(year)), paste0('0', cruiseCode))
+    ctdtemp <- as.ctd(salinity = salinity,
                        temperature = temperature,
                        pressure = as.numeric(p),
                        serialNumber = as.numeric(ctdSerialNumber),
@@ -192,6 +199,13 @@ read.nefsc <- function(file){
                        latitude = latitude,
                        time = as.POSIXct(rep(startTime, length(temperature)), origin = '1970-01-01', tz = 'UTC'),
                        startTime = startTime)
+    ctdtemp <- oceSetMetadata(ctdtemp,
+                              'filename',
+                              file)
+    ctdtemp <- oceSetMetadata(ctdtemp,
+                              'cruiseNumber',
+                              cruiseNumber)
+    ctd[[i]] <- ctdtemp
 
   }
   ctd
