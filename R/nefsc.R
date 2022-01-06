@@ -170,11 +170,11 @@ read.nefsc <- function(file){
                                         as.numeric(day), sep = '-'),
                                   time, sep = " "), tz = 'UTC')
     temperature <- as.numeric(paste(substr(T, 1, 2), substr(T, 3, 4), sep ='.'))
-    temperature[temperature == 99] <- NA
+    temperature[temperature == 99.999] <- NA
     salinity <- as.numeric(paste(substr(S, 1, 2), substr(S, 3, 5), sep = '.'))
-    salinity[salinity == 99] <- NA
+    salinity[salinity == 99.999] <- NA
     sigmaTheta <- as.numeric(paste(substr(sigT, 1, 2), substr(sigT, 3, 4), sep= '.'))
-    sigmaTheta[salinity == 99 | temperature == 99] <- NA
+    sigmaTheta[salinity == 99.999 | temperature == 99.999] <- NA
     # likley not to have any oxy, chl, fluor, and par
     # implement other logic
     ## 20190926 : not concerned with these other variable so don't use them
