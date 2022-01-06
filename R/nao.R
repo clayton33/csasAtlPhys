@@ -58,7 +58,7 @@ download.nao <- function(destdir = '.', destfile = NULL){
 #'
 
 read.nao <- function(file){
-  fext <- strsplit(basename(file), sep = '\\.')[[1]]
+  fext <- strsplit(basename(file), split = '\\.')[[1]]
   if(fext[length(fext)] == 'csv'){ # data format for 2019 to 2021 data
     d <- read.csv(file, skip = 1, header = TRUE)
     # first column has the header named Date
@@ -77,7 +77,7 @@ read.nao <- function(file){
     # first column is the year
     # columns after that are the months
     colnames(d) <- c('Year', month.abb)
-    year <- d[['Year']]
+    year <- unlist(lapply(d[['Year']], function(k) rep(k, 12))) # unlist the monthly data by row, so have to rep the year 12 times
     month <- rep(1:12, length(year))
     value <- as.numeric(t(d[, names(d) != 'Year']))
     df <- data.frame(year = year,
