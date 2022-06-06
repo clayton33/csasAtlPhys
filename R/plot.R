@@ -691,14 +691,16 @@ plotMonthlyTimeseriesWAnomalyBar <- function(xYear, xMonth, y, yAnomaly,
   ## monthly
   textcol <- rep('black', length(yAnomaly))
   whitetext <- yAnomaly <= -3.0 | (yAnomaly >= 3.0 & yAnomaly < 3.5)
-  if(any(!whitetext)) text(x = palette[!whitetext == TRUE], y = 2, labels = sprintf('%.1f', yAnomaly[!whitetext == TRUE]), col = 'black', srt = 90, cex = 0.8)
-  if(any(whitetext)) text(x = palette[whitetext == TRUE], y = 2, labels = sprintf('%.1f', yAnomaly[whitetext == TRUE]), col = 'white', srt = 90, cex = 0.8)
+  whitetext[is.na(whitetext)] <- FALSE
+  if(any(!whitetext)) text(x = palette[!whitetext == TRUE & !is.na(yAnomaly)], y = 2, labels = sprintf('%.1f', yAnomaly[!whitetext == TRUE & !is.na(yAnomaly)]), col = 'black', srt = 90, cex = 0.8)
+  if(any(whitetext)) text(x = palette[whitetext == TRUE & !is.na(yAnomaly)], y = 2, labels = sprintf('%.1f', yAnomaly[whitetext == TRUE & !is.na(yAnomaly)]), col = 'white', srt = 90, cex = 0.8)
   ## annual
   textcol <- rep('black', length(yAnnualAnomaly))
   whitetext <- yAnnualAnomaly <= -3.0 | (yAnnualAnomaly >= 3.0 & yAnnualAnomaly < 3.5)
+  whitetext[is.na(whitetext)] <- FALSE
   annualtextat <- as.POSIXct(paste(xAnnualAnomaly, '07', '02', sep = '-'), tz = 'UTC')
-  if(any(!whitetext)) text(x = annualtextat[!whitetext == TRUE], y = 1, labels = sprintf('%.1f', yAnnualAnomaly[!whitetext == TRUE]), col = 'black', cex = 0.8)
-  if(any(whitetext)) text(x = annualtextat[whitetext == TRUE], y = 1, labels = sprintf('%.1f', yAnnualAnomaly[whitetext == TRUE]), col = 'white', cex = 0.8)
+  if(any(!whitetext)) text(x = annualtextat[!whitetext == TRUE & !is.na(yAnnualAnomaly)], y = 1, labels = sprintf('%.1f', yAnnualAnomaly[!whitetext == TRUE & !is.na(yAnnualAnomaly)]), col = 'black', cex = 0.8)
+  if(any(whitetext)) text(x = annualtextat[whitetext == TRUE], y = 1, labels = sprintf('%.1f', yAnnualAnomaly[whitetext == TRUE & !is.na(yAnnualAnomaly)]), col = 'white', cex = 0.8)
 
   # reset mai, prep for primary plot
   par(new=TRUE, mai=pc$mai2)
