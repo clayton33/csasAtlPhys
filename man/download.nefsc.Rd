@@ -4,7 +4,7 @@
 \alias{download.nefsc}
 \title{Download NODC NEFSC data}
 \usage{
-download.nefsc(year, ship, destdir = ".")
+download.nefsc(year, ship, destdir = ".", overwrite = FALSE)
 }
 \arguments{
 \item{year}{Optional number giving the year of interest}
@@ -15,6 +15,9 @@ download.nefsc(year, ship, destdir = ".")
 downloaded files. If not supplied, \code{"."} is used, i.e. the data file
 is stored in the present working directory. Also, if the directory will be created
 if not already done so.}
+
+\item{overwrite}{Logical value indicating if data file(s) should be re-downloaded, or overwritten,
+if they already exist in destdir. Default is set to \code{FALSE}.}
 }
 \description{
 Download data hosted by the National

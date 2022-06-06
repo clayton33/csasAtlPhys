@@ -48,6 +48,8 @@
 #' downloaded files. If not supplied, `"."` is used, i.e. the data file
 #' is stored in the present working directory. Also, if the directory will be created
 #' if not already done so.
+#' @param overwrite Logical value indicating if data file(s) should be re-downloaded, or overwritten,
+#' if they already exist in destdir. Default is set to `FALSE`.
 #'
 #' @author Chantelle Layton
 #' @importFrom utils download.file
@@ -55,9 +57,16 @@
 #' @export
 #'
 
-download.nefsc <- function(year, ship, destdir = '.') {
+download.nefsc <- function(year, ship, destdir = '.', overwrite = FALSE) {
   if(missing(year) & missing(ship)){
     stop("Please provide either a year or ship.")
+  }
+  # check if files are already in destdir
+  if(!overwrite){ # chances are user has already downloaded data
+    existingFiles <- list.files(path = destdir, pattern = '.*\\.dat')
+    if(length(existingFiles) == 0) {
+      message(paste('No existing files in', destdir))
+    }
   }
   # define ftp site
   ftp <- 'ftp://ftp.nefsc.noaa.gov/pub/hydro/nodc_files/'
@@ -81,8 +90,14 @@ download.nefsc <- function(year, ship, destdir = '.') {
   } else { # provide both year and ship
     okfiles <- fullYear == year & ships == ship
   }
-
   downloadfiles <- filenames[okfiles]
+  message(paste('Found', length(downloadfiles), 'files to download.'))
+  # if overwrite = FALSE, check to see which ones have already been downloaded
+  if(!overwrite & length(existingFiles) != 0){
+    okdownload <- downloadfiles %in% existingFiles
+    downloadfiles <- downloadfiles[!okdownload]
+    message(paste(length(which(okdownload == TRUE)), 'have already been downloaded.'))
+  }
 
   if(!dir.exists(destdir)){
     dir.create(destdir, recursive = TRUE)
@@ -94,7 +109,7 @@ download.nefsc <- function(year, ship, destdir = '.') {
                     destfile = paste(destdir, file, sep = '/'))
     }
   } else {
-    message(paste0('No files found for', year, '.'))
+    message(paste('No files found for', year, '.'))
   }
 
 }
