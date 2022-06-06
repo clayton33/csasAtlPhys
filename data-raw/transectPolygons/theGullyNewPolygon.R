@@ -221,7 +221,7 @@ bottomOutline <- data.frame(latitude = c(startLatitude, bottomlat),
                             elevation_m = zs)
 gullyTransectDef <- list(info = data.frame(start_latitude = startLatitude,
                                            start_longitude = startLongitude,
-                                           yaxis_max = 300), # need to think about yaxis_max
+                                           yaxis_max = 1200), # need to think about yaxis_max, initially 300, DH requested deeper 2022 01 28 changed to 1200
                          bottom_outline = bottomOutline)
 
 save(gullyTransectDef, file = './data-raw/transects/gullyNewTransectDefinition.RData')
