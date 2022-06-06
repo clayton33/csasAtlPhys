@@ -4,10 +4,13 @@
 \alias{annualAnomaly}
 \title{Calculate annual anomaly values}
 \usage{
-annualAnomaly(d)
+annualAnomaly(d, minNMonths = 12)
 }
 \arguments{
 \item{d}{a data.frame containing year, month, and at least anomaly, and optionally normalizedAnomaly}
+
+\item{minNMonths}{an numeric value indicating the minimum number of months required to calculate an
+annual value for a given year. The default value is set to 12.}
 }
 \value{
 a data.frame with year, anomaly, and optionally normalizedAnomaly

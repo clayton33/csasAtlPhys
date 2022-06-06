@@ -368,6 +368,8 @@ monthlyNormalizedAnomaly <- function(d, climatologyYears){
 #' monthly anomaly values.
 #'
 #' @param d a data.frame containing year, month, and at least anomaly, and optionally normalizedAnomaly
+#' @param minNMonths an numeric value indicating the minimum number of months required to calculate an
+#' annual value for a given year. The default value is set to 12.
 #'
 #' @return a data.frame with year, anomaly, and optionally normalizedAnomaly
 #'
@@ -377,9 +379,28 @@ monthlyNormalizedAnomaly <- function(d, climatologyYears){
 #'
 #' @export
 
-annualAnomaly <- function(d){
-  aa <- aggregate(anomaly ~ year, d, mean, na.rm = TRUE)
-  aa
+annualAnomaly <- function(d, minNMonths = 12){
+  # remove any character columns
+  # most likely flag columns
+  dclass <- sapply(d, class)
+  d <- d[, !dclass %in% 'character']
+  ds <- split(d, d[['year']])
+  dout <- vector(mode = 'list', length = length(ds))
+  for(i in 1:length(ds)){
+    dd <- ds[[i]]
+    # check that there are at least minimum number of values present for temperature
+    if(length(which(!is.na(dd[['temperature']]))) > minNMonths){ # enough data
+      dsave <- apply(dd, 2, mean, na.rm = TRUE)
+      # remove the month column
+      dout[[i]] <- dsave[names(dsave) != 'month']
+    } else { # not enough data
+      dsave <- c(as.numeric(names(ds)[i]), rep(NA, length(names(dd)[!names(dd) %in% c('year', 'month')])))
+      names(dsave) <- c('year', names(dd)[!names(dd) %in% c('year', 'month')])
+      dout[[i]] <- dsave
+    }
+  }
+  dfout <- as.data.frame(do.call('rbind', dout))
+  dfout
 }
 
 #' @title Calculate normalized annual anomaly values
