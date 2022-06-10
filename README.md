@@ -20,7 +20,7 @@ there is no plan at this time to submit to CRAN. For users to who wish to instal
 
 ```
 library(devtools)
-install_github('clayton33/csasAtlPhys', ref = 'develop')
+install_github('clayton33/csasAtlPhys', ref = 'master')
 ```
 
 this package is dependent on the `oce` package, so it is also best to have
