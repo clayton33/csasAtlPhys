@@ -5,8 +5,10 @@
 \title{Create a grid mask}
 \usage{
 makeGridMask(
-  gridLongitude,
-  gridLatitude,
+  gridLongitudeOriginal,
+  gridLatitudeOriginal,
+  gridPtLongitude,
+  gridPtLatitude,
   gridDiffLongitude,
   gridDiffLatitude,
   useCtd = FALSE,
@@ -17,9 +19,13 @@ makeGridMask(
 )
 }
 \arguments{
-\item{gridLongitude}{a numerical vector of the grids longitude}
+\item{gridLongitudeOriginal}{a numerical vector of the unique grid longitude values}
 
-\item{gridLatitude}{a numerical vector of the grids latitude}
+\item{gridLatitudeOriginal}{a numerical vector of the unique grid latitude values}
+
+\item{gridPtLongitude}{a numerical vector of the grid point longitude values}
+
+\item{gridPtLatitude}{a numerical vector of the grid point latitude values}
 
 \item{gridDiffLongitude}{a numerical value indicating the delta value between \code{gridLongitude}}
 
