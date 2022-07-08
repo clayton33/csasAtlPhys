@@ -161,7 +161,9 @@ read.climateSummaries.xml <- function(file)
   stationId <- unname(unlist(lapply(stationData, function(k) k[['identifier']])))
   latitude <- unname(unlist(lapply(stationData, function(k) k[['latitude']])))
   longitude <- unname(unlist(lapply(stationData, function(k) k[['longitude']])))
-  province <- unname(unlist(lapply(stationData, function(k) k[['province']][1])))
+  # they changed the variable name for province sometime in the first half of 2022
+  provTerrVarName <- c('province', 'province_or_territory')
+  province <- unname(unlist(lapply(stationData, function(k) k[[which(names(k) %in% provTerrVarName)]][1])))
   meanTemperature <- unname(unlist(lapply(stationData, function(k) k[['mean_temperature']][1]))) # value is firs value
   maxTemperature <- unname(unlist(lapply(stationData, function(k) ifelse(is.null(k[['max_temperature']]), NA, k[['max_temperature']][1]))))
   minTemperature <- unname(unlist(lapply(stationData, function(k) ifelse(is.null(k[['min_temperature']]), NA, k[['min_temperature']][1]))))
