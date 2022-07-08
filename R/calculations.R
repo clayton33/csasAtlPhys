@@ -574,7 +574,7 @@ binMeanPressureCtd <- function(x, bin, tolerance, trimBin = TRUE, method = 'mean
   pok <- names(x@data) %in% 'pressure'
   pressure <- x@data[pok][[1]]
   if(trimBin) {
-    ok <- bin <= max(pressure)
+    ok <- bin <= max(pressure, na.rm = TRUE)
     bin <- bin[ok]
     tolerance <- tolerance[ok]
   }
@@ -603,6 +603,20 @@ binMeanPressureCtd <- function(x, bin, tolerance, trimBin = TRUE, method = 'mean
                                                             #if(all(is.na(data[dataidx]))){NA} else {sum(data[dataidx] * weight[weightidx], na.rm = TRUE) / sum(weight[weightidx], na.rm = TRUE)}},
                                   bin,
                                   tolerance)
+            # for debugging
+          # newd <- vector(mode = 'logical', length = length(bin))
+          # for(ib in 1:length(bin)){
+          #   lookbin <- (bin[ib] - floor(tolerance[ib]/2)):(bin[ib] + ceiling(tolerance[ib]/2))
+          #   # get triangle weight
+          #   weight <- triangle(n = length(lookbin))
+          #   dataidx <- unlist(lapply(lookbin, function(k) which(pressure == k))) # not sure what will happen if there is no match
+          #   weightidx <- unlist(lapply(pressure, function(k) which(lookbin == k)))
+          #   xd <- data[dataidx]
+          #   w <- weight[weightidx]
+          #   ok <- !is.na(xd)
+          #   newd[ib] <- if(all(!ok)) {NA} else {sum(xd[ok] * w[ok], na.rm = TRUE) / sum(w[ok], na.rm = TRUE)}
+          # }
+          # res@data[[i]] <- newd
         }
       }
 
