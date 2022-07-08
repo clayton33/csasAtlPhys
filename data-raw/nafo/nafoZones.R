@@ -7,7 +7,7 @@ file <- scan(text = paste(nafoPath, shpfiles, sep = '/'),
               what = character())
 shp <- readOGR(dsn = nafoPath)
 # we want 4x, 4v, 4w, 4Vs, 4Vn
-azmpzones <- c('4X', '4W', '4Vs', '4Vn') 
+azmpzones <- c('4X', '4W', '4Vs', '4Vn', '5Ze')
 okzone <- shp$ZONE %in% azmpzones
 
 zonepoly <- shp@polygons[okzone]
