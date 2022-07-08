@@ -17,17 +17,22 @@
 
 download.ahccd <- function(destdir = '.') {
 
-  ftp <- 'ftp://ccrp.tor.ec.gc.ca/pub/AHCCD/'
+  # source location of the data changed somewhere in first half of 2022
+  # most likely due to various popular web browsers not supporting ftp sites anymore
+  #ftp <- 'ftp://ccrp.tor.ec.gc.ca/pub/AHCCD/'
+  site <- 'http://crd-data-donnees-rdc.ec.gc.ca/CDAS/products/AHCCD/'
   # define two files associated with temperature.
-  ftpFile <- 'Homog_monthly_mean_temp.zip'
-  ftpStnFile <- 'Temperature_Stations.xls'
+  #ftpFile <- 'Homog_monthly_mean_temp.zip'
+  file <- 'Homog_monthly_mean_temp_Gen3.zip'
+  #ftpStnFile <- 'Temperature_Stations.xls'
+  stnFile <- 'Temperature_Stations_Gen3.xls'
 
   if(!dir.exists(destdir)){
     dir.create(destdir, recursive = TRUE)
   }
 
-  download.file(url = paste0(ftp, ftpFile), destfile = paste(destdir, ftpFile, sep = '/'), mode = 'wb')
-  download.file(url = paste0(ftp, ftpStnFile), destfile = paste(destdir, ftpStnFile, sep = '/'), mode = 'wb')
+  download.file(url = paste0(site, file), destfile = paste(destdir, file, sep = '/'), mode = 'wb')
+  download.file(url = paste0(site, stnFile), destfile = paste(destdir, stnFile, sep = '/'), mode = 'wb')
 }
 
 
