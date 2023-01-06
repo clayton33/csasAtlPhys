@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: csasAtlPhys 0.0.9000\n"
-"POT-Creation-Date: 2021-09-13 12:27\n"
+"POT-Creation-Date: 2022-10-26 10:04\n"
 "PO-Revision-Date: 2020-06-03 19:38-0300\n"
 "Last-Translator: <EMAIL@ADDRESS>\n"
 "Language-Team: Language R-fr\n"
@@ -102,6 +102,9 @@ msgstr "Bassin d'Émeraude"
 msgid "Sable Island"
 msgstr "Île de Sable"
 
+msgid "Sable Island sentence"
+msgstr "l'île de Sable"
+
 msgid "Georges Basin"
 msgstr "Bassin de Georges"
 
@@ -128,6 +131,9 @@ msgstr "Saint-Jean"
 
 msgid "Halifax"
 msgstr ""
+
+msgid "Halifax extended"
+msgstr "Halifax étendue"
 
 msgid "Boston"
 msgstr ""
@@ -385,6 +391,66 @@ msgstr ""
 msgid "CCGS"
 msgstr "NGCC"
 
+msgid "the first"
+msgstr "la première"
+
+msgid "the second"
+msgstr "la deuxième"
+
+msgid "the third"
+msgstr "le troisième"
+
+msgid "the fourth"
+msgstr "le quatrième"
+
+msgid "the fifth"
+msgstr "le cinquième"
+
+msgid "the sixth"
+msgstr "le sixième"
+
+msgid "the seventh"
+msgstr "le septième"
+
+msgid "the eighth"
+msgstr "la huitième"
+
+msgid "the ninth"
+msgstr "la neuvième"
+
+msgid "the tenth"
+msgstr "le dixième"
+
+msgid "one"
+msgstr "un"
+
+msgid "two"
+msgstr "deux"
+
+msgid "three"
+msgstr "trois"
+
+msgid "four"
+msgstr "quatre"
+
+msgid "five"
+msgstr "cinq"
+
+msgid "six"
+msgstr "six"
+
+msgid "seven"
+msgstr "sept"
+
+msgid "eight"
+msgstr "huit"
+
+msgid "nine"
+msgstr "neuf"
+
+msgid "ten"
+msgstr "dix"
+
 msgid "At a minimum, must supply a year."
 msgstr "At a minimum, must supply a year."
 
@@ -440,6 +506,18 @@ msgstr "'"
 
 msgid "Please provide either a year or ship."
 msgstr "Please provide either a year or ship."
+
+msgid "No existing files in"
+msgstr ""
+
+msgid "Found"
+msgstr ""
+
+msgid "files to download."
+msgstr ""
+
+msgid "have already been downloaded."
+msgstr ""
 
 msgid ""
 "Must supply all three parameters, buoyName, startDate, and endDate, in order "

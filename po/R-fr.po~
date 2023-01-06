@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: csasAtlPhys 0.0.9000\n"
-"POT-Creation-Date: 2021-03-09 14:37\n"
+"POT-Creation-Date: 2022-08-15 09:46\n"
 "PO-Revision-Date: 2020-06-03 19:38-0300\n"
 "Last-Translator: <EMAIL@ADDRESS>\n"
 "Language-Team: Language R-fr\n"
@@ -102,6 +102,9 @@ msgstr "Bassin d'Émeraude"
 msgid "Sable Island"
 msgstr "Île de Sable"
 
+msgid "Sable Island sentence"
+msgstr "l'île de Sable"
+
 msgid "Georges Basin"
 msgstr "Bassin de Georges"
 
@@ -140,7 +143,7 @@ msgstr "Détroit de Cabot"
 
 # as per charts 8006 and 4255
 msgid "Browns Bank"
-msgstr "Banc de Browns"
+msgstr "Banc de Brown"
 
 msgid "Louisbourg"
 msgstr "Louisbourg"
@@ -164,13 +167,11 @@ msgstr "Chenal nord-est"
 msgid "Portsmouth"
 msgstr "Portsmouth"
 
-#, fuzzy
 msgid "Laurentian Channel Mouth"
-msgstr "Chenal Laurentien"
+msgstr "Embouchure du chenal laurentien"
 
-#, fuzzy
 msgid "St. Pierre Bank"
-msgstr "Banc de Sainte-Anne"
+msgstr "Banc de Saint-Pierre"
 
 msgid "Gully"
 msgstr "Gully"
@@ -387,6 +388,66 @@ msgstr ""
 msgid "CCGS"
 msgstr "NGCC"
 
+msgid "the first"
+msgstr "la première"
+
+msgid "the second"
+msgstr "la deuxième"
+
+msgid "the third"
+msgstr "le troisième"
+
+msgid "the fourth"
+msgstr "le quatrième"
+
+msgid "the fifth"
+msgstr "le cinquième"
+
+msgid "the sixth"
+msgstr "le sixième"
+
+msgid "the seventh"
+msgstr "le septième"
+
+msgid "the eighth"
+msgstr "la huitième"
+
+msgid "the ninth"
+msgstr "la neuvième"
+
+msgid "the tenth"
+msgstr "le dixième"
+
+msgid "one"
+msgstr "un"
+
+msgid "two"
+msgstr "deux"
+
+msgid "three"
+msgstr "trois"
+
+msgid "four"
+msgstr "quatre"
+
+msgid "five"
+msgstr "cinq"
+
+msgid "six"
+msgstr "six"
+
+msgid "seven"
+msgstr "sept"
+
+msgid "eight"
+msgstr "huit"
+
+msgid "nine"
+msgstr "neuf"
+
+msgid "ten"
+msgstr "dix"
+
 msgid "At a minimum, must supply a year."
 msgstr "At a minimum, must supply a year."
 
@@ -443,6 +504,18 @@ msgstr "'"
 msgid "Please provide either a year or ship."
 msgstr "Please provide either a year or ship."
 
+msgid "No existing files in"
+msgstr ""
+
+msgid "Found"
+msgstr ""
+
+msgid "files to download."
+msgstr ""
+
+msgid "have already been downloaded."
+msgstr ""
+
 msgid ""
 "Must supply all three parameters, buoyName, startDate, and endDate, in order "
 "to download data."
@@ -464,6 +537,12 @@ msgstr "Moyenne"
 
 msgid "average"
 msgstr "moyenne"
+
+msgid "'pos' must be 1, 2, 3 or 4"
+msgstr ""
+
+msgid "pos must be in 1:4"
+msgstr ""
 
 #, fuzzy
 msgid "Please provide a filename"

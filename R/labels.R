@@ -211,6 +211,9 @@ getLocationName <- function(item){
   if(item == 'Sable Island'){
     location <- gettext('Sable Island', domain = 'R-csasAtlPhys')
   }
+  if(item == 'Sable Island sentence'){
+    location <- gettext('Sable Island sentence', domain = 'R-csasAtlPhys')
+  }
   if(item == 'Georges Basin'){
     location <- gettext('Georges Basin', domain = 'R-csasAtlPhys')
   }
@@ -240,6 +243,9 @@ getLocationName <- function(item){
   }
   if(item %in% c('Halifax', 'halifax', 'halifaxInshore')){
     location <- gettext('Halifax', domain = 'R-csasAtlPhys')
+  }
+  if(item == 'halifaxExtended'){
+    location <- gettext('Halifax extended', domain = 'R-csasAtlPhys')
   }
   if(item == 'Boston'){
     location <- gettext('Boston', domain = 'R-csasAtlPhys')
@@ -348,7 +354,7 @@ getLocationName <- function(item){
   }
   if(is.null(location)){
     cat('Please provide a valid location, if you believe the location has not been implemented, please contact creator.', sep = '\n')
-    cat('Returning item')
+    cat(paste('Returning item', item), sep = '\n')
     item
   } else {
     location
@@ -589,10 +595,11 @@ makeCruiseMapTitle <- function(ctd) {
      length(number) == length(number)){
     shipname <- getShipnameLong(unique(unlist(ship)))
     numbers <- paste0(unique(unlist(number)), collapse ='/')
-    shipnamenumber <- paste(shipname, numbers)
+    shipnamenumber <- paste(shipname, numbers) # abandon the cruise 'number', only use ship name
   } else {
     cship <- mapply(function(x, y) c(getShipnameLong(x), y), ship, number)
-    shipnamenumber <- paste(apply(cship, 2, paste, collapse = ' '), collapse = ' , ')
+    shipname <- getShipnameLong(ship)
+    shipnamenumber <- paste(apply(cship, 2, paste, collapse = ' '), collapse = ' , ') # abandon cruise 'number' only use ship name
   }
 
   timerange <- as.POSIXlt(range(time))
@@ -603,10 +610,13 @@ makeCruiseMapTitle <- function(ctd) {
     start <- format(range(time)[1], '%d %b, %Y')
     end <- format(range(time)[2], '%d %b %Y')
   }
+  # test to deal with Encoding issue with french characters
+  Encoding(start) <- 'latin1'
+  Encoding(end) <- 'latin1'
   # will probably eventually need to figure out the cex if there are two different ships
   # and the time ranges over 2 years
   nstn <- length(ctd)
-  bquote(.(shipnamenumber) * ',' ~ .(start) ~ .(gettext('to', domain = 'R-csasAtlPhys')) ~ .(end) * ',' ~ .(nstn) ~ 'stations')
+  bquote(.(shipname) * ',' ~ .(start) ~ .(gettext('to', domain = 'R-csasAtlPhys')) ~ .(end) * ',' ~ .(nstn) ~ 'stations')
 }
 
 #' @title Make section plot title
@@ -678,12 +688,120 @@ getShipnameLong <- function(x){
   if (x == 'AT'){
     long <- 'R/V Atlantis'
   }
+  if(x == 'JC'){
+    long <- 'RRS James Cook'
+  }
 
   if(is.null(long)){
-    cat('Ship abbreviation not found, please contact author and provide abbreviation and long name', sep = '\n')
-    cat('Returning abbreviation')
+    cat(paste('Ship abbreviation ', x, ' not found, please contact author and provide abbreviation and long name'), sep = '\n')
+    cat('Returning abbreviation', sep = '\n')
     x
   } else {
     long
+  }
+}
+
+#' @title Provide ordinal value for numbers up to 10.
+#'
+#' @description This function provides the ordinal word, with the article ('the'), for numbers up to 10.
+#'
+#' @param x A single numerical value for the desired number.
+#'
+#' @author Chantelle Layton
+#'
+#' @export
+#'
+
+getOrdinal <- function(x) {
+  ordinal <- NULL
+  if(x == 1) {
+    ordinal <- gettext('the first', domain = 'R-csasAtlPhys')
+  }
+  if(x == 2) {
+    ordinal <- gettext('the second', domain = 'R-csasAtlPhys')
+  }
+  if(x == 3) {
+    ordinal <- gettext('the third', domain = 'R-csasAtlPhys')
+  }
+  if(x == 4) {
+    ordinal <- gettext('the fourth', domain = 'R-csasAtlPhys')
+  }
+  if(x == 5) {
+    ordinal <- gettext('the fifth', domain = 'R-csasAtlPhys')
+  }
+  if(x == 6) {
+    ordinal <- gettext('the sixth', domain = 'R-csasAtlPhys')
+  }
+  if(x == 7) {
+    ordinal <- gettext('the seventh', domain = 'R-csasAtlPhys')
+  }
+  if(x == 8) {
+    ordinal <- gettext('the eighth', domain = 'R-csasAtlPhys')
+  }
+  if(x == 9) {
+    ordinal <- gettext('the ninth', domain = 'R-csasAtlPhys')
+  }
+  if(x == 10) {
+    ordinal <- gettext('the tenth', domain = 'R-csasAtlPhys')
+  }
+
+  if(is.null(ordinal)){
+    cat('Function only translates up to numerical value of 10', sep = '\n')
+    cat('Returning original input', sep = '\n')
+    x
+  } else {
+    ordinal
+  }
+}
+
+#' @title Provide written value for numbers up to 10.
+#'
+#' @description This function provides the written number, for numbers up to 10.
+#'
+#' @param x A single numerical value for the desired number.
+#'
+#' @author Chantelle Layton
+#'
+#' @export
+
+getNumber <- function(x) {
+  xx <- NULL
+  if(x == 1) {
+    xx <- gettext('one', domain = 'R-csasAtlPhys')
+  }
+  if(x == 2) {
+    xx <- gettext('two', domain = 'R-csasAtlPhys')
+  }
+  if(x == 3) {
+    xx <- gettext('three', domain = 'R-csasAtlPhys')
+  }
+  if(x == 4) {
+    xx <- gettext('four', domain = 'R-csasAtlPhys')
+  }
+  if(x == 5) {
+    xx <- gettext('five', domain = 'R-csasAtlPhys')
+  }
+  if(x == 6) {
+    xx <- gettext('six', domain = 'R-csasAtlPhys')
+  }
+  if(x == 7) {
+    xx <- gettext('seven', domain = 'R-csasAtlPhys')
+  }
+  if(x == 8) {
+    xx <- gettext('eight', domain = 'R-csasAtlPhys')
+  }
+  if(x == 9) {
+    xx <- gettext('nine', domain = 'R-csasAtlPhys')
+  }
+  if(x == 10) {
+    xx <- gettext('ten', domain = 'R-csasAtlPhys')
+  }
+
+  if(is.null(xx)){
+    cat('Function only translates up to numerical value of 10', sep = '\n')
+    cat('Returning original input', sep = '\n')
+    x
+  } else {
+    xx
   }
 }

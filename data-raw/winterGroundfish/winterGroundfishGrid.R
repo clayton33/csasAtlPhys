@@ -17,7 +17,8 @@ gridStandardDepths <- c(seq(0, 100, 10),
                         seq(400, 1000, 100))
 gridTolerance <- c(head(diff(gridStandardDepths), 1), diff(gridStandardDepths))
 #   3. append a depth threshold and find which points are the bottom depth
-tolerance <- bottom <- vector(length = dim(grid)[1])
+tolerance <- bottom <- bDepth <- vector(length = dim(grid)[1])
+
 nbtm <- 0
 for(i in 1:dim(uxy)[1]){
   xlook <- uxy[['x']][i]
@@ -33,20 +34,30 @@ for(i in 1:dim(uxy)[1]){
   bottomDepth <- grid[['depth']][ok][okBottom]
   if(bottomDepth %in% gridStandardDepths){
     bottom[ok] <- isBottom
+    bDepth[ok] <- bottomDepth
     nbtm <- nbtm + 1
   } else {
     isBottom[okBottom] <- TRUE
     bottom[ok] <- isBottom
+    bDepth[ok] <- bottomDepth
   }
-
 }
-winterGroundfishGrid <- data.frame(grid, tolerance = tolerance, isBottom = bottom)
+
+winterGroundfishGridOld <- data.frame(grid, tolerance = tolerance, isBottom = bottom)
+gridWBottom <- data.frame(winterGroundfishGridOld, bottomDepth = bDepth)
+omit <- gridWBottom[['bottomDepth']] >= 1000 | (gridWBottom[['x']] > -65.6 & gridWBottom[['y']] < 44.8)
+cat(paste('Removing', length(which(omit == TRUE)), 'points from original grid'), sep = '\n')
+winterGroundfishGrid <- winterGroundfishGridOld[!omit, ]
 winterGroundfishStandardDepths <- gridStandardDepths
+# pull this info from the new grid with omitted points from original grid
+uxy <- unique(winterGroundfishGrid[ , names(winterGroundfishGrid) %in% c('x', 'y')])
+xseq <- seq(min(uxy[['x']]), max(uxy[['x']]), 0.2)
+yseq <- seq(min(uxy[['y']]), max(uxy[['y']]), 0.2)
 winterGroundfishXg <- xseq
 winterGroundfishYg <- yseq
 
+usethis::use_data(winterGroundfishGridOld, compress ='xz', overwrite = T)
 usethis::use_data(winterGroundfishGrid, compress = "xz", overwrite = T)
 usethis::use_data(winterGroundfishStandardDepths, compress = "xz", overwrite = T)
 usethis::use_data(winterGroundfishXg, compress = 'xz', overwrite = T)
 usethis::use_data(winterGroundfishYg, compress = 'xz', overwrite = T)
-

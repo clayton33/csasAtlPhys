@@ -1,14 +1,14 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: csasAtlPhys 0.0.9000\n"
-"POT-Creation-Date: 2021-09-13 12:27\n"
+"POT-Creation-Date: 2022-10-26 10:04\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
-
 
 msgid "Calculating area average not using bins has not been coded. Contact the author"
 msgstr ""
@@ -91,6 +91,9 @@ msgstr ""
 msgid "Sable Island"
 msgstr ""
 
+msgid "Sable Island sentence"
+msgstr ""
+
 msgid "Georges Basin"
 msgstr ""
 
@@ -116,6 +119,9 @@ msgid "Saint John"
 msgstr ""
 
 msgid "Halifax"
+msgstr ""
+
+msgid "Halifax extended"
 msgstr ""
 
 msgid "Boston"
@@ -370,6 +376,66 @@ msgstr ""
 msgid "CCGS"
 msgstr ""
 
+msgid "the first"
+msgstr ""
+
+msgid "the second"
+msgstr ""
+
+msgid "the third"
+msgstr ""
+
+msgid "the fourth"
+msgstr ""
+
+msgid "the fifth"
+msgstr ""
+
+msgid "the sixth"
+msgstr ""
+
+msgid "the seventh"
+msgstr ""
+
+msgid "the eighth"
+msgstr ""
+
+msgid "the ninth"
+msgstr ""
+
+msgid "the tenth"
+msgstr ""
+
+msgid "one"
+msgstr ""
+
+msgid "two"
+msgstr ""
+
+msgid "three"
+msgstr ""
+
+msgid "four"
+msgstr ""
+
+msgid "five"
+msgstr ""
+
+msgid "six"
+msgstr ""
+
+msgid "seven"
+msgstr ""
+
+msgid "eight"
+msgstr ""
+
+msgid "nine"
+msgstr ""
+
+msgid "ten"
+msgstr ""
+
 msgid "At a minimum, must supply a year."
 msgstr ""
 
@@ -422,6 +488,18 @@ msgid "'"
 msgstr ""
 
 msgid "Please provide either a year or ship."
+msgstr ""
+
+msgid "No existing files in"
+msgstr ""
+
+msgid "Found"
+msgstr ""
+
+msgid "files to download."
+msgstr ""
+
+msgid "have already been downloaded."
 msgstr ""
 
 msgid "Must supply all three parameters, buoyName, startDate, and endDate, in order to download data."

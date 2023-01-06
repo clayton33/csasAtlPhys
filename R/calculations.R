@@ -866,6 +866,10 @@ shelfSurveyInterpBarnes <- function(ctd, fullgrid, grid, variable, xg, yg, xr, y
     } else {
       ok <- fullgrid[['depth']] == lookdepth
       subgrid <- fullgrid[ok, ]
+      if(dim(subgrid)[1]  == 0){
+        if(debug) cat(paste('No points in the grid found for depth', griddfsub[['depth']], ', moving on to next depth'), sep = '\n')
+        next
+      }
       gridmask <- apply(expgrid, 1, function(k) {any(subgrid[['x']] %in% k[['x']] & subgrid[['y']] %in% k[['y']])})
     }
 

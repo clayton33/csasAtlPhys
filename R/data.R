@@ -137,13 +137,24 @@
 
 #' Winter groundfish grid.
 #'
-#' Winter groundfish grid used interpolation
+#' Winter groundfish grid used for interpolation
 #'
 #' @format a data frame columns \code{x}, or the longitude, \code{y}, or the latitude,
 #' \code{depth}, \code{tolerance}, and \code{isBottom} which is a logical column indicating
 #' if the point is considered a bottom depth of the grid.
 #'
 "winterGroundfishGrid"
+
+#' Winter groundfish grid.
+#'
+#' Winter groundfish grid used for interpolation, note that this is the depreciated grid, but
+#' is kept for completeness, it may be removed in the future.
+#'
+#' @format a data frame columns \code{x}, or the longitude, \code{y}, or the latitude,
+#' \code{depth}, \code{tolerance}, and \code{isBottom} which is a logical column indicating
+#' if the point is considered a bottom depth of the grid.
+#'
+"winterGroundfishGridOld"
 
 #' Winter groundfish standard grid depths.
 #'
