@@ -18,8 +18,8 @@ cilVolume(T, p, longitude, latitude, dlongitude, dlatitude, Tlim = 4)
 \item{Tlim}{cold intermediate layer temperature limit, default of 4}
 }
 \value{
-a list with thickness with units kilometer and volume with units kilometer^3
-and the minimum temperature.
+a list with thickness with units kilometer, volume with units kilometer^3,
+and minimum temperature.
 }
 \description{
 Calculate cold intermediate layer thickness

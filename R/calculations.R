@@ -99,8 +99,8 @@ weightedArea <- function(bins, binarea){
 #' as (p_i + p_(i+1)) / 2. If the bottom value, (p_i - p_(i-1))/2. If interior, (p_(i+1) - p(i-1)) / 2.
 #'
 #' @author Chantelle Layton
-#' @return a list with thickness with units kilometer and volume with units kilometer^3
-#' and the minimum temperature.
+#' @return a list with thickness with units kilometer, volume with units kilometer^3,
+#' and minimum temperature.
 #' @export
 #'
 cilVolume <- function(T, p, longitude, latitude, dlongitude, dlatitude, Tlim = 4){
@@ -133,7 +133,6 @@ cilVolume <- function(T, p, longitude, latitude, dlongitude, dlatitude, Tlim = 4
   } else {
     minTemp <- min(T[idx], na.rm = TRUE)
   }
-
   # convert thickness from meters to kilometers
   thicknesskm <- sum(thickness) / 1000
   area <- (dlongitude * 111.12) * (cos(latitude * pi / 180) * dlatitude * 111.12)
@@ -1034,3 +1033,166 @@ shelfSurveyInterpBarnes <- function(ctd, fullgrid, grid, variable, xg, yg, xr, y
   barnesd
 }
 
+#' @title Calculate mixed layer depth
+#'
+#' @description This function calculated the mixed layer depth, which is
+#' defined as when the density gradient, or d(sigmaTheta)/dz, is
+#' greater than 0.01 kg/m^-4. A parameter, `mldMin`, can be provided
+#' in order to force the mixed layer depth to be found below the
+#' set depth.
+#'
+#' @param ctd a `ctd` object.
+#' @param mldMin a numeric value indicating the minimum value the
+#'               mixed layer depth should be. Default is set to `NULL`
+#' @param debug a logical value indicating to show debug information
+#' @return a single row data frame with relevant information for easy output use
+#'
+#' @importFrom oce plotProfile
+#'
+#' @author Chantelle Layton and Benoit Casault
+#' @export
+#'
+
+calculateMixedLayerDepth <- function(ctd, mldMin = NULL, debug = TRUE){
+  if(!'salinity' %in% names(ctd@data)){
+    message('No salinity data')
+    mldDefault <- NA
+    mldForced <- NA
+  } else {
+    # calculate density gradient
+    nz <- length(ctd[['pressure']])
+    dz <- diff(ctd[['pressure']])
+    zm <- ctd[['pressure']][1:(nz - 1)] + (dz/2)
+    grad <- 100 * diff(ctd[['sigmaTheta']])/dz
+
+    if(debug){
+      par(mfrow = c(1,2))
+      xtype <- ifelse(all(is.na(ctd[['salinity']])),
+                      'temperature',
+                      'salinity+temperature')
+      plotProfile(ctd, xtype = xtype)
+      if(all(is.na(grad))){ # no data
+        fakeGrad <- rep(0, length = length(zm))
+        plot(fakeGrad, zm,
+             xlim = c(0,8), ylim = rev(range(zm)),
+             xlab = 'density gradient', ylab = '',
+             col = 'white')
+        abline(h = pretty(zm), lty = 3, col = 'lightgrey')
+        text(x = 4,
+             y = mean(zm),
+             labels = 'No valid data')
+      } else { # valid data
+        plot(grad, zm, ylim = rev(range(zm)))
+        abline(h = pretty(zm), lty = 3, col = 'lightgrey')
+        abline(v = 1, lty = 2)
+      }
+    } # closes debug
+
+    # default calculation
+    gradCheck <- any(grad >= 1, na.rm = TRUE) # to prevent infinite warnings
+    if(!gradCheck){ # no values
+      if(all(is.na(grad))){
+        mldDefault <- NA
+      } else {
+        # if none, set mixed layer depth to max pressure
+        mldDefault <- max(ctd[['pressure']], na.rm = TRUE)
+      }
+    } else {
+      iMld <- min(which(grad >= 1))
+      mldDefault <- (zm[iMld] + zm[(iMld + 1)]) / 2
+    }
+
+    # forced calculation (below mldMin)
+    mldForced <- as.numeric(NA)
+    if(!is.null(mldMin)){
+      gradCheck <- any(grad >= 1 & zm > mldMin) # to prevent infinite warnings
+      if(!gradCheck){ # no values
+        mldForced <- max(ctd[['pressure']], na.rm = TRUE)
+      } else {
+        iMld <- min(which(grad >= 1 & zm > mldMin))
+        mldForced <- (zm[iMld]+zm[iMld+1]) / 2
+      }
+      #df_results$mld <- df_results$mld_forced
+    }
+  }
+  # output results in 1-row data.frame
+  out <- data.frame(time = ctd[['startTime']],
+                    year = as.POSIXlt(ctd[['startTime']])$year + 1900,
+                    month = as.POSIXlt(ctd[['startTime']])$mon + 1,
+                    day = as.POSIXlt(ctd[['startTime']])$mday,
+                    yearDay = as.POSIXlt(ctd[['startTime']])$yday,
+                    mixedLayerDepthDefault = mldDefault,
+                    mixedLayerDepthForced = mldForced)
+  out
+}
+
+## this is the develop version of the function
+## it was migrated to `csasAtlPhys` on 20230502
+## this version is deemed to not be the most current version
+
+#' @title Calculate stratification index
+#'
+#' @description This function calculates the stratification index, which is
+#' defined as the difference in density between two defined depths divided
+#' by the difference in the two depths. The calculation completes two
+#' iterations. The first is between the two defined depths, and then if the
+#' calculated value is less than 0, the depth range is slighly increased
+#'
+#' @param ctd a `ctd` object.
+#' @param depth1 a numeric value, such that depth1 < depth2
+#' @param depth2 a numeric value, such that depth2 > depth1
+#' @param debug a logical value indicating if debug info should be displayed
+#' @return a single row data frame with relevant information for easy output use
+#'
+#' @author Chantelle Layton and Benoit Casault
+#' @export
+
+calculateStratificationIndex <- function(ctd, depth1, depth2, debug = TRUE){
+  # check that depth1 is less than depth2
+  okdepths <- depth1 < depth2
+  if(!okdepths){
+    warning('depth1 is greater than depth2')
+  }
+  # check that salinity is a variable in the ctd object,
+  if(!'salinity' %in% names(ctd@data)){
+    message('No salinity data')
+    si <- NA
+    siZmin <- NA
+    siZmax <- NA
+  } else {
+    # pre-define si, siZmin, and siZmax for checking
+    si <- NA
+    siZmin <- NA
+    siZmax <- NA
+    # calculate stratification index (depth1 to depth2)
+    if(min(ctd[['pressure']], na.rm=T) <= depth1 & max(ctd[['pressure']], na.rm=T) >= depth2){
+      i_depth1 <- which(abs(ctd[['pressure']] - depth1) <= 0.5)
+      z_min <- mean(ctd[['pressure']][i_depth1], na.rm=T)
+      i_depth2 <- which(abs(ctd[['pressure']] - depth2) <= 0.5)
+      z_max <- mean(ctd[['pressure']][i_depth2], na.rm=T)
+      si <- (mean(ctd[['sigmaTheta']][i_depth2], na.rm=T) - mean(ctd[['sigmaTheta']][i_depth1], na.rm=T)) / (z_max - z_min)
+      siZmin <- z_min
+      siZmax <- z_max
+    }
+    # increase depth range when si<0
+    if(!is.na(si) & si < 0){
+      i_depth1 <- which(abs(ctd[['pressure']] - depth1) <= 1.0)
+      z_min <- mean(ctd[['pressure']][i_depth1], na.rm=T)
+      i_depth2 <- which(abs(ctd[['pressure']] - depth2) <= 1.0)
+      z_max <- mean(ctd[['pressure']][i_depth2], na.rm=T)
+      si <- (mean(ctd[['sigmaTheta']][i_depth2], na.rm=T) - mean(ctd[['sigmaTheta']][i_depth1], na.rm=T)) / (z_max - z_min)
+      siZmin <- z_min
+      siZmax <- z_max
+    }
+  }
+  # output results in 1-row data.frame
+  out <- data.frame(time = ctd[['startTime']],
+                    year = as.POSIXlt(ctd[['startTime']])$year + 1900,
+                    month = as.POSIXlt(ctd[['startTime']])$mon + 1,
+                    day = as.POSIXlt(ctd[['startTime']])$mday,
+                    yearDay = as.POSIXlt(ctd[['startTime']])$yday,
+                    stratificationIndex = si,
+                    minDepth = siZmin,
+                    maxDepth = siZmax)
+  out
+}

@@ -575,8 +575,10 @@ plotStationLocations <- function(distance, plabel, distanceOffset = NULL, cex = 
 #' @param xMonth a numeric vector of the associated month
 #' @param y a numeric vector of the associated year month value
 #' @param yAnomaly a numeric vector of the associated anomaly year month value
+#' @param yNormalizedAnomaly a numeric vector of the associated normalized anomaly with xYear and xMonth
 #' @param xAnnualAnomaly a numeric vector of the year for the annual anomaly
 #' @param yAnnualAnomaly a numeric vector of the annual anomaly
+#' @param plotAnnual a logical value indicating if the annual anomaly should be shown in the scorecard bar, default is `TRUE`
 #' @param xClimatology a numeric vector of the months for the monthly climatology
 #' @param yClimatology a numeric vector of the climatology values for associated month
 #' @param sdClimatology a numeric vector of the standard deviation for the associated month
@@ -593,8 +595,8 @@ plotStationLocations <- function(distance, plabel, distanceOffset = NULL, cex = 
 #'
 #' @export
 
-plotMonthlyTimeseriesWAnomalyBar <- function(xYear, xMonth, y, yAnomaly,
-                                             xAnnualAnomaly, yAnnualAnomaly,
+plotMonthlyTimeseriesWAnomalyBar <- function(xYear, xMonth, y, yAnomaly, yNormalizedAnomaly,
+                                             xAnnualAnomaly, yAnnualAnomaly, plotAnnual = TRUE,
                                              xClimatology, yClimatology, sdClimatology,
                                              xlim, ylim, anomalyColors){
   # 1. set arguments if missing
@@ -650,20 +652,28 @@ plotMonthlyTimeseriesWAnomalyBar <- function(xYear, xMonth, y, yAnomaly,
     zannual <- c(zannual, annualadd)
   }
   #zannual <- unlist(lapply(yAnnualAnomaly, rep, 12))
-  z <- matrix(nrow = length(time), ncol = 2)
-  z[, 2] <- yAnomaly
-  #z[, 1] <- zannual[1:length(time)] # watch this
-  z[, 1] <- zannual
+  if(plotAnnual){
+    z <- matrix(nrow = length(time), ncol = 2)
+    z[, 2] <- yAnomaly
+    #z[, 1] <- zannual[1:length(time)] # watch this
+    z[, 1] <- zannual
+    zy <- c(1,2)
+  } else { # only monthly
+    z <- matrix(nrow = length(time), ncol = 1)
+    z[,1] <- yAnomaly
+    zy <- 1
+  }
+
   #col[is.na(col)] <- 'lightgray'
   # plot it
   par(mai = ifelse(pc$mai1 > 0, pc$mai1, 0))
-  image(x = palette, y = c(1,2), z = z,
+  image(x = palette, y = zy, z = z,
         xlim = xlim,
         axes = FALSE, xlab="", ylab="",
         col = anomalyColors[['colors']],
         breaks = anomalyColors[['breaks']])
   rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "lightgray")
-  image(x = palette, y = c(1,2), z = z,
+  image(x = palette, y = zy, z = z,
         xlim = xlim,
         axes = FALSE, xlab="", ylab="",
         col = anomalyColors[['colors']],
@@ -673,7 +683,7 @@ plotMonthlyTimeseriesWAnomalyBar <- function(xYear, xMonth, y, yAnomaly,
   # axis and labels
   at <- seq(xlim[1], xlim[2], by = 'month')
   #abline(v = at)
-  lapply(at, function(k) lines(x = rep(k, 2), y = c(1,2) + 0.5)) # vertical lines for monthly
+  lapply(at, function(k) lines(x = rep(k, 2), y = c(ifelse(plotAnnual, 1, 0), ifelse(plotAnnual, 2, 1)) + 0.5)) # vertical lines for monthly
   abline(h = 1.5) # separate monthly and annual
   # month axis labels
   lapply(at[as.POSIXlt(at)$mon + 1 == 1], function(k) lines(x = rep(k, 2), y = c(0, 1) + 0.5))
@@ -692,15 +702,17 @@ plotMonthlyTimeseriesWAnomalyBar <- function(xYear, xMonth, y, yAnomaly,
   textcol <- rep('black', length(yAnomaly))
   whitetext <- yAnomaly <= -3.0 | (yAnomaly >= 3.0 & yAnomaly < 3.5)
   whitetext[is.na(whitetext)] <- FALSE
-  if(any(!whitetext)) text(x = palette[!whitetext == TRUE & !is.na(yAnomaly)], y = 2, labels = sprintf('%.1f', yAnomaly[!whitetext == TRUE & !is.na(yAnomaly)]), col = 'black', srt = 90, cex = 0.8)
-  if(any(whitetext)) text(x = palette[whitetext == TRUE & !is.na(yAnomaly)], y = 2, labels = sprintf('%.1f', yAnomaly[whitetext == TRUE & !is.na(yAnomaly)]), col = 'white', srt = 90, cex = 0.8)
+  if(any(!whitetext)) text(x = palette[!whitetext == TRUE & !is.na(yAnomaly)], y = ifelse(plotAnnual, 2, 1), labels = sprintf('%.1f', yAnomaly[!whitetext == TRUE & !is.na(yAnomaly)]), col = 'black', srt = 90, cex = 0.8)
+  if(any(whitetext)) text(x = palette[whitetext == TRUE & !is.na(yAnomaly)], y = ifelse(plotAnnual, 2, 1), labels = sprintf('%.1f', yAnomaly[whitetext == TRUE & !is.na(yAnomaly)]), col = 'white', srt = 90, cex = 0.8)
   ## annual
-  textcol <- rep('black', length(yAnnualAnomaly))
-  whitetext <- yAnnualAnomaly <= -3.0 | (yAnnualAnomaly >= 3.0 & yAnnualAnomaly < 3.5)
-  whitetext[is.na(whitetext)] <- FALSE
-  annualtextat <- as.POSIXct(paste(xAnnualAnomaly, '07', '02', sep = '-'), tz = 'UTC')
-  if(any(!whitetext)) text(x = annualtextat[!whitetext == TRUE & !is.na(yAnnualAnomaly)], y = 1, labels = sprintf('%.1f', yAnnualAnomaly[!whitetext == TRUE & !is.na(yAnnualAnomaly)]), col = 'black', cex = 0.8)
-  if(any(whitetext)) text(x = annualtextat[whitetext == TRUE], y = 1, labels = sprintf('%.1f', yAnnualAnomaly[whitetext == TRUE & !is.na(yAnnualAnomaly)]), col = 'white', cex = 0.8)
+  if(plotAnnual){
+    textcol <- rep('black', length(yAnnualAnomaly))
+    whitetext <- yAnnualAnomaly <= -3.0 | (yAnnualAnomaly >= 3.0 & yAnnualAnomaly < 3.5)
+    whitetext[is.na(whitetext)] <- FALSE
+    annualtextat <- as.POSIXct(paste(xAnnualAnomaly, '07', '02', sep = '-'), tz = 'UTC')
+    if(any(!whitetext)) text(x = annualtextat[!whitetext == TRUE & !is.na(yAnnualAnomaly)], y = 1, labels = sprintf('%.1f', yAnnualAnomaly[!whitetext == TRUE & !is.na(yAnnualAnomaly)]), col = 'black', cex = 0.8)
+    if(any(whitetext)) text(x = annualtextat[whitetext == TRUE], y = 1, labels = sprintf('%.1f', yAnnualAnomaly[whitetext == TRUE & !is.na(yAnnualAnomaly)]), col = 'white', cex = 0.8)
+  }
 
   # reset mai, prep for primary plot
   par(new=TRUE, mai=pc$mai2)

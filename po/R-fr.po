@@ -186,9 +186,8 @@ msgstr "Gully"
 msgid "La Have Bank"
 msgstr ""
 
-#, fuzzy
 msgid "Sable Island Bank"
-msgstr "Île de Sable"
+msgstr "Banc de l'île de Sable"
 
 msgid "Roseway"
 msgstr ""

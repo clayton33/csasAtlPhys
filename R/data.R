@@ -476,6 +476,14 @@
 #' @format a list for each NAFO zone, where each zone has \code{zoneName}, \code{longitude}, and
 #' \code{latitude}
 "nafoZones"
+#' Sea-surface temperature NAFO zones for Maritimes regions
+#'
+#' NAFO zone definitions used for the zonal sea-surface temperature analysis, those only concerned with in the Maritimes
+#' region are included here. The definitions were provided by P.Galbraith on 2022 07 13.
+#'
+#' @format a list for each NAFO zone, where each zone has \code{zoneName}, \code{longitude}, and
+#' \code{latitude}
+"sstSatelliteNafoZones"
 
 #' Anomaly colours
 #'
@@ -728,6 +736,39 @@
 #' @format a list which contains \code{stationName}, \code{longitude}, \code{latitude}, \code{polyLongitude},
 #' \code{polyLatitude} for each station.
 "sableIslandBankStationPolygons"
+
+#' Sable Island Bank New polygon
+#'
+#' Polygon defining the bounds to look for data along the cross-shelf portion of the ancillary Atlantic Zone Monitoring Program
+#' line, Sable Island Bank, that was introduced in spring 2022. It was constructed by finding the angle between the first
+#' point and the last point of the line, and then calculating the bounding box which is 8 km wide.
+#'
+#' @format a list of \code{longitude} and \code{latitude}
+"sableIslandBankNewPolygon"
+
+#' Sable Island Bank New station polygon's
+#'
+#' Polygons defining bounds to look for data at each station along the cross-shelf portion of the
+#' ancillary Atlantic Zone Monitoring Program line, Sable Island Bank, that was introduced in spring 2022.
+#' Defining bounds are determined by station spacing. If the spacing is less than 8km,
+#' then it is modified to half of the distance between the adjacent spacing. Note that this mean that the spacing
+#' on either side can be uneven.
+#'
+#' @format a list which contains \code{stationName}, \code{longitude}, \code{latitude}, \code{polyLongitude},
+#' \code{polyLatitude} for each station.
+"sableIslandBankNewStationPolygons"
+
+#' Sable Island Bank West-East station polygon's
+#'
+#' Polygons defining bounds to look for data at each station in the west-east direction on the shelf portion of the
+#' ancillary Atlantic Zone Monitoring Program line, Sable Island Bank, that was introduced in spring 2022.
+#' Defining bounds are determined by station spacing. If the spacing is less than 8km,
+#' then it is modified to half of the distance between the adjacent spacing. Note that this mean that the spacing
+#' on either side can be uneven.
+#'
+#' @format a list which contains \code{stationName}, \code{longitude}, \code{latitude}, \code{polyLongitude},
+#' \code{polyLatitude} for each station.
+"sableIslandBankWestEastStationPolygons"
 
 #' Roseway polygon
 #'

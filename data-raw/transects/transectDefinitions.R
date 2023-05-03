@@ -3,6 +3,8 @@ library(usethis)
 
 load('data-raw/transects/TRANSECT_DEFINITIONS.RData')
 load('data-raw/transects/gullyNewTransectDefinition.RData')
+load('data-raw/transects/sableIslandBankNewTransectDefinition.RData')
+load('data-raw/transects/sableIslandBankWestEastTransectDefinition.RData')
 
 # first re-name the list
 transectDefinitions <- TRANSECT_DEFINITIONS
@@ -47,8 +49,14 @@ names(transectDefinitions)[oksi] <- 'sableIslandBank'
 # add gully
 gtd <- list(gullyTransectDef)
 names(gtd) <- 'theGullyNew'
+# sable island bank new
+sibn <- list(sableIslandBankNewTransectDef)
+names(sibn) <- 'sableIslandBankNew'
+# sable island bank west east
+sibwe <- list(sableIslandBankWestEastTransectDef)
+names(sibwe) <- 'sableIslandBankWestEast'
 
-transectDefinitions <- c(transectDefinitions, gtd)
+transectDefinitions <- c(transectDefinitions, gtd, sibn, sibwe)
 
 
 usethis::use_data(transectDefinitions, compress = 'xz', overwrite = TRUE)

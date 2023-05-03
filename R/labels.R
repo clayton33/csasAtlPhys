@@ -640,7 +640,7 @@ makeSectionPlotTitle <- function(ctd){
   if(length(utransect) > 1){
     stop("More than one transect has been identified in the supplied CTD objects")
   }
-
+  utransect <- ifelse(grepl('sableIslandBank', utransect), 'sableIslandBank', utransect)
   transectName <- getLocationName(utransect)
   timeRange <- as.POSIXct(range(unlist(lapply(ctd, function(x) x[['time']])), na.rm = TRUE),
                           origin = '1970-01-01', tz = 'UTC')
