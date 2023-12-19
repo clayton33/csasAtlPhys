@@ -152,7 +152,7 @@ read.ahccd <- function(file, longitude = NULL, latitude = NULL, elevation = NULL
                    temperature = as.numeric(data), # wondering what to name this, obviously this fn could be used to read other ahccd data...
                    flag = flag,
                    stringsAsFactors = FALSE)
-  metaEng <- trimws(strsplit(lines[grep('^\\d+,\\w+\\s+,\\w+\\s+, station( not)? joined', lines)],
+  metaEng <- trimws(strsplit(lines[grep('^\\d+,.*,\\w+\\s+,\\sstation( not)? joined\\s+,.*,.*,.*', lines)],
                              split = ',')[[1]],
                     which = 'both')
   list(stationId = metaEng[1],
