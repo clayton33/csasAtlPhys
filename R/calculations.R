@@ -1042,10 +1042,22 @@ shelfSurveyInterpBarnes <- function(ctd, fullgrid, grid, variable, xg, yg, xr, y
 #' set depth.
 #'
 #' @param ctd a `ctd` object.
+#' @param method a character string indicting which method to
+#'               use to calculate the mixed layer depth, options include
+#'               'gradient', 'N2', and 'density'. Default is 'gradient'
 #' @param mldMin a numeric value indicating the minimum value the
-#'               mixed layer depth should be. Default is set to `NULL`
+#'               mixed layer depth should be. Default is set to `NULL`.
+#'               Ignored for `method = 'density'`.
+#' @param nPointsMin a numeric value indicating the minimum number of
+#'                   points in ctd object
+#' @param densityThreshold a numeric value indicating the threshold value
+#'                         to use for the 'density' method, ignored for other methods.
+#'                         Default is 0.03.
+#' @param densityReferenceDepth a numeric value indicating the reference
+#'                              depth for the density method. It will find the closest
+#'                              value in the profile within 5dbar. Default is 10dbar.
 #' @param debug a logical value indicating to show debug information
-#' @return a single row data frame with relevant information for easy output use
+#' @return a single numeric value of the calculated mixed layer depth
 #'
 #' @importFrom oce plotProfile
 #'
@@ -1053,68 +1065,302 @@ shelfSurveyInterpBarnes <- function(ctd, fullgrid, grid, variable, xg, yg, xr, y
 #' @export
 #'
 
-calculateMixedLayerDepth <- function(ctd, mldMin = NULL, debug = TRUE){
+calculateMixedLayerDepth <- function(ctd,
+                                     method = 'gradient',
+                                     mldMin = NULL,
+                                     nPointsMin = 3,
+                                     densityThreshold = 0.03,
+                                     densityReferenceDepth = 10,
+                                     debug = TRUE){
   if(!'salinity' %in% names(ctd@data)){
     message('No salinity data')
+    # add fake salinity for debug
+    ctd <- oceSetData(object=ctd,
+                      name='salinity',
+                      value=rep(NA, length(ctd[['pressure']])))
     mldDefault <- NA
     mldForced <- NA
-  } else {
-    # calculate density gradient
-    nz <- length(ctd[['pressure']])
-    dz <- diff(ctd[['pressure']])
-    zm <- ctd[['pressure']][1:(nz - 1)] + (dz/2)
-    grad <- 100 * diff(ctd[['sigmaTheta']])/dz
-
-    if(debug){
-      par(mfrow = c(1,2))
-      xtype <- ifelse(all(is.na(ctd[['salinity']])),
-                      'temperature',
-                      'salinity+temperature')
-      plotProfile(ctd, xtype = xtype)
-      if(all(is.na(grad))){ # no data
+  } else if(length(which(!is.na(ctd[['temperature']]))) <= nPointsMin | length(which(!is.na(ctd[['salinity']]))) <= nPointsMin){
+    message(paste('Less than', nPointsMin, 'points in ctd object'))
+    mldDefault <- NA
+    mldForced <- NA
+  } else { # MLD can be calculated
+    if(method == 'gradient'){
+      # calculate density gradient
+      nz <- length(ctd[['pressure']])
+      dz <- diff(ctd[['pressure']])
+      zm <- ctd[['pressure']][1:(nz - 1)] + (dz/2)
+      vargrad <- 100 * diff(ctd[['sigmaTheta']])/dz
+      # default calculation
+      gradCheck <- any(vargrad >= 1, na.rm = TRUE) # to prevent infinite warnings
+      if(!gradCheck){ # no values
+        if(all(is.na(vargrad))){
+          mldDefault <- NA
+        } else {
+          # if none, set mixed layer depth to max pressure
+          mldDefault <- max(ctd[['pressure']], na.rm = TRUE)
+        }
+      } else {
+        iMld <- min(which(vargrad >= 1))
+        mldDefault <- (zm[iMld]+zm[iMld+1]) / 2
+      }
+      # forced calculation (below mldMin)
+      mldForced <- as.numeric(NA)
+      if(!is.null(mldMin)){
+        gradCheck <- any(vargrad >= 1 & zm > mldMin, na.rm = TRUE) # to prevent infinite warnings
+        if(!gradCheck){ # no values
+          if(all(is.na(vargrad))){
+            mldForced <- NA
+          } else {
+            # if none, set mixed layer depth to max pressure
+            mldForced <- max(ctd[['pressure']], na.rm = TRUE)
+          }
+        } else {
+          iMld <- min(which(vargrad >= 1 & zm > mldMin))
+          mldForced <- (zm[iMld]+zm[iMld+1]) / 2
+        }
+        #df_results$mld <- df_results$mld_forced
+      }
+    } # closes method == 'gradient'
+    if(method == 'N2'){
+      # calculate N^2
+      # equation is N^2 = -g/rho0 * drho / dz
+      # we want to smooth drho, so we'll do 5m average, +/- 2.5m
+      runningMeanN2 <- function(ctd){
+        tol <- 2.5
+        # define parameters
+        g <- 9.8 #m/s^2
+        rho0 <- mean(ctd[['density']], na.rm = TRUE)
+        # get data out of ctd object
+        rho <- rev(ctd[['sigmaTheta']])
+        z <- rev(ctd[['pressure']]) * -1
+        # calculate derivative
+        drho <- diff(rho)
+        dz <- diff(z)
+        # smooth drho
+        drhoSmooth <- vector(mode = 'logical', length = length(drho))
+        for(i in 1:length(drho)){
+          Z <- z[(i+1)] # use the i+1 value for z since diff decreases length by 1.
+          lower <- Z - tol
+          upper <- Z + tol
+          ok <- z > lower & z <= upper
+          if(all(!ok)){ # I don't think this will ever happen, but for safety
+            drhoSmooth[i] <- NA
+          } else {
+            drhoSmooth[i] <- mean(drho[ok], na.rm = TRUE)
+          }
+        }
+        N2 <- (-1) * (g / rho0) * (drhoSmooth/ dz)
+        N2[is.infinite(N2)] <- NA
+        return(list(z = z, N2 = N2))
+      }
+      N2 <- runningMeanN2(ctd)
+      okN2 <- which.max(N2$N2)
+      mldDefault <- abs(N2$z[(okN2 + 1)])
+      #okN2 <- which.max(ctd[['N2']])
+      #mldDefault <- ctd[['pressure']][okN2]
+      mldForced <- as.numeric(NA)
+      if(!is.null(mldMin)){
+        ctdsub <- oce::subset(ctd, pressure > mldMin)
+        N2sub <- runningMeanN2(ctdsub)
+        okN2sub <- which.max(N2sub$N2)
+        if(length(okN2sub) == 0){
+          mldForced <- NA
+        } else {
+          mldForced <- abs(N2sub$z[(okN2sub + 1)])
+        }
+        # okN2sub <- which.max(ctdsub[['N2']])
+        # mldForced <- ctdsub[['pressure']][okN2sub]
+      }
+    } # closes if method == 'N2'
+    if(method == 'density'){
+      idxrd <- which.min(abs(ctd[['pressure']] - densityReferenceDepth))
+      # check that it is within 5dbar of referenceDepth
+      okidx <- ctd[['pressure']][idxrd] >= (densityReferenceDepth - 5) & ctd[['pressure']][idxrd] <= (densityReferenceDepth + 5)
+      if(!okidx) idxrd <- NULL
+      if(debug & okidx) cat(paste('Density reference depth :', ctd[['pressure']][idxrd]), sep = '\n')
+      if(length(idxrd) != 0){
+        densityLook <- ctd[['sigmaTheta']][idxrd] + densityThreshold
+        idxmld <- which(ctd[['sigmaTheta']] > densityLook)[1] # only interested in the first instance
+        if(length(idxmld) != 0){
+          mldDefault <- ctd[['pressure']][idxmld]
+        } else {
+          cat(paste0("No points in profile exceed density look value of ", densitylook), sep = '\n')
+          mldDefault <- NA
+        }
+      } else { # no data at 10dbar/m
+        cat("No data at 10dbar", sep = '\n')
+        mldDefault <- NA
+      }
+      # note that since it take density value at 10m, no mldForced for this method
+      mldForced <- NA
+    } # closes if method == 'density'
+  } # closes else statement for MLD to be calculated
+  # debug plot
+  # taken out of else statement to see data that failed initial checks (not enough points and no salinity)
+  if(debug){
+    par(mfrow = c(1,2))
+    # all combinations
+    if(all(is.na(ctd[['salinity']]) & is.na(ctd[['temperature']]))){ # NA in both S and T data slots
+      # add fake temperature data
+      ctd <- oceSetData(ctd,
+                        name = 'temperature',
+                        value = 1:length(ctd[['pressure']]) # so we don't get a xlim error
+      )
+      # add fake salinity data
+      ctd <- oceSetData(ctd,
+                        name = 'salinity',
+                        value = 1:length(ctd[['pressure']]) # so we don't get a xlim error
+      )
+      # set col to white
+      col <- 'white'
+      densityCol <- 'white'
+      # set xtype to just temperature
+      xtype <- 'temperature'
+      hasNoData <- TRUE
+      cat(xtype, sep = '\n')
+    } else if (all(is.na(ctd[['salinity']])) & any(!is.na(ctd[['temperature']]))){ # S is NA, T is not all NA
+      # add fake salinity data
+      ctd <- oceSetData(ctd,
+                        name = 'salinity',
+                        value = 1:length(ctd[['pressure']]) # so we don't get a xlim error
+      )
+      xtype <- 'temperature'
+      col <- 'black' # this is default, but for completeness of NA for both T and S
+      densityCol <- 'white'
+      hasNoData <- FALSE
+      cat(xtype, sep = '\n')
+    } else if(any(!is.na(ctd[['salinity']])) & all(is.na(ctd[['temperature']]))){ # S is not all NA, T is all NA
+      # add fake temperature data
+      ctd <- oceSetData(ctd,
+                        name = 'temperature',
+                        value = 1:length(ctd[['pressure']]) # so we don't get a xlim error
+      )
+      xtype <- 'salinity'
+      col <- 'black'
+      densityCol <- 'white'
+      hasNoData <- FALSE
+      cat(xtype, sep = '\n')
+    } else { # ideal, both S and T data
+      xtype <- 'salinity+temperature' # the default
+      col <- 'black' # it will be ignored for this case, keeping for completeness
+      densityCol <- 'black'
+      hasNoData <- FALSE
+      cat(xtype, sep = '\n')
+    }
+    oce::plotProfile(ctd, xtype = xtype, type = 'o', col = col, mar = c(3.0, 3.5, 3.5, 2.0))
+    if(hasNoData){
+      text(x = mean(ctd[['temperature']]),
+           y = mean(ctd[['pressure']]),
+           labels = 'No valid data')
+    }
+    if(method == 'gradient'){
+      # have to fake zm and grad if they don't exist
+      if(!exists('zm')){
+        zm <- ctd[['pressure']]
+      }
+      if(!exists('vargrad')){
+        # make it all NA
+        vargrad <- rep(NA, length(zm))
+      }
+      if(all(is.na(vargrad))){ # no data
         fakeGrad <- rep(0, length = length(zm))
         plot(fakeGrad, zm,
              xlim = c(0,8), ylim = rev(range(zm)),
              xlab = 'density gradient', ylab = '',
-             col = 'white')
+             col = 'white', xaxt = 'n')
         abline(h = pretty(zm), lty = 3, col = 'lightgrey')
         text(x = 4,
              y = mean(zm),
              labels = 'No valid data')
       } else { # valid data
-        plot(grad, zm, ylim = rev(range(zm)))
+        plot(vargrad, zm, ylim = rev(range(zm)),
+             ylab = '',
+             xlab = bquote('100('*Delta*rho*'/'*Delta*z*')'))
         abline(h = pretty(zm), lty = 3, col = 'lightgrey')
         abline(v = 1, lty = 2)
+        if(!is.na(mldDefault)){
+          abline(h=mldDefault)
+          axis(side = 4, at = mldDefault)
+        }
       }
-    } # closes debug
+    } # closes if method == 'gradient
+    if(method == 'N2'){
+      if(all(is.na(ctd[['N2']]))){
+        hasNoData <- TRUE
+        N2lim <- c(0,1)
+         # add fake data to prevent warning message
+         ctd <- oceSetData(ctd,
+                           name = 'N2',
+                           value = 1:length(ctd[['pressure']])) # so we don't get a xlim error
+         col <- 'white'
+      } else { # there is data
+        hasNoData <- FALSE
+        #N2lim <- range(ctd[['N2']], na.rm = TRUE)
+        if(exists('N2')){
+          N2lim <- range(N2[['N2']], na.rm = TRUE)
+        } else {
+          N2lim <- range(ctd[['N2']], na.rm = TRUE)
+        }
+        if(N2lim[1] == N2lim[2]){
+          N2lim <- c(N2lim[1], N2lim[1] + 1)
+        }
+        col <- 'black'
+      }
 
-    # default calculation
-    gradCheck <- any(grad >= 1, na.rm = TRUE) # to prevent infinite warnings
-    if(!gradCheck){ # no values
-      if(all(is.na(grad))){
-        mldDefault <- NA
-      } else {
-        # if none, set mixed layer depth to max pressure
-        mldDefault <- max(ctd[['pressure']], na.rm = TRUE)
+      plotProfile(ctd, xtype = 'N2',
+                  mar = c(3.0, 3.5, 3.5, 2.0),
+                  N2lim = N2lim,
+                  col = 'white') # not sure what happens if I put in fake T/S data, if N2 gets calculated
+      if(hasNoData){
+        text(x = mean(ctd[['N2']]),
+             y = mean(ctd[['pressure']]),
+             labels = 'No data')
       }
-    } else {
-      iMld <- min(which(grad >= 1))
-      mldDefault <- (zm[iMld] + zm[(iMld + 1)]) / 2
-    }
+      if(!is.na(mldDefault)){
+        lines(N2[['N2']], abs(N2[['z']][2:length(N2[['z']])]), type = 'o')
+      }
 
-    # forced calculation (below mldMin)
-    mldForced <- as.numeric(NA)
-    if(!is.null(mldMin)){
-      gradCheck <- any(grad >= 1 & zm > mldMin) # to prevent infinite warnings
-      if(!gradCheck){ # no values
-        mldForced <- max(ctd[['pressure']], na.rm = TRUE)
-      } else {
-        iMld <- min(which(grad >= 1 & zm > mldMin))
-        mldForced <- (zm[iMld]+zm[iMld+1]) / 2
+      if(!is.na(mldDefault)){
+        abline(h=mldDefault)
+        axis(side = 4, at = mldDefault)
       }
-      #df_results$mld <- df_results$mld_forced
-    }
-  }
+    } # closes method == 'N2'
+    if(method == 'density'){
+      # basically identical to N2
+      if(all(is.na(ctd[['sigmaTheta']]))){
+        hasNoData <- TRUE
+        densitylim <- c(0,1)
+        col <- 'white'
+      } else { # there is data
+        xtype <- 'sigmaTheta'
+        hasNoData <- FALSE
+        densitylim <- range(ctd[['sigmaTheta']], na.rm = TRUE)
+        if(densitylim[1] == densitylim[2]){
+          densitylim <- c(densitylim[1], densitylim[1] + 1)
+        }
+        col <- 'black'
+      }
+
+      oce::plotProfile(ctd, xtype = 'sigmaTheta',
+                       type = 'o',
+                       mar = c(3.0, 3.5, 3.5, 2.0),
+                       #xlab = oce::resizableLabel(item = 'sigmaTheta', axis = 'x'), # keep getting Error : object 'label' not found
+                       densitylim = densitylim,
+                       #xlim = rholim, # provide both to cover for sigmaThetaFake
+                       col = densityCol) # not sure what happens if I put in fake T/S data, if sigmaTheta gets calculated
+      if(hasNoData){
+        text(x = mean(ctd[[xtype]]),
+             y = mean(ctd[['pressure']]),
+             labels = 'No data')
+      }
+      if(!is.na(mldDefault)){
+        abline(h=mldDefault)
+        axis(side = 4, at = mldDefault)
+      }
+    } # closes method == 'density'
+  } # closes debug
+
   # output results in 1-row data.frame
   out <- data.frame(time = ctd[['startTime']],
                     year = as.POSIXlt(ctd[['startTime']])$year + 1900,
