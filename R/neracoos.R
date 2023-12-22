@@ -9,14 +9,14 @@
 #' http://www.neracoos.org/datatools/historical/graphing_download.
 #' @param startDate A character string in the format `yyyy-mm-dd` identifying the start of the desired
 #' timeseries beginning at 00:00UTC
-#' @param endDate A character string in the format `yyyy-mm-dd` indentifying the end of the desired
+#' @param endDate A character string in the format `yyyy-mm-dd` identifying the end of the desired
 #' timeseries ending at 23:59UTC
 #' @param destdir Optional string indicating the directory in which to store
 #' downloaded files. If not supplied, `"."` is used, i.e. the data file
 #' is stored in the present working directory. Also, the directory will be created
 #' if not already done so.
 #'
-#' @details This function downloads data from the NERACOOS ERDDAP server via a ftp connection.
+#' @details This function downloads data from the NERACOOS ERDDAP.
 #' It has been specifically written to download CTD data from their buoy sites. Data chosen to download
 #' includes all variables, including QC flags. The file is downloaded as a netcdf file and is output with the following
 #' naming convention, `buoyName_sbe37_all_startDate_endDate.nc` , which uses the supplied parameters.

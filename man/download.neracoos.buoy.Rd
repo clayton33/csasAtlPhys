@@ -15,7 +15,7 @@ http://www.neracoos.org/datatools/historical/graphing_download.}
 \item{startDate}{A character string in the format \code{yyyy-mm-dd} identifying the start of the desired
 timeseries beginning at 00:00UTC}
 
-\item{endDate}{A character string in the format \code{yyyy-mm-dd} indentifying the end of the desired
+\item{endDate}{A character string in the format \code{yyyy-mm-dd} identifying the end of the desired
 timeseries ending at 23:59UTC}
 
 \item{destdir}{Optional string indicating the directory in which to store
@@ -28,7 +28,7 @@ Download hourly buoy CTD data hosted by Northeastern Regional Association
 of Coastal Ocean Observing Systems (NERACOOS) from the ERDDAP server.
 }
 \details{
-This function downloads data from the NERACOOS ERDDAP server via a ftp connection.
+This function downloads data from the NERACOOS ERDDAP.
 It has been specifically written to download CTD data from their buoy sites. Data chosen to download
 includes all variables, including QC flags. The file is downloaded as a netcdf file and is output with the following
 naming convention, \code{buoyName_sbe37_all_startDate_endDate.nc} , which uses the supplied parameters.

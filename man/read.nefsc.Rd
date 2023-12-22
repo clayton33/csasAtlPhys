@@ -10,7 +10,7 @@ read.nefsc(file)
 \item{file}{a connection or a character string giving the name of the file to read.}
 }
 \value{
-a list of ctd objects
+a list of \code{ctd} objects.
 }
 \description{
 Read in Northeast Fisheries

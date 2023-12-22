@@ -122,7 +122,7 @@ download.nefsc <- function(year, ship, destdir = '.', overwrite = FALSE) {
 #'
 #' @param file a connection or a character string giving the name of the file to read.
 #'
-#' @return a list of ctd objects
+#' @return a list of `ctd` objects.
 #'
 #' @importFrom oce as.ctd
 #' @export
@@ -222,6 +222,174 @@ read.nefsc <- function(file){
                               cruiseNumber)
     ctd[[i]] <- ctdtemp
 
+  }
+  ctd
+}
+
+#' @title Download NODC NEFSC data from erddap server
+#'
+#' @description Download data hosted by the National
+#' Oceanic and Atmospheric Administration (NOAA) Northeast Fisheries
+#' Science Center (NEFSC).
+#'
+#' @details This function downloads data hosted by the National
+#' Oceanic and Atmospheric Administration (NOAA) Northeast Fisheries
+#' Science Center (NEFSC) from the ERDDAP server. Saves a `.nc` file in
+#' supplied `destdir`.
+#'
+#' @param startDate A character string in the format `yyyy-mm-dd` identifying the start of the desired
+#' timeseries beginning at 00:00UTC
+#' @param endDate A character string in the format `yyyy-mm-dd` identifying the end of the desired
+#' timeseries ending at 23:59UTC
+#' @param destdir Optional string indicating the directory in which to store
+#' downloaded files. If not supplied, `"."` is used, i.e. the data file
+#' is stored in the present working directory. Also, the directory will be created
+#' if not already done so.
+#'
+#' @return a character string of the filename.
+#' @author Chantelle Layton
+#' @export
+#'
+
+download.nefsc.erddap <- function(startDate, endDate, destdir = ".") {
+  # create output directory if not already done so
+  if(!dir.exists(destdir)){
+    dir.create(destdir, recursive = TRUE)
+  }
+  # define the url
+  baseurl <- "https://comet.nefsc.noaa.gov/"
+  url <- paste0(baseurl, "erddap/tabledap/",
+                "ocdbs_v_erddap1.nc",
+                "?UTC_DATE%2CUTC_DECIMAL_HOUR",
+                "%2Clatitude",
+                "%2Clongitude",
+                "%2Cdepth",
+                "%2Cpressure_dbars",
+                "%2Csea_water_temperature",
+                "%2Csea_water_salinity",
+                "%2Cdissolved_oxygen",
+                "%2Cfluorescence",
+                "%2Cpar_sensor",
+                "%2Ccast_number",
+                "%2Ccruise_id",
+                "%2Cpurpose_code",
+                "%2Cbottom_depth",
+                "%2CGEAR_TYPE",
+                "&UTC_DATE%3E=", startDate, "T00%3A00%3A00Z",
+                "&UTC_DATE%3C=", endDate, "T23%3A59%3A59Z")
+  # download data
+  start <- gsub('-','', startDate)
+  end <- gsub('-','', endDate)
+  destfile <- paste0(paste('nefscProfileData', start, end, sep = '_'),'.nc')
+  destFilename <- paste(destdir, destfile, sep = '/')
+  download.file(url = url,
+                destfile = destFilename,
+                mode = 'wb')
+  destFilename
+}
+
+#' @title Read NODC NEFSC Profile data
+#'
+#' @description This function reads in NODC NEFSC Profile data that was downloaded using [download.nefsc.erddap].
+#'
+#' @param file a connection or a character string giving the name of the file to read.
+#'
+#' @return A list of `ctd` objects.
+#'
+#' @author Chantelle Layton
+#' @importFrom ncdf4 nc_open
+#' @importFrom ncdf4 ncvar_get
+#' @importFrom ncdf4 ncatt_get
+#' @importFrom oce as.ctd
+#'
+#' @export
+
+read.nefsc.erddap.nc <- function(file){
+  nc <- nc_open(filename = file)
+  # to see which variables are in the file do names(nc$var)
+  # no qc flags in data
+  # but if they get implemented, have a look at read.neracoos.buoy
+
+  # I don't think there's anything useful here
+  globalAtts <- ncatt_get(nc, 0)
+
+  # get data
+  # note that I could have just converted 'time' to number of seconds
+  # and added it to 'date', but I don't trust that 'date' is actually
+  # UTC, so I'm going to convert them separately, then join them together
+  date <- ncvar_get(nc = nc, varid = "UTC_DATE")
+  # convert to POSIXct
+  datestrf <- strftime(as.POSIXct(date, origin = '1970-01-01', tz = 'UTC'), format = '%Y-%m-%d')
+  # I'm not sure that the date is actually "00:00:00"Z, it's giving me "04:00:00"Z
+  # that's why I strftime'd it
+  time <- ncvar_get(nc = nc, varid = 'UTC_DECIMAL_HOUR')
+  # convert to POSIXct
+  timestrf <- strftime(as.POSIXct(x = time * 60 * 60, # covert to number of seconds
+                                  origin = '1970-01-01', # could use anything
+                                  tz = 'UTC'),
+                       format = '%H:%M:%S')
+  dateTime <- as.POSIXct(x = paste(datestrf, timestrf), origin = '1970-01-01', tz = 'UTC')
+  # get data
+  # [1] "UTC_DATE"              "UTC_DECIMAL_HOUR"      "latitude"              "longitude"             "depth"                 "pressure_dbars"
+  # [7] "sea_water_temperature" "sea_water_salinity"    "dissolved_oxygen"      "fluorescence"          "par_sensor"            "cast_number"
+  # [13] "cruise_id"             "purpose_code"          "bottom_depth"          "GEAR_TYPE"
+  lat <- ncvar_get(nc = nc, varid = 'latitude')
+  lon <- ncvar_get(nc = nc, varid = 'longitude')
+  p <- ncvar_get(nc = nc, varid = 'pressure_dbars')
+  T <- ncvar_get(nc = nc, varid = 'sea_water_temperature')
+  S <- ncvar_get(nc = nc, varid = 'sea_water_salinity')
+  # get metadata items
+  castNum <- ncvar_get(nc = nc, varid = 'cast_number')
+  cruiseId <- ncvar_get(nc = nc, varid = 'cruise_id')
+  purposeCode <- ncvar_get(nc = nc, varid = 'purpose_code')
+  sounding <- ncvar_get(nc = nc, varid = 'bottom_depth')
+  gearType <- ncvar_get(nc = nc, varid = 'GEAR_TYPE')
+
+  # create a data.frame so the data can be split efficiently
+  # (not sure what happens if there's a lot of data for one year)
+  df <- data.frame(cruiseId = cruiseId, # metadata
+                   castNumber = castNum,
+                   purposeCode = purposeCode,
+                   gearType = gearType,
+                   sounding = sounding,
+                   time = dateTime,
+                   latitude = lat, # data
+                   longitude = lon,
+                   pressure = p,
+                   temperature = T,
+                   salinity = S)
+  # split df by cruiseId
+  dfs <- split(df, df[['cruiseId']])
+  # split dfs by castNumber
+  dfss <- lapply(dfs, function(k) split(x = k, f = k[['castNumber']]))
+  # split dfss by gearType
+  dfsss <- lapply(dfss, function(kk) lapply(kk, function(k) split(x = k, f = k[['gearType']])))
+  # now create ctd objects
+  profilecnt <- 1
+  ctd <- vector(mode = 'list', length = sum(unlist(lapply(dfsss, # cruiseID
+                                                          function(kk) lapply(kk, length)))))# castNumber
+  #function(k) lapply(k, # gearType
+  #                   length))))))
+  for(ic in 1:length(dfsss)){ # iterates through length from split by cruiseNumber
+    ddd <- dfsss[[ic]]
+    for(ip in 1:length(ddd)){ # iterates through length from split by castNumber
+      dd <- ddd[[ip]]
+      for(ig in 1:length(dd)){
+        d <- dd[[ig]]
+        ctd[[profilecnt]] <- as.ctd(salinity = d[['salinity']],
+                                    temperature = d[['temperature']],
+                                    pressure = d[['pressure']],
+                                    time = d[['time']],
+                                    startTime = d[['time']][1],
+                                    longitude = d[['longitude']],
+                                    latitude = d[['latitude']],
+                                    station = d[['castNumber']][1],
+                                    cruise = d[['cruiseId']][1],
+                                    type = d[['gearType']][1])
+        profilecnt <- profilecnt + 1
+      }
+
+    }
   }
   ctd
 }

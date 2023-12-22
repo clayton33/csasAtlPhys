@@ -4,18 +4,42 @@
 \alias{calculateMixedLayerDepth}
 \title{Calculate mixed layer depth}
 \usage{
-calculateMixedLayerDepth(ctd, mldMin = NULL, debug = TRUE)
+calculateMixedLayerDepth(
+  ctd,
+  method = "gradient",
+  mldMin = NULL,
+  nPointsMin = 3,
+  densityThreshold = 0.03,
+  densityReferenceDepth = 10,
+  debug = TRUE
+)
 }
 \arguments{
 \item{ctd}{a \code{ctd} object.}
 
+\item{method}{a character string indicting which method to
+use to calculate the mixed layer depth, options include
+'gradient', 'N2', and 'density'. Default is 'gradient'}
+
 \item{mldMin}{a numeric value indicating the minimum value the
-mixed layer depth should be. Default is set to \code{NULL}}
+mixed layer depth should be. Default is set to \code{NULL}.
+Ignored for \code{method = 'density'}.}
+
+\item{nPointsMin}{a numeric value indicating the minimum number of
+points in ctd object}
+
+\item{densityThreshold}{a numeric value indicating the threshold value
+to use for the 'density' method, ignored for other methods.
+Default is 0.03.}
+
+\item{densityReferenceDepth}{a numeric value indicating the reference
+depth for the density method. It will find the closest
+value in the profile within 5dbar. Default is 10dbar.}
 
 \item{debug}{a logical value indicating to show debug information}
 }
 \value{
-a single row data frame with relevant information for easy output use
+a single numeric value of the calculated mixed layer depth
 }
 \description{
 This function calculated the mixed layer depth, which is
