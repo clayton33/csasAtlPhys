@@ -1134,6 +1134,12 @@ calculateMixedLayerDepth <- function(ctd,
         # get data out of ctd object
         rho <- rev(ctd[['sigmaTheta']])
         z <- rev(ctd[['pressure']]) * -1
+        ## when doing calculation on binned bottle data
+        ## there can be 'NA' values at multiple depth bins
+        ## subset data where there are not NA values in rho
+        notNA <- !is.na(rho)
+        rho <- rho[notNA]
+        z <- z[notNA]
         # calculate derivative
         drho <- diff(rho)
         dz <- diff(z)
@@ -1181,7 +1187,7 @@ calculateMixedLayerDepth <- function(ctd,
       if(debug & okidx) cat(paste('Density reference depth :', ctd[['pressure']][idxrd]), sep = '\n')
       if(length(idxrd) != 0){
         densityLook <- ctd[['sigmaTheta']][idxrd] + densityThreshold
-        idxmld <- which(ctd[['sigmaTheta']] > densityLook)[1] # only interested in the first instance
+        idxmld <- which(ctd[['sigmaTheta']][idxrd:length(ctd[['pressure']])] > densityLook)[1] + (idxrd - 1) # only interested in the first instance, and it has to be below the referenceDepth
         if(length(idxmld) != 0){
           mldDefault <- ctd[['pressure']][idxmld]
         } else {
