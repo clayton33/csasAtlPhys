@@ -76,10 +76,18 @@ read.nao <- function(file){
     d <- read.table(file) # this will be a data.frame
     # first column is the year
     # columns after that are the months
-    colnames(d) <- c('Year', month.abb)
-    year <- unlist(lapply(d[['Year']], function(k) rep(k, 12))) # unlist the monthly data by row, so have to rep the year 12 times
+    ## 20240110 - column names changed, 'Year' was removed
+    ##            'Year' is now the row names
+    ##            column names are 'month.abb'
+    ## old code, retaining it for now
+    # colnames(d) <- c('Year', month.abb)
+    # year <- unlist(lapply(d[['Year']], function(k) rep(k, 12))) # unlist the monthly data by row, so have to rep the year 12 times
+    # month <- rep(1:12, length(year))
+    # value <- as.numeric(t(d[, names(d) != 'Year']))
+    ## 20240110 - new code to format the data
+    year <- as.numeric(rownames(d))
     month <- rep(1:12, length(year))
-    value <- as.numeric(t(d[, names(d) != 'Year']))
+    value <- as.numeric(t(d))
     df <- data.frame(year = year,
                      month = month,
                      value = value)
