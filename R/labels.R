@@ -642,7 +642,7 @@ makeSectionPlotTitle <- function(ctd){
   }
   utransect <- ifelse(grepl('sableIslandBank', utransect), 'sableIslandBank', utransect)
   transectName <- getLocationName(utransect)
-  timeRange <- as.POSIXct(range(unlist(lapply(ctd, function(x) x[['time']])), na.rm = TRUE),
+  timeRange <- as.POSIXct(range(unlist(lapply(ctd, function(x) x[['startTime']])), na.rm = TRUE), # 20240423 'time' to 'startTime'
                           origin = '1970-01-01', tz = 'UTC')
   timeRangeFormat <- format(timeRange, '%d %b %Y')
   # right now it assumes that the profiles were all taken during the same year
