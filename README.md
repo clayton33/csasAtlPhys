@@ -19,8 +19,8 @@ This package is in active development, and due to the nature of the package,
 there is no plan at this time to submit to CRAN. For users to who wish to install the package, the can do so by
 
 ```
-library(devtools)
-install_github('clayton33/csasAtlPhys', ref = 'master')
+library(remotes)
+remotes::install_github(repo = "clayton33/csasAtlPhys", ref = "master")
 ```
 
 this package is dependent on the `oce` package, so it is also best to have
