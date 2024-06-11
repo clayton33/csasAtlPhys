@@ -1408,7 +1408,7 @@ calculateMixedLayerDepth <- function(ctd,
 #' defined as the difference in density between two defined depths divided
 #' by the difference in the two depths. The calculation completes two
 #' iterations. The first is between the two defined depths, and then if the
-#' calculated value is less than 0, the depth range is slighly increased
+#' calculated value is less than 0, the depth range is slightly increased.
 #'
 #' @param ctd a `ctd` object.
 #' @param depth1 a numeric value, such that depth1 < depth2
