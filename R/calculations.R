@@ -1035,31 +1035,29 @@ shelfSurveyInterpBarnes <- function(ctd, fullgrid, grid, variable, xg, yg, xr, y
 
 #' @title Calculate mixed layer depth
 #'
-#' @description This function calculated the mixed layer depth, which is
-#' defined as when the density gradient, or d(sigmaTheta)/dz, is
-#' greater than 0.01 kg/m^-4. A parameter, `mldMin`, can be provided
-#' in order to force the mixed layer depth to be found below the
-#' set depth.
+#' @description This function calculates the mixed layer depth using one
+#' of three methods implemented. Methods include the `gradient`, `N2`, and `density`.
 #'
 #' @param ctd a `ctd` object.
 #' @param method a character string indicting which method to
 #'               use to calculate the mixed layer depth, options include
-#'               'gradient', 'N2', and 'density'. Default is 'gradient'
+#'               'gradient', 'N2', and 'density'. Default is 'gradient'.
 #' @param mldMin a numeric value indicating the minimum value the
 #'               mixed layer depth should be. Default is set to `NULL`.
 #'               Ignored for `method = 'density'`.
 #' @param nPointsMin a numeric value indicating the minimum number of
 #'                   points in ctd object
 #' @param densityThreshold a numeric value indicating the threshold value
-#'                         to use for the 'density' method, ignored for other methods.
+#'                         to use for the `method = density`, ignored for other methods.
 #'                         Default is 0.03.
 #' @param densityReferenceDepth a numeric value indicating the reference
-#'                              depth for the density method. It will find the closest
+#'                              depth for the `method = density` . It will find the closest
 #'                              value in the profile within 5dbar. Default is 10dbar.
 #' @param debug a logical value indicating to show debug information
 #' @return a single numeric value of the calculated mixed layer depth
 #'
 #' @importFrom oce plotProfile
+#' @importFrom pracma interp1
 #'
 #' @author Chantelle Layton and Benoit Casault
 #' @export
@@ -1080,10 +1078,14 @@ calculateMixedLayerDepth <- function(ctd,
                       value=rep(NA, length(ctd[['pressure']])))
     mldDefault <- NA
     mldForced <- NA
+    referenceDepth <- densityReferenceDepth
+    referenceDensity <- NA
   } else if(length(which(!is.na(ctd[['temperature']]))) <= nPointsMin | length(which(!is.na(ctd[['salinity']]))) <= nPointsMin){
     message(paste('Less than', nPointsMin, 'points in ctd object'))
     mldDefault <- NA
     mldForced <- NA
+    referenceDepth <- densityReferenceDepth
+    referenceDensity <- NA
   } else { # MLD can be calculated
     if(method == 'gradient'){
       # calculate density gradient
@@ -1188,15 +1190,27 @@ calculateMixedLayerDepth <- function(ctd,
       if(length(idxrd) != 0){
         densityLook <- ctd[['sigmaTheta']][idxrd] + densityThreshold
         idxmld <- which(ctd[['sigmaTheta']][idxrd:length(ctd[['pressure']])] > densityLook)[1] + (idxrd - 1) # only interested in the first instance, and it has to be below the referenceDepth
-        if(length(idxmld) != 0){
-          mldDefault <- ctd[['pressure']][idxmld]
+        if(length(idxmld) != 0 & !is.na(idxmld)){
+          #mldDefault <- ctd[['pressure']][idxmld]
+          # need to get index that is not NA before the mld index
+          idxsmldprev <- which(!is.na(ctd[['sigmaTheta']][1:(idxmld-1)]))
+          idxmldprev <- idxsmldprev[length(idxsmldprev)]
+          mldDefault <- pracma::interp1(x = ctd[['sigmaTheta']][c(idxmldprev,idxmld)],
+                                y = ctd[['pressure']][c(idxmldprev,idxmld)],
+                                xi = densityLook)
+          referenceDepth <- ctd[['pressure']][idxrd]
+          referenceDensity <- densityLook
         } else {
-          cat(paste0("No points in profile exceed density look value of ", densitylook), sep = '\n')
+          cat(paste0("No points in profile exceed density look value of ", densityLook), sep = '\n')
           mldDefault <- NA
+          referenceDepth <- densityReferenceDepth
+          referenceDensity <- NA
         }
       } else { # no data at 10dbar/m
         cat("No data at 10dbar", sep = '\n')
         mldDefault <- NA
+        referenceDepth <- densityReferenceDepth
+        referenceDensity <- NA
       }
       # note that since it take density value at 10m, no mldForced for this method
       mldForced <- NA
@@ -1375,6 +1389,12 @@ calculateMixedLayerDepth <- function(ctd,
                     yearDay = as.POSIXlt(ctd[['startTime']])$yday,
                     mixedLayerDepthDefault = mldDefault,
                     mixedLayerDepthForced = mldForced)
+  if(method == 'density'){
+    out <- data.frame(out,
+                      referenceDepth = referenceDepth,
+                      referenceDensity = referenceDensity
+                      )
+  }
   out
 }
 
@@ -1447,4 +1467,56 @@ calculateStratificationIndex <- function(ctd, depth1, depth2, debug = TRUE){
                     minDepth = siZmin,
                     maxDepth = siZmax)
   out
+}
+
+#' @title Rotate axes
+#'
+#' @details This function rotates points in a x-y Cartesian coordinate system. Setting `inverse = TRUE` is effectively the
+#' same as multiplying the provided `angle` by `-1`, so for example, providing parameters `angle = 50` and `inverse = TRUE` would give
+#' the same results providing parameters `angle = -50` and `inverse = FALSE`.
+#'
+#' @param x a numeric vector of the x-component value(s)
+#' @param y a numeric vector of the y-component value(s)
+#' @param angle rotation angle in degrees
+#' @param inverse logical value indicating whether or not to do inverse transformation, default is `FALSE`.
+#'
+#' @return list of rotated x and y components as `X` and `Y`.
+#' @author Chantelle Layton
+#' @export
+#'
+#' @references
+#' 1. Basic explanation for rotation of axes \url{https://en.wikipedia.org/wiki/Rotation_of_axes}
+#'
+rotateAxes <- function(x, y, angle, inverse = FALSE){
+  thetarad <- angle * pi/180
+  if(!inverse){
+    X <- x * cos(thetarad) + y * sin(thetarad)
+    Y <- -x * sin(thetarad) + y * cos(thetarad)
+  }
+  if(inverse){
+    X <- x * cos(thetarad) - y * sin(thetarad)
+    Y <- x * sin(thetarad) + y * cos(thetarad)
+  }
+  invisible(list(X=X, Y=Y))
+}
+
+#' @title Rotate axes clockwise from true north
+#'
+#' @details This function rotates points clockwise from true north in a x-y Cartesian coordinate system.
+#' Adapted from MATLAB code provided to me by David Hebert, which was used in Mathieu Dever's PhD.
+#'
+#' @param x a numeric vector of the x-component value(s)
+#' @param y a numeric vector of the y-component value(s)
+#' @param angle rotation angle in degrees
+#'
+#' @return list of rotated x and y components as `X` and `Y`.
+#' @author Chantelle Layton
+#' @export
+#'
+
+rotateAxesTrueNorth <- function(x, y, angle){
+  thetarad <- angle * pi/180
+  X <- x * sin(thetarad) + y * cos(thetarad)
+  Y <- x * cos(thetarad) - y * sin(thetarad)
+  invisible(list(X=X, Y=Y))
 }
