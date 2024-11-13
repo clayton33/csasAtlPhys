@@ -260,7 +260,7 @@ download.nefsc.erddap <- function(startDate, endDate, destdir = ".") {
   baseurl <- "https://comet.nefsc.noaa.gov/"
   url <- paste0(baseurl, "erddap/tabledap/",
                 "ocdbs_v_erddap1.nc",
-                "?UTC_DATE%2CUTC_DECIMAL_HOUR",
+                "?UTC_DATETIME",
                 "%2Clatitude",
                 "%2Clongitude",
                 "%2Cdepth",
@@ -275,8 +275,9 @@ download.nefsc.erddap <- function(startDate, endDate, destdir = ".") {
                 "%2Cpurpose_code",
                 "%2Cbottom_depth",
                 "%2CGEAR_TYPE",
-                "&UTC_DATE%3E=", startDate, "T00%3A00%3A00Z",
-                "&UTC_DATE%3C=", endDate, "T23%3A59%3A59Z")
+                "&UTC_DATETIME%3E=", startDate, #"T00%3A00%3A00Z",
+                "&UTC_DATETIME%3C=", endDate#, "T23%3A59%3A59Z"
+                )
   # download data
   start <- gsub('-','', startDate)
   end <- gsub('-','', endDate)
@@ -317,22 +318,28 @@ read.nefsc.erddap.nc <- function(file){
   # note that I could have just converted 'time' to number of seconds
   # and added it to 'date', but I don't trust that 'date' is actually
   # UTC, so I'm going to convert them separately, then join them together
-  date <- ncvar_get(nc = nc, varid = "UTC_DATE")
-  # convert to POSIXct
-  datestrf <- strftime(as.POSIXct(date, origin = '1970-01-01', tz = 'UTC'), format = '%Y-%m-%d')
-  # I'm not sure that the date is actually "00:00:00"Z, it's giving me "04:00:00"Z
-  # that's why I strftime'd it
-  time <- ncvar_get(nc = nc, varid = 'UTC_DECIMAL_HOUR')
-  # convert to POSIXct
-  timestrf <- strftime(as.POSIXct(x = time * 60 * 60, # covert to number of seconds
-                                  origin = '1970-01-01', # could use anything
-                                  tz = 'UTC'),
-                       format = '%H:%M:%S')
-  dateTime <- as.POSIXct(x = paste(datestrf, timestrf), origin = '1970-01-01', tz = 'UTC')
+  date <- ncvar_get(nc = nc, varid = "UTC_DATETIME")
+  # # convert to POSIXct
+  # datestrf <- strftime(as.POSIXct(date, origin = '1970-01-01', tz = 'UTC'), format = '%Y-%m-%d')
+  # # I'm not sure that the date is actually "00:00:00"Z, it's giving me "04:00:00"Z
+  # # that's why I strftime'd it
+  # time <- ncvar_get(nc = nc, varid = 'UTC_DECIMAL_HOUR')
+  # # convert to POSIXct
+  # timestrf <- strftime(as.POSIXct(x = time * 60 * 60, # covert to number of seconds
+  #                                 origin = '1970-01-01', # could use anything
+  #                                 tz = 'UTC'),
+  #                      format = '%H:%M:%S')
+  #dateTime <- as.POSIXct(x = paste(datestrf, timestrf), origin = '1970-01-01', tz = 'UTC')
+  dateTime <- as.POSIXct(x = date, origin = '1970-01-01', tz = 'UTC')
   # get data
   # [1] "UTC_DATE"              "UTC_DECIMAL_HOUR"      "latitude"              "longitude"             "depth"                 "pressure_dbars"
   # [7] "sea_water_temperature" "sea_water_salinity"    "dissolved_oxygen"      "fluorescence"          "par_sensor"            "cast_number"
   # [13] "cruise_id"             "purpose_code"          "bottom_depth"          "GEAR_TYPE"
+  # 20241113
+  # [1] "UTC_DATETIME"          "latitude"              "longitude"             "depth"
+  # [5] "pressure_dbars"        "sea_water_temperature" "sea_water_salinity"    "dissolved_oxygen"
+  # [9] "fluorescence"          "par_sensor"            "cast_number"           "cruise_id"
+  # [13] "purpose_code"          "bottom_depth"          "GEAR_TYPE"
   lat <- ncvar_get(nc = nc, varid = 'latitude')
   lon <- ncvar_get(nc = nc, varid = 'longitude')
   p <- ncvar_get(nc = nc, varid = 'pressure_dbars')
