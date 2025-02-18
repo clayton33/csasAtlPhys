@@ -73,24 +73,19 @@ read.nao <- function(file){
     df
   }
   if(fext[length(fext)] == 'txt'){ # different data format identified 20220116, see download.nao for details
-    d <- read.table(file) # this will be a data.frame
-    # first column is the year
-    # columns after that are the months
-    ## 20240110 - column names changed, 'Year' was removed
-    ##            'Year' is now the row names
-    ##            column names are 'month.abb'
-    ## old code, retaining it for now
-    # colnames(d) <- c('Year', month.abb)
-    # year <- unlist(lapply(d[['Year']], function(k) rep(k, 12))) # unlist the monthly data by row, so have to rep the year 12 times
-    # month <- rep(1:12, length(year))
-    # value <- as.numeric(t(d[, names(d) != 'Year']))
-    ## 20240110 - new code to format the data
-    year <- as.numeric(rownames(d))
-    month <- rep(1:12, length(year))
-    value <- as.numeric(t(d))
-    df <- data.frame(year = year,
-                     month = month,
-                     value = value)
-    df
+    # switch to readLines to accommodate partial years of data
+    rl <- readLines(con = file)
+    # first line are month headers
+    months <- strsplit(x = rl[1], split = '\\s+')[[1]]
+    d <- strsplit(x = rl[2:length(rl)], split = '\\s+')
+    year <- as.numeric(unlist(lapply(d, function(k) k[1])))
+    data <- lapply(d, function(k) as.numeric(k[2:length(k)]))
+    # add NA values for partial years
+    data <- lapply(data, function(k) if(length(k) != 12){k <- c(k, rep(NA, times = 12-length(k))); k} else {k})
+    datam <- do.call('rbind', data)
+    datav <- as.vector(datam) # decomposes it column wise
+    df <- data.frame(year = rep(year, times = 12),
+                     month = unlist(lapply(1:12, rep, time = length(year))),
+                     value = datav)
   }
 }
