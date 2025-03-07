@@ -117,8 +117,8 @@ getAnomalyLabel <- function(item, sep = "", bold = FALSE){
     }
   }
   if(is.null(label)){
-    cat('Please provide a valid item, if you believe the desired has not been implemented, please contact creator.', sep = '\n')
-    cat('Returning item')
+    message('Please provide a valid item, if you believe the desired has not been implemented, please contact creator.', sep = '\n')
+    message('Returning item')
     item
   } else {
     label
@@ -184,8 +184,8 @@ getLabel <- function(item, sep = ""){
     label <- gettext('Oxygen saturation', domain = 'R-csasAtlPhys')
   }
   if(is.null(label)){
-    cat('Please provide a valid item, if you believe the desired has not been implemented, please contact creator.', sep = '\n')
-    cat('Returning item')
+    message('Please provide a valid item, if you believe the desired has not been implemented, please contact creator.', sep = '\n')
+    message('Returning item')
     item
   } else {
     label
@@ -353,8 +353,8 @@ getLocationName <- function(item){
     location <- gettext('Northeast Channel (inflow)', domain = 'R-csasAtlPhys')
   }
   if(is.null(location)){
-    cat('Please provide a valid location, if you believe the location has not been implemented, please contact creator.', sep = '\n')
-    cat(paste('Returning item', item), sep = '\n')
+    message('Please provide a valid location, if you believe the location has not been implemented, please contact creator.', sep = '\n')
+    message(paste('Returning item', item), sep = '\n')
     item
   } else {
     location
@@ -462,8 +462,8 @@ getMetadata <- function(item){
     label <- gettext('Months averaged', domain = 'R-csasAtlPhys')
   }
   if(is.null(label)){
-    cat('Please provide a valid item, if you believe the desired has not been implemented, please contact creator.', sep = '\n')
-    cat('Returning item')
+    message('Please provide a valid item, if you believe the desired has not been implemented, please contact creator.', sep = '\n')
+    message('Returning item')
     item
   } else {
     label
@@ -535,8 +535,8 @@ getData <- function(item){
     label <- gettext('depth', domain = 'R-csasAtlPhys')
   }
   if(is.null(label)){
-    cat('Please provide a valid item, if you believe the desired has not been implemented, please contact creator.', sep = '\n')
-    cat('Returning item')
+    message('Please provide a valid item, if you believe the desired has not been implemented, please contact creator.', sep = '\n')
+    message('Returning item')
     item
   } else {
     label
@@ -696,8 +696,8 @@ getShipnameLong <- function(x){
   }
 
   if(is.null(long)){
-    cat(paste('Ship abbreviation ', x, ' not found, please contact author and provide abbreviation and long name'), sep = '\n')
-    cat('Returning abbreviation', sep = '\n')
+    message(paste('Ship abbreviation ', x, ' not found, please contact author and provide abbreviation and long name'), sep = '\n')
+    message('Returning abbreviation', sep = '\n')
     x
   } else {
     long
@@ -749,8 +749,8 @@ getOrdinal <- function(x) {
   }
 
   if(is.null(ordinal)){
-    cat('Function only translates up to numerical value of 10', sep = '\n')
-    cat('Returning original input', sep = '\n')
+    message('Function only translates up to numerical value of 10', sep = '\n')
+    message('Returning original input', sep = '\n')
     x
   } else {
     ordinal
@@ -801,8 +801,8 @@ getNumber <- function(x) {
   }
 
   if(is.null(xx)){
-    cat('Function only translates up to numerical value of 10', sep = '\n')
-    cat('Returning original input', sep = '\n')
+    message('Function only translates up to numerical value of 10', sep = '\n')
+    message('Returning original input', sep = '\n')
     x
   } else {
     xx
