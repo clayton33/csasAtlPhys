@@ -23,7 +23,7 @@ This function calculates the stratification index, which is
 defined as the difference in density between two defined depths divided
 by the difference in the two depths. The calculation completes two
 iterations. The first is between the two defined depths, and then if the
-calculated value is less than 0, the depth range is slighly increased
+calculated value is less than 0, the depth range is slightly increased.
 }
 \author{
 Chantelle Layton and Benoit Casault

@@ -19,7 +19,7 @@ calculateMixedLayerDepth(
 
 \item{method}{a character string indicting which method to
 use to calculate the mixed layer depth, options include
-'gradient', 'N2', and 'density'. Default is 'gradient'}
+'gradient', 'N2', and 'density'. Default is 'gradient'.}
 
 \item{mldMin}{a numeric value indicating the minimum value the
 mixed layer depth should be. Default is set to \code{NULL}.
@@ -29,11 +29,11 @@ Ignored for \code{method = 'density'}.}
 points in ctd object}
 
 \item{densityThreshold}{a numeric value indicating the threshold value
-to use for the 'density' method, ignored for other methods.
+to use for the \code{method = density}, ignored for other methods.
 Default is 0.03.}
 
 \item{densityReferenceDepth}{a numeric value indicating the reference
-depth for the density method. It will find the closest
+depth for the \code{method = density} . It will find the closest
 value in the profile within 5dbar. Default is 10dbar.}
 
 \item{debug}{a logical value indicating to show debug information}
@@ -42,11 +42,8 @@ value in the profile within 5dbar. Default is 10dbar.}
 a single numeric value of the calculated mixed layer depth
 }
 \description{
-This function calculated the mixed layer depth, which is
-defined as when the density gradient, or d(sigmaTheta)/dz, is
-greater than 0.01 kg/m^-4. A parameter, \code{mldMin}, can be provided
-in order to force the mixed layer depth to be found below the
-set depth.
+This function calculates the mixed layer depth using one
+of three methods implemented. Methods include the \code{gradient}, \code{N2}, and \code{density}.
 }
 \author{
 Chantelle Layton and Benoit Casault
