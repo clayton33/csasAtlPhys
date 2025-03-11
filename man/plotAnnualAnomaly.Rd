@@ -7,6 +7,7 @@
 plotAnnualAnomaly(
   x,
   y,
+  ysc,
   xlim,
   ylim,
   xlab = TRUE,
@@ -19,13 +20,18 @@ plotAnnualAnomaly(
   plotLmTrend = FALSE,
   lmResults,
   plotClimatologyMean = FALSE,
-  climatologyMean
+  climatologyMean,
+  plotScorecard = FALSE,
+  scorecardLines = TRUE,
+  scorecardLabels = TRUE
 )
 }
 \arguments{
 \item{x}{a vector indicating the times of observations}
 
 \item{y}{a vector indicating the observations}
+
+\item{ysc}{a vector indicating observations used for scorecard, ignored if \code{plotScorecard = FALSE}}
 
 \item{xlim}{Optional limit for x axis}
 
@@ -55,6 +61,12 @@ on the plot}
 \item{plotClimatologyMean}{Logical indicating whether or not to print out the climatology mean.}
 
 \item{climatologyMean}{A numeric value, if \code{plotClimatologyMean = FALSE}, ignored.}
+
+\item{plotScorecard}{Logical indicating whether or not to plot scorecard on side = 1.}
+
+\item{scorecardLines}{Logical indicating whether or not to put vertical lines on scorecard.}
+
+\item{scorecardLabels}{Logical indicating whether or not to print \code{ysc} values in scorecard.}
 }
 \description{
 Creates a time-series of annual time series in the format that is used

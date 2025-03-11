@@ -7,6 +7,7 @@
 #'
 #' @param x a vector indicating the times of observations
 #' @param y a vector indicating the observations
+#' @param ysc a vector indicating observations used for scorecard, ignored if `plotScorecard = FALSE`
 #' @param xlim Optional limit for x axis
 #' @param ylim Optional limit for y axis
 #' @param xlab Logical indicating whether to label the x axis
@@ -23,6 +24,9 @@
 #' @param lmResults A `lm` format object, if `plotLmTrend = FALSE`, ignored.
 #' @param plotClimatologyMean Logical indicating whether or not to print out the climatology mean.
 #' @param climatologyMean A numeric value, if `plotClimatologyMean = FALSE`, ignored.
+#' @param plotScorecard Logical indicating whether or not to plot scorecard on side = 1.
+#' @param scorecardLines Logical indicating whether or not to put vertical lines on scorecard.
+#' @param scorecardLabels Logical indicating whether or not to print `ysc` values in scorecard.
 #'
 #' @details The current format of the figure is for the 2019 research document. Any changes in the future
 #' will be reflected in the code with comments, and here.
@@ -48,10 +52,11 @@
 #'
 
 
-plotAnnualAnomaly <- function(x, y, xlim, ylim, xlab = TRUE, climatologyYears, ylabel = TRUE,
+plotAnnualAnomaly <- function(x, y, ysc, xlim, ylim, xlab = TRUE, climatologyYears, ylabel = TRUE,
                                     plotSd = TRUE, yaxs = TRUE, plotPoints = TRUE, plotRunningAvg = TRUE,
                               plotLmTrend = FALSE, lmResults,
-                              plotClimatologyMean = FALSE, climatologyMean){
+                              plotClimatologyMean = FALSE, climatologyMean,
+                              plotScorecard = FALSE, scorecardLines = TRUE, scorecardLabels = TRUE){
   is.even <- function(x) x %% 2 == 0
   # ylabel
   L <- '['
@@ -69,34 +74,108 @@ plotAnnualAnomaly <- function(x, y, xlim, ylim, xlab = TRUE, climatologyYears, y
   if(!ylimGiven){
     ylim <- range(y, na.rm = TRUE)
   }
+  if(plotScorecard){
+    xlim <- xlim + c(-0.5, 1.0) # to make the beginning and end nice
+    # plot bottom scorecard first, some code taken from drawPalette()
+    # set up margins
+    omai <- par("mai")
+    mai <- rep(0, 4)
+    # arguments for paletteCalculations
+    separation <- par('cin')[2]
+    width <- par('cin')[2]
+    pos <- 1
+    debug <- 3
+    zlab <- ""
+    pc <- paletteCalculations(separation = separation, width = width,
+                              maidiff=mai, pos=pos,
+                              zlab=zlab, debug=debug-1)
+    # plot
+    z <- matrix(data = ysc, nrow = length(x), ncol = 1)
+    zy <- 1
+    # plot it
+    barxlim <- xlim #+ c(-1, 1)
+    par(mai = ifelse(pc$mai1 > 0, pc$mai1, 0))
+    image(x = x, y = zy, z = z,
+          xlim = barxlim,
+          axes = FALSE, xlab="", ylab="",
+          col = anomalyColors[['colors']],
+          breaks = anomalyColors[['breaks']])
+    rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "lightgray")
+    image(x = x, y = zy, z = z,
+          xlim = barxlim,
+          axes = FALSE, xlab="", ylab="",
+          col = anomalyColors[['colors']],
+          breaks = anomalyColors[['breaks']],
+          add = TRUE)
+    box()
+    ## add vertical lines to separate years
+    if(scorecardLines) {lapply(x, function(k) lines(x = rep(k, 2) + 0.5, y = c(0, 1) + 0.5))}
+    # axis and labels
+    ## annual
+    if(scorecardLabels) {
+      textcol <- rep('black', length(ysc))
+      whitetext <- ysc <= -3.0 | (ysc >= 3.0 & ysc < 3.5)
+      whitetext[is.na(whitetext)] <- FALSE
+      annualtextat <- x
+      if(any(!whitetext)) text(x = annualtextat[!whitetext == TRUE & !is.na(ysc)], y = 1, labels = sprintf('%.1f', ysc[!whitetext == TRUE & !is.na(ysc)]), col = 'black', cex = 0.8, srt = 90)
+      if(any(whitetext)) text(x = annualtextat[whitetext == TRUE], y = 1, labels = sprintf('%.1f', ysc[whitetext == TRUE & !is.na(ysc)]), col = 'white', cex = 0.8, srt = 90)
+    }
+    # x-axis, x-axis labels
+    if(abs(diff(xlim)) > 10){
+      xat <- seq(round(xlim[1], digits = -1), round(xlim[2], digits = -1), 10) # tick every decade
+      centuries <- c(1800, 1900, 2000)
+      okcentury <- centuries %in% xat
+      centuryIdx <- unlist(lapply(centuries[okcentury], function(k) which(k == xat)))
+      # if centuryIdx[1] is even, start xlabel idx at 2, if odd, at 1
+      xlabels <- seq(ifelse(is.even(centuryIdx[1]), 2, 1), length(xat), 2) # label every second decade, make sure centuries are labelled
+      axis(side = 1, at = xat, labels = FALSE)
+      if(xlab){
+        #axis(side = 1, at = xat[xlabels], labels = xat[xlabels])
+        axis(side = 1, at = xat, labels = xat) # try this for now
+      }
+    } else {
+      xat <- pretty(xlim)
+      if(xlab){
+        axis(side = 1, at = xat)
+      } else {
+        axis(side = 1, at = xat, labels = FALSE)
+      }
+    }
+    # reset mai, prep for primary plot
+    par(new=TRUE, mai=pc$mai2)
+    par(mar = par('mar') * c(0, 1, 1, 1) + c(4.5, 0, 0, 0)) # have to change first term of second addition if changes made to colorbar height
+  }
 
   plot(x = x,
        y = y, col = 'white',
        lwd = 0.6,
        type = 'n',
+       xaxs = 'i',
        xlim = xlim, ylim = ylim,
        xaxt = 'n', yaxt = 'n',
        xlab = '', ylab = '')
   #...)
   # x-axis, x-axis labels
-  if(abs(diff(xlim)) > 10){
-    xat <- seq(round(xlim[1], digits = -1), round(xlim[2], digits = -1), 10) # tick every decade
-    centuries <- c(1800, 1900, 2000)
-    okcentury <- centuries %in% xat
-    centuryIdx <- unlist(lapply(centuries[okcentury], function(k) which(k == xat)))
-    # if centuryIdx[1] is even, start xlabel idx at 2, if odd, at 1
-    xlabels <- seq(ifelse(is.even(centuryIdx[1]), 2, 1), length(xat), 2) # label every second decade, make sure centuries are labelled
-    axis(side = 1, at = xat, labels = FALSE)
-    if(xlab){
-      #axis(side = 1, at = xat[xlabels], labels = xat[xlabels])
-      axis(side = 1, at = xat, labels = xat) # try this for now
-    }
-  } else {
-    xat <- pretty(xlim)
-    if(xlab){
-      axis(side = 1, at = xat)
-    } else {
+  if(!plotScorecard) {
+    if(abs(diff(xlim)) > 10){
+      xat <- seq(round(xlim[1], digits = -1), round(xlim[2], digits = -1), 10) # tick every decade
+      centuries <- c(1800, 1900, 2000)
+      okcentury <- centuries %in% xat
+      centuryIdx <- unlist(lapply(centuries[okcentury], function(k) which(k == xat)))
+      # if centuryIdx[1] is even, start xlabel idx at 2, if odd, at 1
+      xlabels <- seq(ifelse(is.even(centuryIdx[1]), 2, 1), length(xat), 2) # label every second decade, make sure centuries are labelled
       axis(side = 1, at = xat, labels = FALSE)
+      if(xlab){
+        #axis(side = 1, at = xat[xlabels], labels = xat[xlabels])
+        axis(side = 1, at = xat, labels = xat) # try this for now
+      }
+    } else {
+      xat <- pretty(xlim)
+      if(xlab){
+        axis(side = 1, at = xat)
+      } else {
+        axis(side = 1, at = xat, labels = FALSE)
+      }
     }
   }
   # y-axis, y-axis labels, y-axis label
