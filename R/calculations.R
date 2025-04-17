@@ -1379,6 +1379,7 @@ calculateMixedLayerDepth <- function(ctd,
         axis(side = 4, at = mldDefault)
       }
     } # closes method == 'density'
+    mtext(text = ctd[['startTime']], side = 1, outer = TRUE)
   } # closes debug
 
   # output results in 1-row data.frame
