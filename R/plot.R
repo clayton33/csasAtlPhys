@@ -27,6 +27,10 @@
 #' @param plotScorecard Logical indicating whether or not to plot scorecard on side = 1.
 #' @param scorecardLines Logical indicating whether or not to put vertical lines on scorecard.
 #' @param scorecardLabels Logical indicating whether or not to print `ysc` values in scorecard.
+#' @param scorecardSeparation Value used to denote the separation between the main plot and scorecard.
+#' Suggested to use `par('cin')[2]` (default) and play with that value. If closer is desired, decrease.
+#' @param scorecardWidth Value used to denote the width of the scorecard. Suggested to use
+#' `par('cin')[2]` (default) and play with that value. If wider is desired, increase.
 #'
 #' @details The current format of the figure is for the 2019 research document. Any changes in the future
 #' will be reflected in the code with comments, and here.
@@ -56,7 +60,21 @@ plotAnnualAnomaly <- function(x, y, ysc, xlim, ylim, xlab = TRUE, climatologyYea
                                     plotSd = TRUE, yaxs = TRUE, plotPoints = TRUE, plotRunningAvg = TRUE,
                               plotLmTrend = FALSE, lmResults,
                               plotClimatologyMean = FALSE, climatologyMean,
-                              plotScorecard = FALSE, scorecardLines = TRUE, scorecardLabels = TRUE){
+                              plotScorecard = FALSE, scorecardLines = TRUE, scorecardLabels = TRUE,
+                              scorecardSeparation = par('cin')[2], scorecardWidth = par('cin')[2]){
+  data("anomalyColors")
+  okbreaks <- anomalyColors$breaks <= 3.5
+  okcol <- anomalyColors$breaks < 3.5
+  anomalyColors[['breaks']] <- anomalyColors[['breaks']][okbreaks]
+  anomalyColors[['colors']] <- anomalyColors[['colors']][okcol]
+  # need to extend the top half, keep adding dark red
+  addBreaks <- seq(4.0, 5.5, 0.5)
+  anomalyColors[['breaks']] <- c(anomalyColors[['breaks']], addBreaks)
+  anomalyColors[['colors']] <- c(anomalyColors[['colors']], rep(anomalyColors[['colors']][length(anomalyColors[['colors']])], length(addBreaks)))
+  # need to extend the bottom half, just keep adding the dark blue
+  addBreaks <- seq(-5.5, -4.0, 0.5)
+  anomalyColors[['breaks']] <- c(addBreaks, anomalyColors[['breaks']])
+  anomalyColors[['colors']] <- c(rep(anomalyColors[['colors']][1], length(addBreaks)), anomalyColors[['colors']])
   is.even <- function(x) x %% 2 == 0
   # ylabel
   L <- '['
@@ -81,12 +99,20 @@ plotAnnualAnomaly <- function(x, y, ysc, xlim, ylim, xlab = TRUE, climatologyYea
     omai <- par("mai")
     mai <- rep(0, 4)
     # arguments for paletteCalculations
-    separation <- par('cin')[2]
-    width <- par('cin')[2]
+    # scorecardSeparation
+    # set it if not given
+    separationGiven <- !missing(scorecardSeparation)
+    if(!separationGiven){
+      scorecardSeparation <- par('cin')[2]
+    }
+    widthGiven <- !missing(scorecardWidth)
+    if(!separationGiven){
+      scorecardWidth <- par('cin')[2]
+    }
     pos <- 1
     debug <- 3
     zlab <- ""
-    pc <- paletteCalculations(separation = separation, width = width,
+    pc <- paletteCalculations(separation = scorecardSeparation, width = scorecardWidth,
                               maidiff=mai, pos=pos,
                               zlab=zlab, debug=debug-1)
     # plot
@@ -150,7 +176,7 @@ plotAnnualAnomaly <- function(x, y, ysc, xlim, ylim, xlab = TRUE, climatologyYea
        y = y, col = 'white',
        lwd = 0.6,
        type = 'n',
-       xaxs = 'i',
+       xaxs = ifelse(plotScorecard, 'i', 'r'),
        xlim = xlim, ylim = ylim,
        xaxt = 'n', yaxt = 'n',
        xlab = '', ylab = '')
@@ -508,49 +534,59 @@ plotMonthlyBar <- function(df, ylim, years, plotYear, yearLabel = FALSE, yearLab
 #' @param y a vector indicating what the rows represent for \code{z}
 #' @param z a matrix with the columns being the x-axis and the rows being items
 #' that wish to be stacked.
+#' @param zsc a vector of normalized values of z for the scorecard, ignored if `plotScorecard = FALSE`
 #' @param plotAverage a logical value indicating whether or not to add the average value
 #' from matrix z.
 #' @param ylab1 name for the y-axis on side 2, default is \code{NULL}
 #' @param ylab2 name for the y-axis on side 4 if \code{plotAverage = TRUE}, ignored otherwise, default is
 #' \code{NULL}.
+#' @param xlabels Logical indicating if the x-axis ticks should be annotated.
 #' @param ylim1 limits for the y-axis on side 2, if not supplied, it will be inferred from \code{z}
 #' @param ylim2 limits for the y-axis on side 4 if \code{plotAverage = TRUE}, ignored otherwise. If not
 #' supplied, it will be inferred from the data.
 #' @param ncol supplied to legend, the number of columns in which to set the legend items, default is 1.
+#' @param hclpalette Name of an `hcl.colors` palette. Names can be found by doing `hcl.pals()`, default is
+#' a sequential palette, 'Viridis'.
+#' @param legendLocation Character string, valid choices are `inside` or `outside`. Indicating if the
+#' legend should be place `inside` the plot window (default), or `outside` of the plot window on the right
+#' hand side.
+#' @param legendInset Vector of two values to control placement of legend, see `?legend` for details, when
+#' `legendLocation = 'outside'`.
+#' @param plotScorecard Logical indicating whether or not to plot scorecard on side = 1.
+#' @param scorecardLines Logical indicating whether or not to put vertical lines on scorecard.
+#' @param scorecardLabels Logical indicating whether or not to print `ysc` values in scorecard.
+#' @param scorecardSeparation Value used to denote the separation between the main plot and scorecard.
+#' Suggested to use `par('cin')[2]` (default) and play with that value. If closer is desired, decrease.
+#' @param scorecardWidth Value used to denote the width of the scorecard. Suggested to use
+#' `par('cin')[2]` (default) and play with that value. If wider is desired, increase.
 #'
 #' @author Chantelle Layton
 #'
-#' @importFrom viridis viridis
 #' @importFrom graphics legend
 #'
 #' @export
 #'
 
-plotStackedBarplot <- function(x, y, z, plotAverage = TRUE, ylab1 = NULL, ylab2 = NULL,
-                               ylim1, ylim2, ncol = 1){
+plotStackedBarplot <- function(x, y, z, zsc, plotAverage = TRUE, ylab1 = NULL, ylab2 = NULL,
+                               xaxtlabels = TRUE,
+                               ylim1, ylim2, ncol = 1, hclpalette = 'Viridis', legendLocation = 'inside',
+                               legendInset = c(-0.38, 0),
+                               plotScorecard = FALSE, scorecardLines = TRUE, scorecardLabels = TRUE,
+                               scorecardSeparation = par('cin')[2], scorecardWidth = par('cin')[2]){
   mround <- function(x, base) {base * round(x/base)}
   is.even <- function(x) x %% 2 == 0
   # check to see if ylim1 is given
   if(missing(ylim1)){
-    ylim1 <- range(z, na.rm = TRUE)
+    ylim1 <- range(apply(z, 2, sum, na.rm = TRUE), na.rm = TRUE)
   }
-  # have to split up the matrix into negative and positive
-  zPos <- z
-  zPos[zPos < 0] <- 0
-  zPos[is.na(zPos)] <- 0
-  zNeg <- z
-  zNeg[zNeg > 0] <- 0
-  zNeg[is.na(zNeg)] <- 0
-
-  cexaxis <- 0.8
+  # test barplot to get x values for scorecard so they line up
   # first do the positive values
-  bppos <- barplot(zPos, ylim = ylim1, col = viridis(n = 6), xaxt = 'n',
-                   #legend = y, args.legend = list(x = 'topleft', bty = 'n'), border = NA,
-                   cex.axis = cexaxis)
-  # need to set up the nice xaxis labels using some information from the bar plot
-  # this will be used again below when actually labelling the x-axis, but some information
-  # is needed to do dotted guidelines
-  bp <- c(bppos, bppos[length(bppos)] + mean(diff(bppos)))
+  bpset <- barplot(z, ylim = ylim1, col = col, xaxt = 'n',
+                   #legend = y, args.legend = list(x = 'topleft', bty = 'n'),
+                   xaxs = 'i',
+                   border = NA,
+                   cex.axis = cexaxis, plot = FALSE)
+  # x-axis at and labels
   # need to do some fudging when close to decade ending
   stackedx <- c(x, x[length(x)] + 1)
   xlim <- mround(range(stackedx),5)
@@ -567,6 +603,94 @@ plotStackedBarplot <- function(x, y, z, plotAverage = TRUE, ylab1 = NULL, ylab2 
     xat <- pretty(xlim)
     okIdxAt <- okIdxLab <- unlist(lapply(xat, function(k) which(k == stackedx)))
   }
+  if(plotScorecard){
+    ysc <- zsc
+    data("anomalyColors")
+    # need to extend the bottom half, just keep adding the dark blue
+    addBreaks <- seq(-5.5, -4.0, 0.5)
+    anomalyColors[['breaks']] <- c(addBreaks, anomalyColors[['breaks']])
+    anomalyColors[['colors']] <- c(rep(anomalyColors[['colors']][1], length(addBreaks)), anomalyColors[['colors']])
+    xlim <- range(bpset) + diff(bpset)[1]/2 * c(-1, 1)
+   # plot bottom scorecard first, some code taken from drawPalette()
+    # set up margins
+    omai <- par("mai")
+    mai <- rep(0, 4)
+    # arguments for paletteCalculations
+    # scorecardSeparation
+    # set it if not given
+    separationGiven <- !missing(scorecardSeparation)
+    if(!separationGiven){
+      scorecardSeparation <- par('cin')[2]
+    }
+    widthGiven <- !missing(scorecardWidth)
+    if(!separationGiven){
+      scorecardWidth <- par('cin')[2]
+    }
+    pos <- 1
+    debug <- 3
+    zlab <- ""
+    pc <- paletteCalculations(separation = scorecardSeparation, width = scorecardWidth,
+                              maidiff=mai, pos=pos,
+                              zlab=zlab, debug=debug-1)
+    # plot
+    zm <- matrix(data = ysc, nrow = length(x), ncol = 1)
+    zy <- 1
+    # plot it
+    barxlim <- xlim #+ c(-1, 1)
+    par(mai = ifelse(pc$mai1 > 0, pc$mai1, 0))
+    image(x = bpset, y = zy, z = zm,
+          xlim = barxlim,
+          axes = FALSE, xlab="", ylab="",
+          col = anomalyColors[['colors']],
+          breaks = anomalyColors[['breaks']])
+    rect(par("usr")[1],par("usr")[3],par("usr")[2],par("usr")[4],col = "lightgray")
+    image(x = bpset, y = zy, z = zm,
+          xlim = barxlim,
+          axes = FALSE, xlab="", ylab="",
+          col = anomalyColors[['colors']],
+          breaks = anomalyColors[['breaks']],
+          add = TRUE)
+    box()
+    ## add vertical lines to separate years
+    bpsetdiff <- diff(bpset)[1]
+    if(scorecardLines) {lapply(bpset, function(k) lines(x = rep(k, 2) + bpsetdiff/2, y = c(0, 1) + 0.5))}
+    # axis and labels
+    ## annual
+    if(scorecardLabels) {
+      textcol <- rep('black', length(ysc))
+      whitetext <- ysc <= -3.0 | (ysc >= 3.0 & ysc < 3.5)
+      whitetext[is.na(whitetext)] <- FALSE
+      annualtextat <- bpset
+      if(any(!whitetext)) text(x = annualtextat[!whitetext == TRUE & !is.na(ysc)], y = 1, labels = sprintf('%.1f', ysc[!whitetext == TRUE & !is.na(ysc)]), col = 'black', cex = 0.8, srt = 90)
+      if(any(whitetext)) text(x = annualtextat[whitetext == TRUE], y = 1, labels = sprintf('%.1f', ysc[whitetext == TRUE & !is.na(ysc)]), col = 'white', cex = 0.8, srt = 90)
+    }
+    # x-axis, x-axis labels
+    axis(side = 1, at = bpset[okIdxAt], labels = FALSE)
+    if(xaxtlabels) axis(side = 1, at = bpset[okIdxLab], labels = stackedx[okIdxLab])
+    # reset mai, prep for primary plot
+    par(new=TRUE, mai=pc$mai2)
+    par(mar = par('mar') * c(0, 1, 1, 1) + c(4.5, 0, 0, 0)) # have to change first term of second addition if changes made to colorbar height
+  }
+  # get colors
+  col <- hcl.colors(n = dim(z)[1], palette = hclpalette)
+  # have to split up the matrix into negative and positive
+  zPos <- z
+  zPos[zPos < 0] <- 0
+  zPos[is.na(zPos)] <- 0
+  zNeg <- z
+  zNeg[zNeg > 0] <- 0
+  zNeg[is.na(zNeg)] <- 0
+
+  cexaxis <- 0.8
+  bppos <- barplot(zPos, ylim = ylim1, col = col, xaxt = 'n',
+                   #legend = y, args.legend = list(x = 'topleft', bty = 'n'),
+                   xaxs = 'i',
+                   border = NA,
+                   cex.axis = cexaxis)
+  # need to set up the nice xaxis labels using some information from the bar plot
+  # this will be used again below when actually labelling the x-axis, but some information
+  # is needed to do dotted guidelines
+  bp <- c(bppos, bppos[length(bppos)] + mean(diff(bppos)))
 
   # horizontal and vertical guidelines
   hline <- pretty(ylim1)
@@ -576,22 +700,38 @@ plotStackedBarplot <- function(x, y, z, plotAverage = TRUE, ylab1 = NULL, ylab2 
 
 
   # negative values
-  bpneg <- barplot(zNeg, ylim = ylim1, col = viridis(n = 6), xaxt = 'n',
+  bpneg <- barplot(zNeg, ylim = ylim1, col = col, xaxt = 'n',
                    border = NA, cex.axis = cexaxis, add = TRUE)
-  axis(side = 1, at = bp[okIdxAt], labels = FALSE)
-  axis(side = 1, at = bp[okIdxLab], labels = stackedx[okIdxLab])
 
   abline(h = hline[hline < 0], lty = 'dotted', col = 'lightgrey')
   abline(v = bp[okIdxAt], lty = 'dotted', col = 'lightgrey')
   # add neg bar plot again to get things on top of guidelines
-  bpneg <- barplot(zNeg, ylim = ylim1, col = viridis(n = 6), xaxt = 'n',
+  bpneg <- barplot(zNeg, ylim = ylim1, col = col, xaxt = 'n',
                    border = NA, add = TRUE, cex.axis = cexaxis)
 
   # add the bar plot back on top to get things on top of the guidelines
-  barplot(zPos, ylim = ylim1, col = viridis(n = 6), xaxt = 'n',
-          legend = y, args.legend = list(x = 'topleft', bty = 'n', ncol = ncol), border = NA, add = TRUE,
+  if(legendLocation == 'inside'){
+    legendArgs <- list(x = 'topleft', bty = 'n', ncol = ncol)
+    legend <- y
+  } else {
+    legendArgs <- NULL
+    legend <- NULL
+  }
+  barplot(zPos, ylim = ylim1, col = col, xaxt = 'n',
+          legend = legend, args.legend = legendArgs,
+          border = NA, add = TRUE,
           cex.axis = cexaxis)
   box()
+  if(!plotScorecard){
+    axis(side = 1, at = bpset[okIdxAt], labels = FALSE)
+    if(xaxtlabels) {axis(side = 1, at = bpset[okIdxLab], labels = stackedx[okIdxLab])}
+  }
+  # add legend if legendLocation == 'outside'
+  if(legendLocation == 'outside'){
+    par(xpd=TRUE)
+    legend("topright", inset = legendInset, legend = y, col = col, pch = 15, box.col = 'white')
+    par(xpd=FALSE)
+  }
 
   if(plotAverage){
     par(new = TRUE)
@@ -664,6 +804,10 @@ plotStationLocations <- function(distance, plabel, distanceOffset = NULL, cex = 
 #' @param xlim the x limits (x1, x2) of the plot
 #' @param ylim the y limits (y1, y2) of the plot
 #' @param anomalyColors a list that contains the colors and breaks of the desired color bar for the anomaly scorecard
+#' @param scorecardSeparation Value used to denote the separation between the main plot and scorecard.
+#' Suggested to use `par('cin')[2]` as a starting point and play with that value. If closer is desired, decrease.
+#' @param scorecardWidth Value used to denote the width of the scorecard. Suggested to use
+#' `par('cin')[2]` as a starting point and play with that value. If wider is desired, increase.
 #'
 #' @author Chantelle Layton
 #'
@@ -677,7 +821,9 @@ plotStationLocations <- function(distance, plabel, distanceOffset = NULL, cex = 
 plotMonthlyTimeseriesWAnomalyBar <- function(xYear, xMonth, y, yAnomaly, yNormalizedAnomaly,
                                              xAnnualAnomaly, yAnnualAnomaly, plotAnnual = TRUE,
                                              xClimatology, yClimatology, sdClimatology,
-                                             xlim, ylim, anomalyColors){
+                                             xlim, ylim, anomalyColors,
+                                             scorecardSeparation=par('cin')[2]/2 + 0.1 - 0.05 - 0.0125,
+                                             scorecardWidth=par('cin')[2] + 0.2 - 0.05 - 0.0125){
   # 1. set arguments if missing
   if(missing(xlim)){
     xlim <- range(xMonth)
@@ -708,7 +854,9 @@ plotMonthlyTimeseriesWAnomalyBar <- function(xYear, xMonth, y, yAnomaly, yNormal
   pos <- 1
   debug <- 3
   zlab <- ""
-  pc <- paletteCalculations(maidiff=mai, pos=pos, zlab=zlab, debug=debug-1)
+  pc <- paletteCalculations(separation = scorecardSeparation,
+                            width = scorecardWidth,
+                            maidiff=mai, pos=pos, zlab=zlab, debug=debug-1)
   # plot
   time <- as.POSIXct(paste(xYear, xMonth, '15', sep = '-'), tz = 'UTC')
   palette <- time # this is x

@@ -18,7 +18,9 @@ plotMonthlyTimeseriesWAnomalyBar(
   sdClimatology,
   xlim,
   ylim,
-  anomalyColors
+  anomalyColors,
+  scorecardSeparation = par("cin")[2]/2 + 0.1 - 0.05 - 0.0125,
+  scorecardWidth = par("cin")[2] + 0.2 - 0.05 - 0.0125
 )
 }
 \arguments{
@@ -49,6 +51,12 @@ plotMonthlyTimeseriesWAnomalyBar(
 \item{ylim}{the y limits (y1, y2) of the plot}
 
 \item{anomalyColors}{a list that contains the colors and breaks of the desired color bar for the anomaly scorecard}
+
+\item{scorecardSeparation}{Value used to denote the separation between the main plot and scorecard.
+Suggested to use \code{par('cin')[2]} as a starting point and play with that value. If closer is desired, decrease.}
+
+\item{scorecardWidth}{Value used to denote the width of the scorecard. Suggested to use
+\code{par('cin')[2]} as a starting point and play with that value. If wider is desired, increase.}
 }
 \description{
 Creates a time series plot with the monthly anomaly and annual

@@ -8,12 +8,22 @@ plotStackedBarplot(
   x,
   y,
   z,
+  zsc,
   plotAverage = TRUE,
   ylab1 = NULL,
   ylab2 = NULL,
+  xaxtlabels = TRUE,
   ylim1,
   ylim2,
-  ncol = 1
+  ncol = 1,
+  hclpalette = "Viridis",
+  legendLocation = "inside",
+  legendInset = c(-0.38, 0),
+  plotScorecard = FALSE,
+  scorecardLines = TRUE,
+  scorecardLabels = TRUE,
+  scorecardSeparation = par("cin")[2],
+  scorecardWidth = par("cin")[2]
 )
 }
 \arguments{
@@ -23,6 +33,8 @@ plotStackedBarplot(
 
 \item{z}{a matrix with the columns being the x-axis and the rows being items
 that wish to be stacked.}
+
+\item{zsc}{a vector of normalized values of z for the scorecard, ignored if \code{plotScorecard = FALSE}}
 
 \item{plotAverage}{a logical value indicating whether or not to add the average value
 from matrix z.}
@@ -38,6 +50,30 @@ from matrix z.}
 supplied, it will be inferred from the data.}
 
 \item{ncol}{supplied to legend, the number of columns in which to set the legend items, default is 1.}
+
+\item{hclpalette}{Name of an \code{hcl.colors} palette. Names can be found by doing \code{hcl.pals()}, default is
+a sequential palette, 'Viridis'.}
+
+\item{legendLocation}{Character string, valid choices are \code{inside} or \code{outside}. Indicating if the
+legend should be place \code{inside} the plot window (default), or \code{outside} of the plot window on the right
+hand side.}
+
+\item{legendInset}{Vector of two values to control placement of legend, see \code{?legend} for details, when
+\code{legendLocation = 'outside'}.}
+
+\item{plotScorecard}{Logical indicating whether or not to plot scorecard on side = 1.}
+
+\item{scorecardLines}{Logical indicating whether or not to put vertical lines on scorecard.}
+
+\item{scorecardLabels}{Logical indicating whether or not to print \code{ysc} values in scorecard.}
+
+\item{scorecardSeparation}{Value used to denote the separation between the main plot and scorecard.
+Suggested to use \code{par('cin')[2]} (default) and play with that value. If closer is desired, decrease.}
+
+\item{scorecardWidth}{Value used to denote the width of the scorecard. Suggested to use
+\code{par('cin')[2]} (default) and play with that value. If wider is desired, increase.}
+
+\item{xlabels}{Logical indicating if the x-axis ticks should be annotated.}
 }
 \description{
 This function will plot a stacked bar plot that has negative and

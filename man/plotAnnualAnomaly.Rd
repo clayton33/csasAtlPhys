@@ -23,7 +23,9 @@ plotAnnualAnomaly(
   climatologyMean,
   plotScorecard = FALSE,
   scorecardLines = TRUE,
-  scorecardLabels = TRUE
+  scorecardLabels = TRUE,
+  scorecardSeparation = par("cin")[2],
+  scorecardWidth = par("cin")[2]
 )
 }
 \arguments{
@@ -67,6 +69,12 @@ on the plot}
 \item{scorecardLines}{Logical indicating whether or not to put vertical lines on scorecard.}
 
 \item{scorecardLabels}{Logical indicating whether or not to print \code{ysc} values in scorecard.}
+
+\item{scorecardSeparation}{Value used to denote the separation between the main plot and scorecard.
+Suggested to use \code{par('cin')[2]} (default) and play with that value. If closer is desired, decrease.}
+
+\item{scorecardWidth}{Value used to denote the width of the scorecard. Suggested to use
+\code{par('cin')[2]} (default) and play with that value. If wider is desired, increase.}
 }
 \description{
 Creates a time-series of annual time series in the format that is used
