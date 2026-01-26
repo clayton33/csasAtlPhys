@@ -694,6 +694,9 @@ getShipnameLong <- function(x){
   if(x == 'DY'){
     long <- 'RRS Discovery'
   }
+  if(x == 'LAT'){
+    long <- "L'Atalante"
+  }
 
   if(is.null(long)){
     message(paste('Ship abbreviation ', x, ' not found, please contact author and provide abbreviation and long name'), sep = '\n')
