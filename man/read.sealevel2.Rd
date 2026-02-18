@@ -7,7 +7,7 @@
 read.sealevel2(file, combineData = TRUE)
 }
 \arguments{
-\item{file}{a connection or a character string or vector giving the name(s) of the
+\item{file}{a connection or a character string or list giving the name(s) of the
 file(s) to load.}
 
 \item{combineData}{a logical value indicating whether or not to combine data
