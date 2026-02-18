@@ -1472,14 +1472,12 @@ calculateStratificationIndex <- function(ctd, depth1, depth2, debug = TRUE){
 
 #' @title Rotate axes
 #'
-#' @details This function rotates points in a x-y Cartesian coordinate system. Setting `inverse = TRUE` is effectively the
-#' same as multiplying the provided `angle` by `-1`, so for example, providing parameters `angle = 50` and `inverse = TRUE` would give
-#' the same results providing parameters `angle = -50` and `inverse = FALSE`.
+#' @details This function rotates points counterclockwise in a x-y Cartesian coordinate system.
+#' To do clockwise rotation, simple supply a negative angle value.
 #'
 #' @param x a numeric vector of the x-component value(s)
 #' @param y a numeric vector of the y-component value(s)
 #' @param angle rotation angle in degrees
-#' @param inverse logical value indicating whether or not to do inverse transformation, default is `FALSE`.
 #'
 #' @return list of rotated x and y components as `X` and `Y`.
 #' @author Chantelle Layton
@@ -1488,16 +1486,10 @@ calculateStratificationIndex <- function(ctd, depth1, depth2, debug = TRUE){
 #' @references
 #' 1. Basic explanation for rotation of axes \url{https://en.wikipedia.org/wiki/Rotation_of_axes}
 #'
-rotateAxes <- function(x, y, angle, inverse = FALSE){
+rotateAxes <- function(x, y, angle){
   thetarad <- angle * pi/180
-  if(!inverse){
-    X <- x * cos(thetarad) + y * sin(thetarad)
-    Y <- -x * sin(thetarad) + y * cos(thetarad)
-  }
-  if(inverse){
-    X <- x * cos(thetarad) - y * sin(thetarad)
-    Y <- x * sin(thetarad) + y * cos(thetarad)
-  }
+  X <- (x * cos(thetarad)) - (y * sin(thetarad))
+  Y <- (x * sin(thetarad)) + (y * cos(thetarad))
   invisible(list(X=X, Y=Y))
 }
 
