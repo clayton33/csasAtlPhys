@@ -51,6 +51,7 @@
 #' @importFrom graphics mtext
 #' @importFrom graphics points
 #' @importFrom graphics legend
+#' @importFrom utils data
 #'
 #' @export
 #'
@@ -540,7 +541,7 @@ plotMonthlyBar <- function(df, ylim, years, plotYear, yearLabel = FALSE, yearLab
 #' @param ylab1 name for the y-axis on side 2, default is \code{NULL}
 #' @param ylab2 name for the y-axis on side 4 if \code{plotAverage = TRUE}, ignored otherwise, default is
 #' \code{NULL}.
-#' @param xlabels Logical indicating if the x-axis ticks should be annotated.
+#' @param xatlabels Logical indicating if the x-axis ticks should be annotated.
 #' @param ylim1 limits for the y-axis on side 2, if not supplied, it will be inferred from \code{z}
 #' @param ylim2 limits for the y-axis on side 4 if \code{plotAverage = TRUE}, ignored otherwise. If not
 #' supplied, it will be inferred from the data.
@@ -563,6 +564,8 @@ plotMonthlyBar <- function(df, ylim, years, plotYear, yearLabel = FALSE, yearLab
 #' @author Chantelle Layton
 #'
 #' @importFrom graphics legend
+#' @importFrom grDevices hcl.colors
+#' @importFrom utils data
 #'
 #' @export
 #'
