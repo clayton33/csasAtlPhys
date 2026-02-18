@@ -73,7 +73,7 @@ Suggested to use \code{par('cin')[2]} (default) and play with that value. If clo
 \item{scorecardWidth}{Value used to denote the width of the scorecard. Suggested to use
 \code{par('cin')[2]} (default) and play with that value. If wider is desired, increase.}
 
-\item{xlabels}{Logical indicating if the x-axis ticks should be annotated.}
+\item{xatlabels}{Logical indicating if the x-axis ticks should be annotated.}
 }
 \description{
 This function will plot a stacked bar plot that has negative and

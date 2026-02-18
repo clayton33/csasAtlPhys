@@ -22,7 +22,7 @@ shelfSurveyInterpBarnes(
 )
 }
 \arguments{
-\item{ctd}{a list of \linkS4class{ctd} objects}
+\item{ctd}{a list of \link[oce:ctd-class]{oce::ctd} objects}
 
 \item{fullgrid}{a data.frame containing the full original grid which contains columns, \code{x} which is the longitude,
 \code{y} which is the latitude, \code{depth}, and \code{isBottom} which indicates if the grid point is the bottom depth.}
@@ -34,13 +34,13 @@ indicating if the grid point is a bottom depth point.}
 
 \item{variable}{a character value specifying which variable to extract from the \code{ctd} profiles.}
 
-\item{xg, yg}{vectors defining x and y grids, see \link{interpBarnes} for additional clarification.}
+\item{xg, yg}{vectors defining x and y grids, see \link[oce:interpBarnes]{oce::interpBarnes} for additional clarification.}
 
-\item{xr, yr}{lengths of the x and y grids for barnes interpolation, see \link{interpBarnes} for additional clarification.}
+\item{xr, yr}{lengths of the x and y grids for barnes interpolation, see \link[oce:interpBarnes]{oce::interpBarnes} for additional clarification.}
 
-\item{iterations}{number of iterations for barnes interpolation, see \link{interpBarnes} for additional clarification.}
+\item{iterations}{number of iterations for barnes interpolation, see \link[oce:interpBarnes]{oce::interpBarnes} for additional clarification.}
 
-\item{gamma}{grid-focussing parameter for barnes interpolation, see \link{interpBarnes} for additional clarification.}
+\item{gamma}{grid-focussing parameter for barnes interpolation, see \link[oce:interpBarnes]{oce::interpBarnes} for additional clarification.}
 
 \item{averagingMethod}{a character vector of length one indicating how to vertically average the data to input
 into the barnes interpolation. Current options include \code{mean} and \code{triangleWeight}.}
