@@ -18,6 +18,21 @@ Roxygen: list(markdown = TRUE)
 Encoding: UTF-8
 LazyData: true
 Depends: R (>= 3.6.0)
-Imports: oce, readxl, RCurl, sp, dplyr, rvest, xml2, XML, viridis, smatr, methods, ncdf4, pracma
+Imports: 
+    oce,
+    readxl,
+    RCurl,
+    sp,
+    dplyr,
+    rvest,
+    xml2,
+    XML,
+    viridis,
+    smatr,
+    methods,
+    ncdf4,
+    pracma,
+    rerddap,
+    magrittr
 Suggests: R.utils
 RoxygenNote: 7.3.3

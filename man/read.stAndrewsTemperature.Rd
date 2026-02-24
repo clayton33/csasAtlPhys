@@ -16,7 +16,7 @@ read.stAndrewsTemperature(file, skip = 0, header = TRUE, pressure)
 \item{pressure}{a numerical value of the pressure that the instrument was moored}
 }
 \value{
-a ctd object with \code{deploymentType = "moored"}.
+a ctd object with \code{deploymentType = "moored"} or a rsk object.
 }
 \description{
 Read non-archived St.Andrews moored temperature data
@@ -24,8 +24,8 @@ Read non-archived St.Andrews moored temperature data
 \details{
 This function attempts to read in a non-archived file that is obtained
 from a technician at the St.Andrews Biological Station in St.Andrews, New Brunswick.
-This is in no way a standard formatted file, as they are recieved in various
-formats year to year. Note that pressure must be indicated as the files recieved have
+This is in no way a standard formatted file, as they are received in various
+formats year to year. Note that pressure must be indicated as the files received have
 no pressure information.
 }
 \author{

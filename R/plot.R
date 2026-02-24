@@ -541,7 +541,7 @@ plotMonthlyBar <- function(df, ylim, years, plotYear, yearLabel = FALSE, yearLab
 #' @param ylab1 name for the y-axis on side 2, default is \code{NULL}
 #' @param ylab2 name for the y-axis on side 4 if \code{plotAverage = TRUE}, ignored otherwise, default is
 #' \code{NULL}.
-#' @param xatlabels Logical indicating if the x-axis ticks should be annotated.
+#' @param xaxtlabels Logical indicating if the x-axis ticks should be annotated.
 #' @param ylim1 limits for the y-axis on side 2, if not supplied, it will be inferred from \code{z}
 #' @param ylim2 limits for the y-axis on side 4 if \code{plotAverage = TRUE}, ignored otherwise. If not
 #' supplied, it will be inferred from the data.
@@ -675,7 +675,7 @@ plotStackedBarplot <- function(x, y, z, zsc, plotAverage = TRUE, ylab1 = NULL, y
     par(mar = par('mar') * c(0, 1, 1, 1) + c(4.5, 0, 0, 0)) # have to change first term of second addition if changes made to colorbar height
   }
   # get colors
-  col <- hcl.colors(n = dim(z)[1], palette = hclpalette)
+  col <- grDevices::hcl.colors(n = dim(z)[1], palette = hclpalette)
   # have to split up the matrix into negative and positive
   zPos <- z
   zPos[zPos < 0] <- 0

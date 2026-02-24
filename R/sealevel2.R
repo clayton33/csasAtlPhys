@@ -30,7 +30,7 @@ read.sealevel2 <- function(file, combineData = TRUE){
                                  elevation = dd[['elevation']]
                                  ))
   } else {
-    dd <- lapply(file, function(k) if(length(k) == 1) read.sealevel(k) else read.sealevel.gc2026(k))
+    dd <- lapply(file, function(k) if(length(k) == 1) read.sealevel(k) else oce::read.sealevel.gc2026(k))
     if(combineData){
       k <- dd[[1]]
       dl <- list(stationNumber = ifelse('stationNumber' %in% names(k@metadata), k[['stationNumber']], k[['Station Code - Code de la station']]),

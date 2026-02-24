@@ -44,6 +44,8 @@ from matrix z.}
 \item{ylab2}{name for the y-axis on side 4 if \code{plotAverage = TRUE}, ignored otherwise, default is
 \code{NULL}.}
 
+\item{xaxtlabels}{Logical indicating if the x-axis ticks should be annotated.}
+
 \item{ylim1}{limits for the y-axis on side 2, if not supplied, it will be inferred from \code{z}}
 
 \item{ylim2}{limits for the y-axis on side 4 if \code{plotAverage = TRUE}, ignored otherwise. If not
@@ -72,8 +74,6 @@ Suggested to use \code{par('cin')[2]} (default) and play with that value. If clo
 
 \item{scorecardWidth}{Value used to denote the width of the scorecard. Suggested to use
 \code{par('cin')[2]} (default) and play with that value. If wider is desired, increase.}
-
-\item{xatlabels}{Logical indicating if the x-axis ticks should be annotated.}
 }
 \description{
 This function will plot a stacked bar plot that has negative and

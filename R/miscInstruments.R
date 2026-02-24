@@ -62,15 +62,16 @@ read.minilog <- function(file, skipStart = NA, skipEnd = NA, skip = 8, pressure)
 #'
 #' @details This function attempts to read in a non-archived file that is obtained
 #' from a technician at the St.Andrews Biological Station in St.Andrews, New Brunswick.
-#' This is in no way a standard formatted file, as they are recieved in various
-#' formats year to year. Note that pressure must be indicated as the files recieved have
+#' This is in no way a standard formatted file, as they are received in various
+#' formats year to year. Note that pressure must be indicated as the files received have
 #' no pressure information.
 #'
-#' @return a ctd object with `deploymentType = "moored"`.
+#' @return a ctd object with `deploymentType = "moored"` or a rsk object.
 #'
 #' @author Chantelle Layton
 #'
 #' @importFrom oce as.ctd
+#' @importFrom oce read.rsk
 #' @importFrom utils read.csv
 #'
 #' @export
@@ -87,61 +88,64 @@ read.stAndrewsTemperature <- function(file, skip = 0, header = TRUE, pressure){
   } else{
     message('File format not yet supported.')
   }
+  if(!ext %in% "rsk"){
+    ddnames <- tolower(names(dd))
+    ddnames <- gsub('\\.', '', ddnames) # remove all '.' from names
+    okdatetime <- grepl('date|time', ddnames) # switched back to date|time
+    if(length(ddnames[okdatetime]) > 1){
+      okdate <- grepl('date', ddnames)
+      oktime <- grepl('time$', ddnames)
+      # sometimes there is a column with both time and date due to someone manually modifying the
+      # data. Omit these rows
+      okdt <- oktime & okdate
+      okdate[okdt] <- oktime[okdt] <- FALSE
+      if(any(oktime)){
+        date <- dd[,okdate]
+        time <- dd[,oktime]
+        datetime <- paste(date, time, sep = ' ')
+      } else { # the case where there was only a Date.Time vector, and it's been split up in hour and minute
+        okhour <- grepl('^hour', ddnames)
+        okminute <- grepl('^minute', ddnames)
+        datetime <- paste(dd[,okdate], paste(dd[,okhour], dd[,okminute], '00', sep = ':'), sep = ' ')
+      }
 
-  ddnames <- tolower(names(dd))
-  ddnames <- gsub('\\.', '', ddnames) # remove all '.' from names
-  okdatetime <- grepl('date|time', ddnames) # switched back to date|time
-  if(length(ddnames[okdatetime]) > 1){
-    okdate <- grepl('date', ddnames)
-    oktime <- grepl('time$', ddnames)
-    # sometimes there is a column with both time and date due to someone manually modifying the
-    # data. Omit these rows
-    okdt <- oktime & okdate
-    okdate[okdt] <- oktime[okdt] <- FALSE
-    if(any(oktime)){
-      date <- dd[,okdate]
-      time <- dd[,oktime]
-      datetime <- paste(date, time, sep = ' ')
-    } else { # the case where there was only a Date.Time vector, and it's been split up in hour and minute
+    }else if (any(grepl('^month', ddnames)) & !any(okdatetime)){
+      okyear <- grepl('^year', ddnames)
+      okmonth <- grepl('^month', ddnames)
+      okday <- grepl('^day$', ddnames)
+      okhour <- grepl('^hour', ddnames)
+      okminute <- grepl('^minute', ddnames)
+      datetime <- paste(paste(dd[,okyear], dd[,okmonth], dd[,okday], sep = '/'),
+                        paste(dd[,okhour], dd[,okminute], '00', sep = ':'),
+                        sep = ' ')
+    } else if (any(grepl('^hour', ddnames))) {
+      okdate <- grepl('^date', ddnames)
       okhour <- grepl('^hour', ddnames)
       okminute <- grepl('^minute', ddnames)
       datetime <- paste(dd[,okdate], paste(dd[,okhour], dd[,okminute], '00', sep = ':'), sep = ' ')
+    } else {
+      datetime <- dd[,okdatetime]
     }
+    emptyns <- datetime == "" # find empty indicies
+    empty1s <- datetime == " "
+    empty <- emptyns | empty1s
+    dd <- dd[!empty,]
+    datetime <- gsub('-','/', datetime) # some files have mixed '-' and '/' in the dates, so just use '/
+    datetimect <- as.POSIXct(datetime[!empty], tryFormats = c('%m/%d/%y %H:%M',
+                                                              '%m/%d/%Y %H:%M',
+                                                              '%y/%m/%d %H:%M:%OS',
+                                                              '%Y/%m/%d %H:%M:%OS',
+                                                              '%d/%b/%y %H:%M:%OS'), tz = 'UTC')
 
-  }else if (any(grepl('^month', ddnames)) & !any(okdatetime)){
-    okyear <- grepl('^year', ddnames)
-    okmonth <- grepl('^month', ddnames)
-    okday <- grepl('^day$', ddnames)
-    okhour <- grepl('^hour', ddnames)
-    okminute <- grepl('^minute', ddnames)
-    datetime <- paste(paste(dd[,okyear], dd[,okmonth], dd[,okday], sep = '/'),
-                      paste(dd[,okhour], dd[,okminute], '00', sep = ':'),
-                      sep = ' ')
-  } else if (any(grepl('^hour', ddnames))) {
-    okdate <- grepl('^date', ddnames)
-    okhour <- grepl('^hour', ddnames)
-    okminute <- grepl('^minute', ddnames)
-    datetime <- paste(dd[,okdate], paste(dd[,okhour], dd[,okminute], '00', sep = ':'), sep = ' ')
+    oktemp <- which(grepl('temperature|temp', ddnames))[1]
+    as.ctd(pressure = rep(pressure, length(datetimect)),
+           conductivity = rep(NA, length(datetimect)),
+           temperature = dd[,oktemp], # in the event there are more than one row of data
+           time = datetimect,
+           deploymentType = 'moored')
   } else {
-    datetime <- dd[,okdatetime]
+    oce::read.rsk(file)
   }
-  emptyns <- datetime == "" # find empty indicies
-  empty1s <- datetime == " "
-  empty <- emptyns | empty1s
-  dd <- dd[!empty,]
-  datetime <- gsub('-','/', datetime) # some files have mixed '-' and '/' in the dates, so just use '/
-  datetimect <- as.POSIXct(datetime[!empty], tryFormats = c('%m/%d/%y %H:%M',
-                                                            '%m/%d/%Y %H:%M',
-                                                            '%y/%m/%d %H:%M:%OS',
-                                                            '%Y/%m/%d %H:%M:%OS',
-                                                            '%d/%b/%y %H:%M:%OS'), tz = 'UTC')
-
-  oktemp <- which(grepl('temperature|temp', ddnames))[1]
-  as.ctd(pressure = rep(pressure, length(datetimect)),
-         conductivity = rep(NA, length(datetimect)),
-         temperature = dd[,oktemp], # in the event there are more than one row of data
-         time = datetimect,
-         deploymentType = 'moored')
 }
 
 #' @title Read sealog-T file

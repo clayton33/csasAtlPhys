@@ -89,3 +89,97 @@ read.nao <- function(file){
                      value = datav)
   }
 }
+
+#' @title Download and Cache the Hurrell Principal Component North Atlantic Oscillation data
+#'
+#' @description Data are downloaded from the National Science Foundation (NSF) National Center for Atmospheric
+#' Research (NCAR) Climate Data Guide website.
+#'
+#' @details The data are downloaded from
+#' \url{'https://climatedataguide.ucar.edu/climate-data/hurrell-north-atlantic-oscillation-nao-index-pc-based'}
+#' using [utils::download.file()]
+#' pointed to the National Science Foundation (NSF) National Center for Atmospheric
+#' Research (NCAR) Climate Data Guide website. Caution: the
+#' location that these data are held could potentially vary, so it could work one
+#' day, and fail the next.
+#'
+#' @param destdir Optional string indicating the directory in which to store downloaded files.
+#' If not supplied, "." is used, i.e. the data file is stored in the present working directory.
+#' @param destfile Optional string indicating the name of the file. If not supplied, the file
+#' name as provided on the website.
+#' @param which Required string indicating which flavour of the NAO should be downloaded, current options
+#' are 'annual', 'monthly', 'DJF', 'DJFM', 'MAM', 'JJA', 'SON', see the website for details. Default
+#' is 'DJFM'.
+#'
+#' @importFrom utils download.file
+#' @importFrom rvest read_html
+#' @importFrom rvest html_elements
+#' @importFrom rvest html_attr
+#'
+#' @export
+
+download.nao.hurrell <- function(destdir = '.', destfile = NULL, which = 'DJFM'){
+  # check valid which
+  if(!which %in% c('annual', 'monthly', 'DJF', 'DJFM', 'MAM', 'JJA', 'SON')){
+    stop(paste0("Supplied parameter for 'which',", which, " is not a valid option. If you believe this option is valid
+                   please modify code."))
+
+  }
+  # check if destdir exists, if not create it
+  if(!dir.exists(destdir)){
+    dir.create(destdir, recursive = TRUE)
+  }
+  # define url to download data
+  url <- 'https://climatedataguide.ucar.edu/climate-data/hurrell-north-atlantic-oscillation-nao-index-pc-based'
+  # when the analysis is updated, the updated data is in the path to download the file
+  #   therefore, we'll need to interrogate the website to get the links
+  webpage <- read_html(url)
+  links <- webpage %>% html_elements("a") %>% html_attr("href")
+  # find the links
+  oklinks <- grepl('/sites/default/files/\\d+\\-\\d+/nao.*\\.txt', links)
+  fileLinks <- links[oklinks]
+  # get link based on supplied parameter 'which'
+  okwhich <- grepl(paste0('nao_pc_', tolower(which), '\\.txt'), basename(fileLinks))
+  if(all(!okwhich)){
+    stop(paste0("Unable to find link on webpage for supplied parameter 'which' = ", which, ". Please check website."))
+  } else {
+    # the link is only partial, need to define the 'baseUrl' name
+    baseUrl <- 'https://climatedataguide.ucar.edu'
+    # url path to file
+    fileUrl <- fileLinks[okwhich]
+    # download data
+    ## define destfile
+    destfile <- basename(fileUrl)
+    ## download
+    download.file(url = paste0(baseUrl, fileUrl),
+                  destfile = paste(destdir, destfile, sep = '/'))
+  }
+}
+
+#' @title Read Hurrell North Atlantic Oscillation Index file
+#'
+#' @description This function reads in the Hurrell North Atlantic Oscillation index.
+#'
+#' @param file a connection or a character string giving the name of the file to load.
+#'
+#' @return a data frame with columns named year, and value
+#'
+#' @author Chantelle Layton
+#'
+#' @export
+#'
+
+read.nao.hurrell <- function(file){
+    rl <- readLines(con = file)
+    # first line tells us what it is
+    # first column is year, second is value
+    rldata <- rl[-1]
+    # remove whitespace
+    data <- trimws(x = rldata)
+    # split based on space
+    ss <- strsplit(x = data, split = '\\s+')
+    # create data.frame
+    df <- data.frame(year = as.numeric(unlist(lapply(ss, function(k) k[1]))),
+                     value = as.numeric(unlist(lapply(ss, function(k) k[2]))))
+    df
+}
