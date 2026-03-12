@@ -551,6 +551,8 @@ plotMonthlyBar <- function(df, ylim, years, plotYear, yearLabel = FALSE, yearLab
 #' @param legendLocation Character string, valid choices are `inside` or `outside`. Indicating if the
 #' legend should be place `inside` the plot window (default), or `outside` of the plot window on the right
 #' hand side.
+#' @param legend.x Character string indicating the location of the legend if legendLocation is
+#' TRUE. Default value is 'topleft'.
 #' @param legendInset Vector of two values to control placement of legend, see `?legend` for details, when
 #' `legendLocation = 'outside'`.
 #' @param plotScorecard Logical indicating whether or not to plot scorecard on side = 1.
@@ -572,8 +574,8 @@ plotMonthlyBar <- function(df, ylim, years, plotYear, yearLabel = FALSE, yearLab
 
 plotStackedBarplot <- function(x, y, z, zsc, plotAverage = TRUE, ylab1 = NULL, ylab2 = NULL,
                                xaxtlabels = TRUE,
-                               ylim1, ylim2, ncol = 1, hclpalette = 'Viridis', legendLocation = 'inside',
-                               legendInset = c(-0.38, 0),
+                               ylim1, ylim2, ncol = 1, hclpalette = 'Viridis',
+                               legendLocation = 'inside', legend.x = 'topleft', legendInset = c(-0.38, 0),
                                plotScorecard = FALSE, scorecardLines = TRUE, scorecardLabels = TRUE,
                                scorecardSeparation = par('cin')[2], scorecardWidth = par('cin')[2]){
   mround <- function(x, base) {base * round(x/base)}
@@ -714,7 +716,7 @@ plotStackedBarplot <- function(x, y, z, zsc, plotAverage = TRUE, ylab1 = NULL, y
 
   # add the bar plot back on top to get things on top of the guidelines
   if(legendLocation == 'inside'){
-    legendArgs <- list(x = 'topleft', bty = 'n', ncol = ncol)
+    legendArgs <- list(x = legend.x, bty = 'n', ncol = ncol)
     legend <- y
   } else {
     legendArgs <- NULL

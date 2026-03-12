@@ -18,6 +18,7 @@ plotStackedBarplot(
   ncol = 1,
   hclpalette = "Viridis",
   legendLocation = "inside",
+  legend.x = "topleft",
   legendInset = c(-0.38, 0),
   plotScorecard = FALSE,
   scorecardLines = TRUE,
@@ -59,6 +60,9 @@ a sequential palette, 'Viridis'.}
 \item{legendLocation}{Character string, valid choices are \code{inside} or \code{outside}. Indicating if the
 legend should be place \code{inside} the plot window (default), or \code{outside} of the plot window on the right
 hand side.}
+
+\item{legend.x}{Character string indicating the location of the legend if legendLocation is
+TRUE. Default value is 'topleft'.}
 
 \item{legendInset}{Vector of two values to control placement of legend, see \code{?legend} for details, when
 \code{legendLocation = 'outside'}.}
