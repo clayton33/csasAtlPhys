@@ -802,6 +802,7 @@ plotStationLocations <- function(distance, plabel, distanceOffset = NULL, cex = 
 #' @param yNormalizedAnomaly a numeric vector of the associated normalized anomaly with xYear and xMonth
 #' @param xAnnualAnomaly a numeric vector of the year for the annual anomaly
 #' @param yAnnualAnomaly a numeric vector of the annual anomaly
+#' @param yAnnualNormalizedAnomaly a numeric vector of the annual normalized anomaly
 #' @param plotAnnual a logical value indicating if the annual anomaly should be shown in the scorecard bar, default is `TRUE`
 #' @param xClimatology a numeric vector of the months for the monthly climatology
 #' @param yClimatology a numeric vector of the climatology values for associated month
@@ -824,7 +825,8 @@ plotStationLocations <- function(distance, plabel, distanceOffset = NULL, cex = 
 #' @export
 
 plotMonthlyTimeseriesWAnomalyBar <- function(xYear, xMonth, y, yAnomaly, yNormalizedAnomaly,
-                                             xAnnualAnomaly, yAnnualAnomaly, plotAnnual = TRUE,
+                                             xAnnualAnomaly, yAnnualAnomaly, yAnnualNormalizedAnomaly,
+                                             plotAnnual = TRUE,
                                              xClimatology, yClimatology, sdClimatology,
                                              xlim, ylim, anomalyColors,
                                              scorecardSeparation=par('cin')[2]/2 + 0.1 - 0.05 - 0.0125,
@@ -869,26 +871,30 @@ plotMonthlyTimeseriesWAnomalyBar <- function(xYear, xMonth, y, yAnomaly, yNormal
   #cm <- colormap(z = yAnomaly, breaks = anomalyColors[['breaks']], col = anomalyColors[['colors']], missingColor = 'lightgray')
   #col <- cm$zcol
   uxYear <- unique(xYear)
-  zannual <- NULL
+  zannual <- znannual <- NULL
   for(iy in 1:length(uxYear)){
     lookyear <- uxYear[iy]
     ok <- xYear == lookyear
     nmon <- length(xMonth[ok])
     okannual <- xAnnualAnomaly == lookyear
     aa <- yAnnualAnomaly[okannual]
+    ana <- yAnnualNormalizedAnomaly[okannual]
     if(any(okannual)){
       annualadd <- rep(yAnnualAnomaly[okannual], nmon)
+      annualnadd <- rep(yAnnualNormalizedAnomaly[okannual], nmon)
     } else {
       annualadd <- rep(NA, nmon)
+      annualnadd <- rep(NA, nmon)
     }
     zannual <- c(zannual, annualadd)
+    znannual <- c(znannual, annualnadd)
   }
   #zannual <- unlist(lapply(yAnnualAnomaly, rep, 12))
   if(plotAnnual){
     z <- matrix(nrow = length(time), ncol = 2)
     z[, 2] <- yAnomaly
     #z[, 1] <- zannual[1:length(time)] # watch this
-    z[, 1] <- zannual
+    z[, 1] <- znannual
     zy <- c(1,2)
   } else { # only monthly
     z <- matrix(nrow = length(time), ncol = 1)

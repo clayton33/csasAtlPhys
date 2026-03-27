@@ -12,6 +12,7 @@ plotMonthlyTimeseriesWAnomalyBar(
   yNormalizedAnomaly,
   xAnnualAnomaly,
   yAnnualAnomaly,
+  yAnnualNormalizedAnomaly,
   plotAnnual = TRUE,
   xClimatology,
   yClimatology,
@@ -37,6 +38,8 @@ plotMonthlyTimeseriesWAnomalyBar(
 \item{xAnnualAnomaly}{a numeric vector of the year for the annual anomaly}
 
 \item{yAnnualAnomaly}{a numeric vector of the annual anomaly}
+
+\item{yAnnualNormalizedAnomaly}{a numeric vector of the annual normalized anomaly}
 
 \item{plotAnnual}{a logical value indicating if the annual anomaly should be shown in the scorecard bar, default is \code{TRUE}}
 
