@@ -697,6 +697,9 @@ getShipnameLong <- function(x){
   if(x == 'LAT'){
     long <- "L'Atalante"
   }
+  if(x == 'CAB'){
+    long <- paste(gettext('CCGS', domain = 'R-csasAtlPhys'), 'John Cabot')
+  }
 
   if(is.null(long)){
     message(paste('Ship abbreviation ', x, ' not found, please contact author and provide abbreviation and long name'), sep = '\n')
