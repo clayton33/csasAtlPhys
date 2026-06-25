@@ -55,9 +55,6 @@ WGOH regional group. It is the region the timeseries is reported in.}
 \item{latitude}{A numeric vector of length one. Nominal latitude position (for plotting purposes).
 Max 3 decimal places.}
 
-\item{longitude}{A numeric vector of length one. Nominal latitude position (for plotting purposes).
-Max 3 decimal places.}
-
 \item{detailedLocation}{A Well Known Text (WKT) formatted object to describe more detailed position
 information (e.g. point, linestring, polygon, multilinestring, multipoint, multipolygon).}
 
@@ -98,6 +95,9 @@ in quotation marks to avoid comma's in the reference causing issues in the CSV f
 \item{doi}{An optional character vector of length one. The DOI of the dataset.}
 
 \item{website}{An optional character vector of length one. The website for the project or dataset.}
+
+\item{lloongitude}{A numeric vector of length one. Nominal latitude position (for plotting purposes).
+Max 3 decimal places.}
 }
 \description{
 Outputs a ICES WGOH formatted file for data submission. Based off the standard format provided on 20251109.

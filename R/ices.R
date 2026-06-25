@@ -20,7 +20,7 @@
 #' WGOH regional group. It is the region the timeseries is reported in.
 #' @param latitude A numeric vector of length one. Nominal latitude position (for plotting purposes).
 #' Max 3 decimal places.
-#' @param lloongitude A numeric vector of length one. Nominal latitude position (for plotting purposes).
+#' @param longitude A numeric vector of length one. Nominal latitude position (for plotting purposes).
 #' Max 3 decimal places.
 #' @param detailedLocation A Well Known Text (WKT) formatted object to describe more detailed position
 #' information (e.g. point, linestring, polygon, multilinestring, multipoint, multipolygon).
