@@ -16,23 +16,30 @@
 #'
 
 download.ahccd <- function(destdir = '.') {
-
+  # define site and file names
+  # ftp <- 'ftp://ccrp.tor.ec.gc.ca/pub/AHCCD/'
+  # define two files associated with temperature.
+  # ftpFile <- 'Homog_monthly_mean_temp.zip'
+  # ftpStnFile <- 'Temperature_Stations.xls'
   # source location of the data changed somewhere in first half of 2022
   # most likely due to various popular web browsers not supporting ftp sites anymore
-  #ftp <- 'ftp://ccrp.tor.ec.gc.ca/pub/AHCCD/'
-  site <- 'http://crd-data-donnees-rdc.ec.gc.ca/CDAS/products/AHCCD/'
+  # site <- 'http://crd-data-donnees-rdc.ec.gc.ca/CDAS/products/AHCCD/'
   # define two files associated with temperature.
-  #ftpFile <- 'Homog_monthly_mean_temp.zip'
-  file <- 'Homog_monthly_mean_temp_Gen3.zip'
-  #ftpStnFile <- 'Temperature_Stations.xls'
-  stnFile <- 'Temperature_Stations_Gen3.xls'
-
+  # file <- 'Homog_monthly_mean_temp_Gen3.zip'
+  # stnFile <- 'Temperature_Stations_Gen3.xls'
+  # source locations of data changed, again !
+  # looks like this data source ends in 2023
+  #site <- 'https://data-donnees.az.ec.gc.ca/data/climate/scientificknowledge/canadian-homogenized-surface-air-temperatures?lang=en'
+  site <- 'https://data-donnees.az.ec.gc.ca/api/file?path=%2Fclimate%2Fscientificknowledge%2Fcanadian-homogenized-surface-air-temperatures%2FCanHomT_mlyV3.1.zip'
+  # define two files associated with temperature.
+  file <- 'CanHomT_mlyV3.1.zip'
   if(!dir.exists(destdir)){
     dir.create(destdir, recursive = TRUE)
   }
-
-  download.file(url = paste0(site, file), destfile = paste(destdir, file, sep = '/'), mode = 'wb')
-  download.file(url = paste0(site, stnFile), destfile = paste(destdir, stnFile, sep = '/'), mode = 'wb')
+  #download.file(url = paste0(site, file), destfile = paste(destdir, file, sep = '/'), mode = 'wb', method = 'curl')
+  download.file(url = site, destfile = paste(destdir, file, sep = '/'), mode = 'wb')
+  # as of 20260612 the station file does not exist
+  #download.file(url = paste0(site, stnFile), destfile = paste(destdir, stnFile, sep = '/'), mode = 'wb')
 }
 
 
@@ -164,6 +171,92 @@ read.ahccd <- function(file, longitude = NULL, latitude = NULL, elevation = NULL
        updatedTo = metaEng[7],
        data = df)
 }
+
+#' @title Read AHCCD data, 2026 version
+#'
+#' @description
+#' Read Adjusted and Homogenized Canadian Climate `CanHomT_mlyV3.1` Data files. Data can be downloaded from
+#' the web site https://data-donnees.az.ec.gc.ca/data/climate/scientificknowledge/canadian-homogenized-surface-air-temperatures?lang=en . It is required that the data file be downloaded.
+#' Unlike previous available versions of this data, an associated station file is not provided.
+#'
+#' Flag values are not retained at the moment
+#'
+#' @param file 	a connection or a character string giving the name of the file to load.
+#' @param longitude optional numerical value containing longitude in decimal degrees,
+#' positive in the eastern hemisphere.
+#' @param latitude optional numerical value containing the latitude in decimal degrees,
+#' positive in the northern hemisphere.
+#' @param elevation optional numerical value containing the elevation of the station in meters.
+#' @param temperatureVar a character vector indicating which temperature variable to output. Options include
+#'        HomT, Adjusted, Original. Default is Adjusted. See details for a description of each.
+#'
+#' @details
+#' HomT is Homogenized temperature data. Adjusted is data that has been adjusted to remove the effects of the observing
+#' time change in 1961 or changed because of quality control. Original is origical archived data.
+#'
+#' @importFrom utils read.table
+#'
+#' @return named list of data for each station provided in stns
+#' @export
+read.ahccd.2026 <- function(file, longitude = NULL, latitude = NULL, elevation = NULL, temperatureVar = 'Adjusted'){
+  # check temperatureVar is valid
+  if(!temperatureVar %in% c('HomT', 'Adjusted', 'Original')){
+    stop(paste(temperatureVar, 'is not a valid temperature variable, please provide a valid value (see documentation)'))
+  }
+  lines <- readLines(file, encoding = 'UTF-8')
+  headerEng <- grep("^#YYYY*", lines)
+  headerFre <- grep("^#ANNÉE*", lines) # this is the last header line
+  # get header
+  heading <- strsplit(lines[headerEng], split = '\\s+')[[1]]
+  # remove '#'
+  heading <- gsub('\\#', '', heading)
+  # omit 'flg' header names
+  heading <- heading[heading != 'flg']
+  # actually deliminated by spaces but read.table isn't having it
+  data <- read.table(file, sep = ",", skip = headerFre, stringsAsFactors = FALSE)
+  # split each line by \\s+
+  data <- apply(X = data,
+              MARGIN = 1,
+              FUN = function(k) strsplit(k, split = '\\s+')[[1]])
+  ## pull out data and flags
+  ##  flags are upper or lowercase letters and there can be more than one !
+  ##  and they are provided for the Adjusted and Original data columns
+  ##  i'm not going to retain the flags for now
+  data <- lapply(data, function(k) k[!grepl(pattern = "^[a-zA-Z]+$", k)])
+  ## omit first column (it's blank)
+  data <- lapply(data, function(k) k[-1])
+  ## go through each line and check if the length matches with
+  ##    the length of 'heading', if not, add a blank space
+  ##    (one file was missing `SourceClimID` !!)
+  for(id in 1:length(data)){
+    if(length(data[[id]]) != length(heading)){
+      data[[id]] <- c(data[[id]], '')
+    }
+  }
+  # matrix of data
+  datam <- do.call('rbind', data)
+  # remove NA data
+  datam[datam==-99.9] <- NA
+  # add heading names as columns
+  colnames(datam) <- heading
+  # format as data.frame
+  datadf <- as.data.frame(datam)
+  # put data into data.frame
+  df <- data.frame(year = as.numeric(datadf[['YYYY']]),
+                   month = as.numeric(datadf[['MM']]),
+                   temperature = as.numeric(datadf[[temperatureVar]]), # wondering what to name this, obviously this fn could be used to read other ahccd data...
+                   #flag = flag,
+                   stringsAsFactors = FALSE)
+  list(stationId = paste(unique(datadf[['SourceClimID']]), collapse = ', '),
+       #stationName = gsub('_', ' ', metaEng[2]),
+       #province = metaEng[3],
+       latitude = ifelse(is.null(latitude), '', as.numeric(latitude)),
+       longitude = ifelse(is.null(longitude), '', as.numeric(longitude)),
+       elevation = ifelse(is.null(elevation), '', as.numeric(elevation)),
+       #updatedTo = metaEng[7],
+       data = df)
+}
+
 
 #' @title Find missing air temperature data
 #'

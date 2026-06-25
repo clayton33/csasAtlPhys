@@ -244,7 +244,7 @@ combineAhccdAndClimateSummary <- function(ahccd, climateSummary){
   # 1. the stationId matches
   # 2. the station name of the climateSummary matches portion of ahccd
   # 3. the distance between stations is within
-  ok <- (ahccd[['stationId']] == climateSummary[['stationId']]) |
+  ok <- (climateSummary[['stationId']] %in% strsplit(ahccd[['stationId']], ', ')[[1]]) |
     grepl(ahccd[['stationName']], climateSummary[['stationName']]) |
     (geodDist(longitude1 = as.numeric(ahccd[['longitude']]),
               latitude1 = as.numeric(ahccd[['latitude']]),
@@ -255,7 +255,7 @@ combineAhccdAndClimateSummary <- function(ahccd, climateSummary){
     cdata <- climateSummary[['data']]
     okadd <- apply(cdata, 1, function(k) {!(k[['year']] %in% adata[['year']] & k[['month']] %in% adata[['month']])})
     okcols <- names(cdata) %in% c('year', 'month', 'meanTemperature')
-    cdatadd <- data.frame(cdata[okadd,okcols], flag = rep('u', dim(cdata[okadd,])[1]))
+    cdatadd <- data.frame(cdata[okadd,okcols])#, flag = rep('u', dim(cdata[okadd,])[1]))
     # re-name 'meanTemperature' to be able to rbind
     names(cdatadd)[names(cdatadd) %in% 'meanTemperature'] <- 'temperature'
     # rbind ahccd and climateSummary
