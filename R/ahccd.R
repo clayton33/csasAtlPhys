@@ -29,10 +29,16 @@ download.ahccd <- function(destdir = '.') {
   # stnFile <- 'Temperature_Stations_Gen3.xls'
   # source locations of data changed, again !
   # looks like this data source ends in 2023
-  #site <- 'https://data-donnees.az.ec.gc.ca/data/climate/scientificknowledge/canadian-homogenized-surface-air-temperatures?lang=en'
-  site <- 'https://data-donnees.az.ec.gc.ca/api/file?path=%2Fclimate%2Fscientificknowledge%2Fcanadian-homogenized-surface-air-temperatures%2FCanHomT_mlyV3.1.zip'
+  # 20260611
+  ## the site (unable to use download.file)
+  # site <- 'https://data-donnees.az.ec.gc.ca/data/climate/scientificknowledge/canadian-homogenized-surface-air-temperatures?lang=en'
+  ## the api link (better, able to use download.file)
+  # site <- 'https://data-donnees.az.ec.gc.ca/api/file?path=%2Fclimate%2Fscientificknowledge%2Fcanadian-homogenized-surface-air-temperatures%2FCanHomT_mlyV3.1.zip'
+  # 20260817
+  site <- 'https://data-donnees.az.ec.gc.ca/api/file?path=%2Fclimate%2Fscientificknowledge%2Fadjusted-and-homogenized-canadian-climate-data-ahccd%2Fcanadian-homogenized-surface-air-temperatureCanHomTV4%2FV4%2FCanHomT_mlyV4.tar.gz'
   # define two files associated with temperature.
-  file <- 'CanHomT_mlyV3.1.zip'
+  # file <- 'CanHomT_mlyV3.1.zip' # 20260611
+  file <- 'CanHomT_mlyV4.tar.gz' # 20260817
   if(!dir.exists(destdir)){
     dir.create(destdir, recursive = TRUE)
   }
